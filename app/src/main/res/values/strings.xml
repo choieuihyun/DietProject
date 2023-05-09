@@ -13,6 +13,9 @@
     <string name="calendar">캘린더</string>
     <string name="weight_change">체중변화</string>
     <string name="myinfo">내 정보</string>
+    <string name="recommand">권장 섭취 칼로리</string>
+    <string name="today">오늘 섭취 칼로리</string>
+    <string name="not_enough">부족한 칼로리</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
