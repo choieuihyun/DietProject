@@ -13,12 +13,15 @@ android {
 
     defaultConfig {
         applicationId "com.myproject.dietproject"
-        minSdk 21
+        minSdk 26
         targetSdk 32
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Required ONLY if your minSdkVersion is below 21 --> CalenderView Library
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -46,8 +49,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
@@ -89,7 +90,7 @@ dependencies {
 
     // ktx
     implementation "androidx.core:core-ktx:$ktx_version"
-    implementation "androidx.activity:activity-ktx:$activity_ktx_version"
+    implementation "androidx.activity:activity-ktx:activity_ktx_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_ktx_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
@@ -150,6 +151,12 @@ dependencies {
 
     // pull to refresh
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_version")
+
+    // Circle Progressbar Library
+    implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
+
+    // Custom CalendarView Library
+    implementation 'com.github.kizitonwose:CalendarView:1.0.4'
 }
 
 kapt {

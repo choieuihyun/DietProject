@@ -8,4 +8,8 @@
         android:id="@+id/homeFragment"
         android:name="com.myproject.dietproject.ui.HomeFragment"
         android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.myproject.dietproject.ui.CalendarFragment"
+        android:label="CalendarFragment" />
 </navigation>
