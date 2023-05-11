@@ -12,4 +12,8 @@
         android:id="@+id/calendarFragment"
         android:name="com.myproject.dietproject.ui.CalendarFragment"
         android:label="CalendarFragment" />
+    <fragment
+        android:id="@+id/weightChartFragment"
+        android:name="com.myproject.dietproject.ui.WeightChartFragment"
+        android:label="WeightChartFragment" />
 </navigation>

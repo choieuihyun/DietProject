@@ -36,15 +36,6 @@ class MainActivity : AppCompatActivity() {
 
         setupNavigation()
 
-//        binding.bottomNavigationView.setOnClickListener {
-//            when(it.id) {
-//                R.id.calendarFragment -> {
-//                    Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_calendarFragment)
-//                    Log.d("asdasdasd","asdasdasd")
-//                }
-//            }
-//        }
-
     }
 
     private fun setupNavigation() {
