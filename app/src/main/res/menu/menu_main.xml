@@ -16,7 +16,7 @@
         android:icon="@drawable/ic_launcher_background"
         android:title="@string/calendar"/>
 
-    <item android:id="@+id/weightChangeFragment"
+    <item android:id="@+id/weightChartFragment"
         app:showAsAction="ifRoom"
         android:enabled="true"
         android:icon="@drawable/ic_launcher_background"

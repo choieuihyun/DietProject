@@ -157,6 +157,10 @@ dependencies {
 
     // Custom CalendarView Library
     implementation 'com.github.kizitonwose:CalendarView:1.0.4'
+
+    // Chart Library
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 }
 
 kapt {
