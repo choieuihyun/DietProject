@@ -17,6 +17,15 @@
     <string name="today">오늘 섭취 칼로리</string>
     <string name="not_enough">부족한 칼로리</string>
 
+    <!-- network error message -->
+
+    <string name="error_msg">An error occurred during\nnetwork communication.</string>
+    <string name="error_unknown">A network error has occurred.\nPlease run again in a few minutes.</string>
+    <string name="error_internal_server">An error occurred on the server.\nPlease run again in a few minutes.</string>
+    <string name="error_timeout">The request timed out.\nPlease run again in a few minutes.</string>
+    <string name="error_bad_request">Error Code : %1$d, Invalid request.\nPlease run again in a few minutes.</string>
+    <string name="data_error_msg">데이터가 없습니다.</string>
+
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>
