@@ -7,6 +7,9 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     namespace 'com.myproject.dietproject'
     compileSdk 32
@@ -17,11 +20,12 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField "String", "KCAL_API_KEY", properties["kcalApikey"]
         // Required ONLY if your minSdkVersion is below 21 --> CalenderView Library
         multiDexEnabled true
+
     }
 
     buildTypes {
