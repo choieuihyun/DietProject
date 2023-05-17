@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.myproject.dietproject.ui.home.HomeFragment"
@@ -16,4 +16,14 @@
         android:id="@+id/weightChartFragment"
         android:name="com.myproject.dietproject.ui.WeightChartFragment"
         android:label="WeightChartFragment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.myproject.dietproject.ui.login.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>
