@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services'
 }
 
 Properties properties = new Properties()
@@ -53,12 +54,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
-
-    // Circle Progressbar Library
-    implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
 
     def swipe_refresh_version = "1.1.0"
     def room_version = "2.4.3"
@@ -78,6 +78,10 @@ dependencies {
     def glide_version = "4.11.0"
     def okhttp_version = "4.9.1"
     def navigation_version = "2.5.2"
+    def firebase_auth_version = "21.0.1"
+    def firebase_storage_version = "20.0.2"
+    def firebase_database_version = "20.0.2"
+    def firebase_bom_version = "30.0.1"
     def tikxml_version = "0.8.13"
 
     // junit
@@ -137,10 +141,11 @@ dependencies {
 //    implementation ("me.relex:circleindicator:2.1.4")
 
     // firebase
-    implementation platform('com.google.firebase:firebase-bom:30.0.1')
+    implementation platform("com.google.firebase:firebase-bom:$firebase_bom_version")
     implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-database-ktx:20.0.2'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.0.2'
+    implementation ("com.google.firebase:firebase-database-ktx:$firebase_database_version")
+    implementation ("com.google.firebase:firebase-storage-ktx:$firebase_storage_version")
+    implementation ("com.google.firebase:firebase-auth-ktx:$firebase_auth_version")
 
     // Glide
     implementation ("com.github.bumptech.glide:glide:$glide_version")
@@ -164,7 +169,6 @@ dependencies {
 
     // Chart Library
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-
 }
 
 kapt {
