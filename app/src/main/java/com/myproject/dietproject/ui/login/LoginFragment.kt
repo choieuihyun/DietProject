@@ -55,8 +55,6 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(com.myproject.dietproje
             emailLogin()
         }
 
-
-
         binding.googleLoginButton.setOnClickListener {
 
             signIn()
@@ -125,6 +123,15 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(com.myproject.dietproje
         startActivityForResult(signInIntent, RC_SIGN_IN) // refactoring 해야함. 일단 미뤄둠.
     }
 
+    private fun signOut() { // 이건 내 정보에 올라가야 하는거 아님?
+
+        mGoogleSignInClient.signOut()
+            .addOnCompleteListener {
+                auth.signOut()
+                Log.d("TAG", "로그아웃되었음")
+            }
+
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
