@@ -5,14 +5,21 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.myproject.dietproject.BuildConfig
 import com.myproject.dietproject.R
 import com.myproject.dietproject.databinding.ActivityMainBinding
@@ -23,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var spalshScreen: SplashScreen
+    private lateinit var auth: FirebaseAuth
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -33,11 +41,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        auth = Firebase.auth
+
         spalshScreen = installSplashScreen()
 
         setContentView(binding.root)
 
         setupNavigation()
+
+//        if(savedInstanceState != null)
+//            setupNavigation()
 
     }
 
@@ -49,6 +62,29 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController)
 
         binding.bottomNavigationView.isVisible = true
+
+        val gsa = GoogleSignIn.getLastSignedInAccount(this@MainActivity)
+
+        if (auth.currentUser != null) {
+            goToHome()
+        } else {
+            Toast.makeText(this@MainActivity, "로그인 안되어있음", Toast.LENGTH_SHORT).show()
+            goToLogin()
+        }
+
+    }
+
+    private fun goToLogin() {
+
+        navController.navigate(R.id.loginFragment,null)
+        Log.d("goToLogin", "goToLogin")
+
+    }
+
+    private fun goToHome() {
+
+        navController.navigate(R.id.homeFragment,null)
+        Log.d("goToHome", "goToHome")
 
     }
 
