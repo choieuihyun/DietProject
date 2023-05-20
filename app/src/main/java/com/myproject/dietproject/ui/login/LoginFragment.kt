@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isInvisible
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -21,20 +23,47 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.myproject.dietproject.R
+import com.myproject.dietproject.data.db.remote.response.kcalresponse.User
 import com.myproject.dietproject.databinding.LoginFragmentBinding
 import com.myproject.dietproject.ui.BaseFragment
 import com.myproject.dietproject.ui.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 
 
-class LoginFragment : BaseFragment<LoginFragmentBinding>(com.myproject.dietproject.R.layout.login_fragment) {
+@AndroidEntryPoint
+class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment) {
 
     private lateinit var mainActivity: MainActivity
     private lateinit var auth: FirebaseAuth
     private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private lateinit var callback: OnBackPressedCallback
+
+    private var backPressedTime: Long = 0
+
+    private val viewModel: LoginViewModel by viewModels()
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
+
+        callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val curTime = System.currentTimeMillis()
+                val gapTime = curTime - backPressedTime
+
+                if(gapTime in 0..2000) {
+                    Toast.makeText(requireContext(),"2초안에 누르면 종료?", Toast.LENGTH_SHORT).show()
+                    mainActivity.finish()
+                } else {
+                    backPressedTime = curTime
+                    Toast.makeText(requireContext(), "", Toast.LENGTH_SHORT).show()
+                }
+
+
+            }
+        }
+        mainActivity.onBackPressedDispatcher.addCallback(this,callback)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +71,9 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(com.myproject.dietproje
 
         auth = Firebase.auth
 
-        googleLogin()
+        googleLogin() // 처음에 이걸로 로그인 되어있는지 안되어있는지 확인
+
+
 
     }
 
@@ -57,10 +88,13 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(com.myproject.dietproje
 
         binding.googleLoginButton.setOnClickListener {
 
-            signIn()
-        }
-    }
+            signIn() // 버튼 누르면 로그인 유무에 따라 아이디 뜨던지 화면 넘어가던지
 
+
+        }
+
+
+    }
 
     private fun emailLogin() {
 
@@ -72,7 +106,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(com.myproject.dietproje
 
     }
 
-    private fun signInAndSignup() {
+    private fun signInAndSignup() { // 이메일 없으면 회원가입하고 로그인, 회원가입 페이지 따로 만들어아햠.
         auth.createUserWithEmailAndPassword(binding.emailEdt.text.toString(), binding.pwEdt.text.toString())
             .addOnCompleteListener { task ->
                 if(task.isSuccessful) {
@@ -85,11 +119,17 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(com.myproject.dietproje
             }
     }
 
-    private fun signInEmail() {
-        auth.signInWithEmailAndPassword(binding.emailEdt.text.toString(),
-            binding.pwEdt.text.toString())
+    private fun signInEmail() { // 이메일 로그인하는 로직
+        auth.signInWithEmailAndPassword(binding.emailEdt.text.toString(), binding.pwEdt.text.toString())
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    val user: User = User(
+                        auth.uid.toString(),
+                        binding.emailEdt.text.toString(),
+                        null,
+                        null
+                    )
+                    viewModel.getUserDB(auth.uid.toString(), user)
                     moveMainPage(task.result?.user)
                 } else {
                     Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT)
@@ -100,27 +140,30 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(com.myproject.dietproje
 
     private fun googleLogin() {
 
-        val gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
+        val gso: GoogleSignInOptions =
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
 
         mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
         val gsa = GoogleSignIn.getLastSignedInAccount(requireContext())
 
 
-        if(gsa != null) {
+        if (gsa != null) {
             Toast.makeText(requireContext(), "로그인 되어있음", Toast.LENGTH_SHORT).show()
-        } else
+        } else {
             Toast.makeText(requireContext(), "로그인 안되어있음", Toast.LENGTH_SHORT).show()
             signIn()
-
+        }
     }
+
 
     private fun signIn() {
         val signInIntent = mGoogleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN) // refactoring 해야함. 일단 미뤄둠.
+
     }
 
     private fun signOut() { // 이건 내 정보에 올라가야 하는거 아님?
@@ -159,6 +202,15 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(com.myproject.dietproje
                 val personEmail = account.email
                 val personId = account.id
                 val personPhoto: Uri? = account.photoUrl
+
+                val user: User = User(
+                    personId.toString(),
+                    personEmail.toString(),
+                    null,
+                    null
+                )
+                viewModel.getUserDB(personId.toString(), user)
+
                 Log.d(TAG, "handleSignInResult:personName $personName")
                 Log.d(TAG, "handleSignInResult:personGivenName $personGivenName")
                 Log.d(TAG, "handleSignInResult:personEmail $personEmail")
