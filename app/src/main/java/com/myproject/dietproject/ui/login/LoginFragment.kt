@@ -106,7 +106,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
     }
 
-    private fun signInAndSignup() {
+    private fun signInAndSignup() { // 이메일 없으면 회원가입하고 로그인, 회원가입 페이지 따로 만들어아햠.
         auth.createUserWithEmailAndPassword(binding.emailEdt.text.toString(), binding.pwEdt.text.toString())
             .addOnCompleteListener { task ->
                 if(task.isSuccessful) {
@@ -119,10 +119,17 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
             }
     }
 
-    private fun signInEmail() {
+    private fun signInEmail() { // 이메일 로그인하는 로직
         auth.signInWithEmailAndPassword(binding.emailEdt.text.toString(), binding.pwEdt.text.toString())
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    val user: User = User(
+                        auth.uid.toString(),
+                        binding.emailEdt.text.toString(),
+                        null,
+                        null
+                    )
+                    viewModel.getUserDB(auth.uid.toString(), user)
                     moveMainPage(task.result?.user)
                 } else {
                     Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT)
