@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "78375549050",
-    "project_id": "dietproject-67b3b",
-    "storage_bucket": "dietproject-67b3b.appspot.com"
+    "project_number": "212323999152",
+    "firebase_url": "https://dietproject-386913-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "dietproject-386913",
+    "storage_bucket": "dietproject-386913.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:78375549050:android:c33a4d338bc24823d623c3",
+        "mobilesdk_app_id": "1:212323999152:android:8f3d717f25dcdb5aa94a75",
         "android_client_info": {
           "package_name": "com.myproject.dietproject"
         }
       },
       "oauth_client": [
         {
-          "client_id": "78375549050-oiald1l3mk6hibtvfhdokh9lubulvojj.apps.googleusercontent.com",
+          "client_id": "212323999152-h5nst1jv6cgv2963r610gv1rfesqdq7t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCasAqQlig9SsaJ9luhDlMWIZoVV_6Mx8s"
+          "current_key": "AIzaSyAZaS3tFKK4tf1VCkemuKL-7Pur86mTT3Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "78375549050-oiald1l3mk6hibtvfhdokh9lubulvojj.apps.googleusercontent.com",
+              "client_id": "212323999152-h5nst1jv6cgv2963r610gv1rfesqdq7t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
