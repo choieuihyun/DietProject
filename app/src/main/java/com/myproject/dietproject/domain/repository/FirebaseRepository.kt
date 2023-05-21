@@ -1,11 +1,15 @@
 package com.myproject.dietproject.domain.repository
 
-import com.myproject.dietproject.data.db.remote.response.kcalresponse.User
+import com.google.firebase.database.DatabaseReference
+import com.myproject.dietproject.data.db.remote.firebase.userdata.User
+import com.myproject.dietproject.domain.model.UserModel
 
 interface FirebaseRepository {
 
     suspend fun test(value: String)
 
-    suspend fun addUser(userId: String, user: User)
+    suspend fun addUser(userId: String, user: UserModel)
+
+    suspend fun getUser(userId: String) : DatabaseReference
 
 }
