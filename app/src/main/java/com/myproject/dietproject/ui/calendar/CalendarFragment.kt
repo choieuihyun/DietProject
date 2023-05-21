@@ -1,16 +1,14 @@
-package com.myproject.dietproject.ui
+package com.myproject.dietproject.ui.calendar
 
 
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.text.format.DateFormat.format
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import com.kizitonwose.calendarview.model.CalendarDay
-import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
@@ -20,6 +18,8 @@ import com.kizitonwose.calendarview.utils.previous
 import com.myproject.dietproject.R
 import com.myproject.dietproject.databinding.CalendarDayLayoutBinding
 import com.myproject.dietproject.databinding.CalendarFragmentBinding
+import com.myproject.dietproject.ui.BaseFragment
+import com.myproject.dietproject.ui.MainActivity
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
