@@ -1,4 +1,4 @@
-package com.myproject.dietproject.ui
+package com.myproject.dietproject.ui.weightChart
 
 import android.graphics.Color
 import android.os.Bundle
@@ -13,9 +13,9 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.myproject.dietproject.R
 import com.myproject.dietproject.databinding.WeightChartFragmentBinding
+import com.myproject.dietproject.ui.BaseFragment
 import java.util.*
 
 
