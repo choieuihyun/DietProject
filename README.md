@@ -1,5 +1,6 @@
 # DietProject
 
-### 다이어트 하는 도중에 만드는 내가 사용할 다이어트 앱
 
-세부사항 추가예정
+# Architecture
+
+<img width="70%" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FPJTRL%2Fbtq8IgnyP7P%2FUiDj9o89fYDn0kJKUkleHk%2Fimg.jpg"/>
