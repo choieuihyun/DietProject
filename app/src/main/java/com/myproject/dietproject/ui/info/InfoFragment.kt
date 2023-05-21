@@ -1,4 +1,4 @@
-package com.myproject.dietproject.ui
+package com.myproject.dietproject.ui.info
 
 import android.os.Bundle
 import android.util.Log
@@ -7,12 +7,16 @@ import androidx.navigation.Navigation
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.myproject.dietproject.R
 import com.myproject.dietproject.databinding.InfoFragmentBinding
+import com.myproject.dietproject.ui.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
 
     private lateinit var auth: FirebaseAuth
@@ -23,6 +27,7 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
 
         auth = Firebase.auth
 
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,8 +35,9 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
 
         Log.d("asdasdasd", auth.currentUser.toString())
 
-        googleLogout()
 
+
+        googleLogout()
 
 
 
@@ -39,9 +45,18 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
 
     private fun googleLogout() {
 
+        val gso: GoogleSignInOptions =
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+
+        mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+
         binding.googleLogoutButton.setOnClickListener {
 
-            auth.signOut()
+            mGoogleSignInClient.signOut() // 재 로그인시 다시 구글 아이디 고르게
+            auth.signOut() // 그냥 로그아웃
 
             Navigation.findNavController(binding.root).navigate(R.id.action_myInfoFragment_to_loginFragment)
 

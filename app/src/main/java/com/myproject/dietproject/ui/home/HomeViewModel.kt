@@ -1,26 +1,24 @@
 package com.myproject.dietproject.ui.home
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myproject.dietproject.domain.error.NetworkResult
 import com.myproject.dietproject.domain.model.Kcal
-import com.myproject.dietproject.domain.usecase.GetKcalDataUseCase
+import com.myproject.dietproject.domain.usecase.GetKcalUseCase
 import com.myproject.dietproject.ui.util.Event
 import com.myproject.dietproject.ui.util.toErrorMessage
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val application: Application,
-    private val useCase: GetKcalDataUseCase
+    private val useCase: GetKcalUseCase
 ) : ViewModel() {
 
     private val _kcalData = MutableLiveData<List<Kcal>?>()

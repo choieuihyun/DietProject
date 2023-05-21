@@ -5,7 +5,7 @@ import com.myproject.dietproject.domain.model.Kcal
 import com.myproject.dietproject.domain.repository.KcalRepository
 import javax.inject.Inject
 
-class GetKcalDataUseCase @Inject constructor(
+class GetKcalUseCase @Inject constructor(
     private val kcalDataRepository: KcalRepository
 ){
 
