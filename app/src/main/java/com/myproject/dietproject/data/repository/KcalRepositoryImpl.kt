@@ -1,8 +1,8 @@
 package com.myproject.dietproject.data.repository
 
 import com.myproject.dietproject.data.datasource.remotedatasource.KcalDataSource
-import com.myproject.dietproject.data.mapNetworkResult
-import com.myproject.dietproject.data.toModel
+import com.myproject.dietproject.data.mapper.mapNetworkResult
+import com.myproject.dietproject.data.mapper.toModel
 import com.myproject.dietproject.domain.error.NetworkResult
 import com.myproject.dietproject.domain.model.Kcal
 import com.myproject.dietproject.domain.repository.KcalRepository

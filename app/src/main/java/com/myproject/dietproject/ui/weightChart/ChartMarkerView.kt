@@ -1,4 +1,4 @@
-package com.myproject.dietproject.ui
+package com.myproject.dietproject.ui.weightChart
 
 import android.annotation.SuppressLint
 import android.content.Context

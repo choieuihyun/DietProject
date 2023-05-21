@@ -9,8 +9,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isInvisible
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -23,8 +24,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.myproject.dietproject.R
-import com.myproject.dietproject.data.db.remote.response.kcalresponse.User
 import com.myproject.dietproject.databinding.LoginFragmentBinding
+import com.myproject.dietproject.domain.model.UserModel
 import com.myproject.dietproject.ui.BaseFragment
 import com.myproject.dietproject.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +41,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
     private var backPressedTime: Long = 0
 
-    private val viewModel: LoginViewModel by viewModels()
+    private val viewModel by activityViewModels<LoginViewModel>()
 
 
     override fun onAttach(context: Context) {
@@ -71,9 +72,9 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
         auth = Firebase.auth
 
-        googleLogin() // 처음에 이걸로 로그인 되어있는지 안되어있는지 확인
+        //googleLogin() // 처음에 이걸로 로그인 되어있는지 안되어있는지 확인
 
-
+        Log.d("LoginViewModel", viewModel.toString())
 
     }
 
@@ -83,13 +84,21 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
         mainActivity.getBinding.bottomNavigationView.isInvisible = true
 
         binding.emailLoginButton.setOnClickListener {
+
             emailLogin()
+
         }
 
         binding.googleLoginButton.setOnClickListener {
 
-            signIn() // 버튼 누르면 로그인 유무에 따라 아이디 뜨던지 화면 넘어가던지
+            googleLogin()
+            //signIn() // 버튼 누르면 로그인 유무에 따라 아이디 뜨던지 화면 넘어가던지
 
+        }
+
+        binding.signupButton.setOnClickListener {
+
+            moveSignUpPage()
 
         }
 
@@ -98,39 +107,20 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
     private fun emailLogin() {
 
-        if(binding.emailEdt.text.toString().isEmpty() || binding.pwEdt.text.toString().isEmpty()) {
+        if (binding.emailEdt.text.toString().isEmpty() || binding.pwEdt.text.toString().isEmpty()) {
             Toast.makeText(requireContext(), "이메일 혹은 비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show()
         } else {
-            signInAndSignup()
+            signInEmail()
+            //signInAndSignup()
         }
 
-    }
-
-    private fun signInAndSignup() { // 이메일 없으면 회원가입하고 로그인, 회원가입 페이지 따로 만들어아햠.
-        auth.createUserWithEmailAndPassword(binding.emailEdt.text.toString(), binding.pwEdt.text.toString())
-            .addOnCompleteListener { task ->
-                if(task.isSuccessful) {
-                    moveMainPage(task.result?.user)
-                } else if (task.exception?.message.isNullOrEmpty()) {
-                    Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
-                } else {
-                    signInEmail()
-                }
-            }
     }
 
     private fun signInEmail() { // 이메일 로그인하는 로직
         auth.signInWithEmailAndPassword(binding.emailEdt.text.toString(), binding.pwEdt.text.toString())
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val user: User = User(
-                        auth.uid.toString(),
-                        binding.emailEdt.text.toString(),
-                        null,
-                        null
-                    )
-                    viewModel.getUserDB(auth.uid.toString(), user)
-                    moveMainPage(task.result?.user)
+                    moveMainPage()
                 } else {
                     Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT)
                         .show()
@@ -150,7 +140,6 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
         val gsa = GoogleSignIn.getLastSignedInAccount(requireContext())
 
-
         if (gsa != null) {
             Toast.makeText(requireContext(), "로그인 되어있음", Toast.LENGTH_SHORT).show()
         } else {
@@ -166,16 +155,6 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
     }
 
-    private fun signOut() { // 이건 내 정보에 올라가야 하는거 아님?
-
-        mGoogleSignInClient.signOut()
-            .addOnCompleteListener {
-                auth.signOut()
-                Log.d("TAG", "로그아웃되었음")
-            }
-
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -188,6 +167,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
         }
     }
 
+    // 사용자 정보
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
@@ -203,20 +183,24 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                 val personId = account.id
                 val personPhoto: Uri? = account.photoUrl
 
-                val user: User = User(
+                val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
                     personId.toString(),
                     personEmail.toString(),
-                    null,
+                    24,
+                    160.4F,
+                    150.2F,
+                    0,
                     null
                 )
-                viewModel.getUserDB(personId.toString(), user)
+                viewModel.addUser(personId.toString(), user)
 
-                Log.d(TAG, "handleSignInResult:personName $personName")
-                Log.d(TAG, "handleSignInResult:personGivenName $personGivenName")
-                Log.d(TAG, "handleSignInResult:personEmail $personEmail")
-                Log.d(TAG, "handleSignInResult:personId $personId")
-                Log.d(TAG, "handleSignInResult:personFamilyName $personFamilyName")
-                Log.d(TAG, "handleSignInResult:personPhoto $personPhoto")
+                viewModel.getUser(personId.toString())
+
+                if(user.activity == 0)
+                    movePersonalInfoPage(user)
+                else
+                    moveMainPage()
+
             }
 
         } catch (e: ApiException) {
@@ -238,8 +222,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                         .show()
                     val user: FirebaseUser? = auth.currentUser
                     Log.d(TAG,auth.currentUser.toString())
-                    moveMainPage(user)
-                    //                            updateUI(user);
+
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
@@ -251,11 +234,20 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
     }
 
 
-    private fun moveMainPage(user: FirebaseUser?) {
-        if(user != null) {
-            Navigation.findNavController(binding.root).navigate(R.id.action_loginFragment_to_homeFragment)
+    private fun moveMainPage() {
 
-        }
+        Navigation.findNavController(binding.root).navigate(R.id.action_loginFragment_to_homeFragment)
+
+    }
+
+    private fun moveSignUpPage() {
+        Navigation.findNavController(binding.root).navigate(R.id.action_loginFragment_to_signUpFragment)
+
+    }
+
+    private fun movePersonalInfoPage(user: UserModel) {
+        val action = LoginFragmentDirections.actionLoginFragmentToPersonalInfoFragment(user)
+        findNavController().navigate(action)
     }
 
     companion object {

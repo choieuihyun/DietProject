@@ -10,8 +10,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.myproject.dietproject.R
-import com.myproject.dietproject.data.db.remote.response.kcalresponse.User
 import com.myproject.dietproject.databinding.SignupFragmentBinding
+import com.myproject.dietproject.domain.model.UserModel
 import com.myproject.dietproject.ui.BaseFragment
 import com.myproject.dietproject.ui.login.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,15 +46,22 @@ class SignUpFragment : BaseFragment<SignupFragmentBinding>(R.layout.signup_fragm
             .addOnCompleteListener { task ->
                 if(task.isSuccessful) {
 
-                    val user: User = User(
+                    val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
                         auth.uid.toString(),
                         binding.signupEmail.text.toString(),
-                        null,
+                        24,
+                        160.4F,
+                        150.2F,
+                        0,
                         null
                     )
-                    loginViewModel.getUserDB(auth.uid.toString(), user)
+                    loginViewModel.addUser(auth.uid.toString(), user)
 
-                    moveMainPage(task.result?.user)
+                    loginViewModel.getUser(user.uid)
+
+                    movePersonalInfoPage(task.result.user)
+
+                    //moveMainPage(task.result?.user)
 
                 } else if (task.exception?.message.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
@@ -62,10 +69,9 @@ class SignUpFragment : BaseFragment<SignupFragmentBinding>(R.layout.signup_fragm
             }
     }
 
-    private fun moveMainPage(user: FirebaseUser?) {
+    private fun movePersonalInfoPage(user: FirebaseUser?) {
         if(user != null) {
-            Navigation.findNavController(binding.root).navigate(R.id.action_signUpFragment_to_homeFragment)
-
+            Navigation.findNavController(binding.root).navigate(R.id.action_signUpFragment_to_personalInfoFragment)
         }
     }
 

@@ -1,4 +1,4 @@
-package com.myproject.dietproject.data
+package com.myproject.dietproject.data.mapper
 
 import com.myproject.dietproject.data.db.remote.response.kcalresponse.KcalData
 import com.myproject.dietproject.domain.error.NetworkResult
