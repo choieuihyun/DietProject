@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "212323999152",
+    "firebase_url": "https://dietproject-386913-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "dietproject-386913",
+    "storage_bucket": "dietproject-386913.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212323999152:android:8f3d717f25dcdb5aa94a75",
+        "android_client_info": {
+          "package_name": "com.myproject.dietproject.data"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212323999152-h5nst1jv6cgv2963r610gv1rfesqdq7t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZaS3tFKK4tf1VCkemuKL-7Pur86mTT3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "212323999152-h5nst1jv6cgv2963r610gv1rfesqdq7t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
