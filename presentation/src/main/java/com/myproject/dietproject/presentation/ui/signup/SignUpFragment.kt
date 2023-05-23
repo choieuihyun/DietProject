@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -49,17 +50,18 @@ class SignUpFragment : BaseFragment<SignupFragmentBinding>(R.layout.signup_fragm
                     val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
                         auth.uid.toString(),
                         binding.signupEmail.text.toString(),
+                        "male",
                         24,
                         160.4F,
                         150.2F,
-                        0,
+                        "",
                         null
                     )
                     loginViewModel.addUser(auth.uid.toString(), user)
 
                     loginViewModel.getUser(user.uid)
 
-                    movePersonalInfoPage(task.result.user)
+                    movePersonalInfoPage(auth.uid.toString())
 
                     //moveMainPage(task.result?.user)
 
@@ -69,10 +71,11 @@ class SignUpFragment : BaseFragment<SignupFragmentBinding>(R.layout.signup_fragm
             }
     }
 
-    private fun movePersonalInfoPage(user: FirebaseUser?) {
-        if(user != null) {
-            Navigation.findNavController(binding.root).navigate(R.id.action_signUpFragment_to_personalInfoFragment)
-        }
+    private fun movePersonalInfoPage(userId: String) {
+
+        val action = SignUpFragmentDirections.actionSignUpFragmentToPersonalInfoFragment(userId)
+        findNavController().navigate(action)
+
     }
 
 

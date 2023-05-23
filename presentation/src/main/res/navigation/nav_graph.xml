@@ -61,8 +61,7 @@
             android:id="@+id/action_personalInfoFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
         <argument
-            android:name="User"
-            app:argType="com.myproject.dietproject.domain.model.UserModel"
-            app:nullable="true" />
+            android:name="userId"
+            app:argType="string" />
     </fragment>
 </navigation>

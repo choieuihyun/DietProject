@@ -6,18 +6,23 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import com.myproject.dietproject.domain.model.UserModel
+import com.myproject.dietproject.domain.usecase.AddUserInfoUseCase
 import com.myproject.dietproject.domain.usecase.AddUserUseCase
 import com.myproject.dietproject.domain.usecase.GetUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.floor
+import kotlin.math.roundToInt
 
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val addUserUseCase: AddUserUseCase,
-    private val getUserUseCase: GetUserUseCase
+    private val getUserUseCase: GetUserUseCase,
+    private val addUserInfoUseCase: AddUserInfoUseCase
 ): ViewModel(){
 
     fun addUser(userId: String, user: UserModel) {
@@ -39,12 +44,31 @@ class LoginViewModel @Inject constructor(
 
                     Log.d("getUserByViewModel", snapshot.getValue(UserModel::class.java).toString())
 
+
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                 }
 
             })
+        }
+
+    }
+
+    fun addUserInfo(userId: String,
+                   gender: String,
+                   age: Int,
+                   height: Float,
+                   weight: Float,
+                   activity: String) {
+
+        viewModelScope.launch {
+
+            val roundToHeight = floor(height) // 소수점 버리기
+            val roundToWeight = floor(weight)
+
+            addUserInfoUseCase.invoke(userId, gender, age, roundToHeight, roundToWeight, activity)
+
         }
 
     }
