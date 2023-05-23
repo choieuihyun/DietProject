@@ -25,5 +25,27 @@ class FirebaseDataSource @Inject constructor(
         return firebase.getReference("user").child(userId)
     }
 
+    fun addUserInfo(userId: String,
+                    gender: String,
+                    age: Int,
+                    height: Float,
+                    weight: Float,
+                    activity: String) {
+
+        firebase.getReference("user").child(userId).let {
+
+            userData ->
+
+            userData.child("gender").setValue(gender)
+            userData.child("age").setValue(age)
+            userData.child("height").setValue(height)
+            userData.child("weight").setValue(weight)
+            userData.child("activity").setValue(activity)
+
+        }
+
+
+    }
+
 
 }
