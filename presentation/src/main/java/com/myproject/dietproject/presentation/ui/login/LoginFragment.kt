@@ -186,10 +186,10 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                 val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
                     personId.toString(),
                     personEmail.toString(),
-                    "male",
-                    24,
-                    160.4F,
-                    150.2F,
+                    "",
+                    0,
+                    0.0F,
+                    0.0F,
                     "",
                     null
                 )
@@ -250,6 +250,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
         val action = LoginFragmentDirections.actionLoginFragmentToPersonalInfoFragment(userId)
         findNavController().navigate(action)
     }
+
 
     companion object {
         private const val RC_SIGN_IN = 9001

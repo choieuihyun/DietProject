@@ -50,10 +50,10 @@ class SignUpFragment : BaseFragment<SignupFragmentBinding>(R.layout.signup_fragm
                     val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
                         auth.uid.toString(),
                         binding.signupEmail.text.toString(),
-                        "male",
-                        24,
-                        160.4F,
-                        150.2F,
+                        "",
+                        0,
+                        0.0F,
+                        0.0F,
                         "",
                         null
                     )
