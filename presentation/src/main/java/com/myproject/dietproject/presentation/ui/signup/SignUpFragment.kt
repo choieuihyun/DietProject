@@ -47,23 +47,21 @@ class SignUpFragment : BaseFragment<SignupFragmentBinding>(R.layout.signup_fragm
             .addOnCompleteListener { task ->
                 if(task.isSuccessful) {
 
-                    val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
-                        auth.uid.toString(),
-                        binding.signupEmail.text.toString(),
-                        "",
-                        0,
-                        0.0F,
-                        0.0F,
-                        "",
-                        null
-                    )
-                    loginViewModel.addUser(auth.uid.toString(), user)
+//                    val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
+//                        auth.uid.toString(),
+//                        binding.signupEmail.text.toString(),
+//                        "",
+//                        0,
+//                        0.0F,
+//                        0.0F,
+//                        "",
+//                        null
+//                    )
+                    loginViewModel.addUser(auth.uid.toString(), binding.signupEmail.text.toString())
 
-                    loginViewModel.getUser(user.uid)
+                    loginViewModel.getUser(auth.uid.toString())
 
                     movePersonalInfoPage(auth.uid.toString())
-
-                    //moveMainPage(task.result?.user)
 
                 } else if (task.exception?.message.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()

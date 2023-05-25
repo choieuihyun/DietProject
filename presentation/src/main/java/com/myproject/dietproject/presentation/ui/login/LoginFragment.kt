@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isInvisible
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -28,8 +29,8 @@ import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.LoginFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
 import com.myproject.dietproject.presentation.ui.MainActivity
+import com.myproject.dietproject.presentation.ui.personal_info.PersonalInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment) {
@@ -41,7 +42,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
     private var backPressedTime: Long = 0
 
-    private val viewModel by activityViewModels<LoginViewModel>()
+    private val viewModel : LoginViewModel by viewModels()
 
 
     override fun onAttach(context: Context) {
@@ -74,7 +75,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
         //googleLogin() // 처음에 이걸로 로그인 되어있는지 안되어있는지 확인
 
-        Log.d("LoginViewModel", viewModel.toString())
+        Log.d("LoginViewModel", "Login")
 
     }
 
@@ -139,6 +140,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
         mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
         val gsa = GoogleSignIn.getLastSignedInAccount(requireContext())
+        Log.d("gsaId", gsa?.id.toString())
 
         if (gsa != null) {
             Toast.makeText(requireContext(), "로그인 되어있음", Toast.LENGTH_SHORT).show()
@@ -150,6 +152,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
 
     private fun signIn() {
+
         val signInIntent = mGoogleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN) // refactoring 해야함. 일단 미뤄둠.
 
@@ -176,6 +179,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                 account.idToken?.let {
                     firebaseAuthWithGoogle(it)
                 }
+
                 val personName = account.displayName
                 val personGivenName = account.givenName
                 val personFamilyName = account.familyName
@@ -183,24 +187,35 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                 val personId = account.id
                 val personPhoto: Uri? = account.photoUrl
 
-                val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
-                    personId.toString(),
-                    personEmail.toString(),
-                    "",
-                    0,
-                    0.0F,
-                    0.0F,
-                    "",
-                    null
-                )
-                viewModel.addUser(personId.toString(), user)
+                viewModel.getUserActivity(personId.toString()) // 로그인 분기점을 위함
 
-                viewModel.getUser(personId.toString())
+                Log.d("viewModel_1", viewModel.loginUserActivity.toString())
 
-                if(user.activity == "")
+/*                if(viewModel.loginUserActivity == "") {
+                   val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
+                        personId.toString(),
+                        personEmail.toString(),
+                        "",
+                        0,
+                        0.0F,
+                        0.0F,
+                        "",
+                        null
+                    )
                     movePersonalInfoPage(personId.toString())
+                    viewModel.addUser(personId.toString(), personEmail.toString())
+                }
                 else
+                    moveMainPage()*/
+
+                if(viewModel.loginUserActivity == "") {
+                    movePersonalInfoPage(personId.toString())
+                    viewModel.addUser(personId.toString(), personEmail.toString())
+                    Log.d("viewModel_2", viewModel.loginUserActivity.toString())
+                } else {
+                    Log.d("viewModel_3", viewModel.loginUserActivity.toString())
                     moveMainPage()
+                }
 
             }
 
@@ -222,14 +237,14 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                     Toast.makeText(requireContext(), "구글 로그인 성공", Toast.LENGTH_SHORT)
                         .show()
                     val user: FirebaseUser? = auth.currentUser
-                    Log.d(TAG,auth.currentUser.toString())
+                    Log.d(TAG,auth.currentUser?.uid.toString())
 
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     Toast.makeText(requireContext(), "구글 로그인 실패", Toast.LENGTH_SHORT)
                         .show()
-                    //                            updateUI(null);
+                    // updateUI(null);
                 }
             }
     }
@@ -242,6 +257,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
     }
 
     private fun moveSignUpPage() {
+
         Navigation.findNavController(binding.root).navigate(R.id.action_loginFragment_to_signUpFragment)
 
     }
