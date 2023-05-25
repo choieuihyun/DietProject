@@ -8,8 +8,8 @@ class AddUserUseCase @Inject constructor(
     private val repository: FirebaseRepository
 ) {
 
-    suspend operator fun invoke(userId: String, user: UserModel) {
-        repository.addUser(userId, user)
+    suspend operator fun invoke(userId: String, userEmail: String) {
+        repository.addUser(userId, userEmail)
     }
 
 }
