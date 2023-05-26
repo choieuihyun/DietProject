@@ -1,7 +1,9 @@
 package com.myproject.dietproject.domain.repository
 
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.myproject.dietproject.domain.model.UserModel
+import java.util.Date
 
 interface FirebaseRepository {
 
@@ -17,5 +19,7 @@ interface FirebaseRepository {
                             height: Float,
                             weight: Float,
                             activity: String)
+
+    suspend fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: Date)
 
 }

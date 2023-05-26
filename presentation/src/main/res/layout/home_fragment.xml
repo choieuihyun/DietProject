@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/appCompatButton"
+            android:id="@+id/setDataButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
@@ -18,7 +18,7 @@
             app:layout_constraintHorizontal_bias="0.882"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="먹은거 등록 버튼" />
+            android:text="먹은거 등록 버튼" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/dbTest"
@@ -46,7 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.493"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatButton" />
+            app:layout_constraintTop_toBottomOf="@+id/setDataButton" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="120dp"
