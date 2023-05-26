@@ -24,12 +24,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.myproject.dietproject.domain.model.UserModel
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.LoginFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
 import com.myproject.dietproject.presentation.ui.MainActivity
-import com.myproject.dietproject.presentation.ui.personal_info.PersonalInfoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -186,36 +184,9 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                 val personEmail = account.email
                 val personId = account.id
                 val personPhoto: Uri? = account.photoUrl
+                val userActivity = viewModel.loginUserActivity
 
-                viewModel.getUserActivity(personId.toString()) // 로그인 분기점을 위함
-
-                Log.d("viewModel_1", viewModel.loginUserActivity.toString())
-
-/*                if(viewModel.loginUserActivity == "") {
-                   val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
-                        personId.toString(),
-                        personEmail.toString(),
-                        "",
-                        0,
-                        0.0F,
-                        0.0F,
-                        "",
-                        null
-                    )
-                    movePersonalInfoPage(personId.toString())
-                    viewModel.addUser(personId.toString(), personEmail.toString())
-                }
-                else
-                    moveMainPage()*/
-
-                if(viewModel.loginUserActivity == "") {
-                    movePersonalInfoPage(personId.toString())
-                    viewModel.addUser(personId.toString(), personEmail.toString())
-                    Log.d("viewModel_2", viewModel.loginUserActivity.toString())
-                } else {
-                    Log.d("viewModel_3", viewModel.loginUserActivity.toString())
-                    moveMainPage()
-                }
+                Log.d("viewModel_1", viewModel.loginUserActivity.value.toString())
 
             }
 
@@ -227,8 +198,8 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
         }
     }
 
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
+    private fun firebaseAuthWithGoogle(idToken: String) { // GoogleSignInAccount 객체에서 ID 토큰을 가져와서
+        val credential = GoogleAuthProvider.getCredential(idToken, null) // Firebase 사용자 인증 정보로 교환하고 Firebase 사용자 인증 정보를 사용해 Firebase에 인증합니다.
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -236,8 +207,27 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                     Log.d(TAG, "signInWithCredential:success")
                     Toast.makeText(requireContext(), "구글 로그인 성공", Toast.LENGTH_SHORT)
                         .show()
+
                     val user: FirebaseUser? = auth.currentUser
-                    Log.d(TAG,auth.currentUser?.uid.toString())
+
+                    viewModel.getUserActivity(user?.uid.toString()) // 로그인 분기점을 위함
+
+                    viewModel.loginUserActivity.observe(viewLifecycleOwner) {
+
+                        if(it == null) {
+
+                            movePersonalInfoPage(user?.uid.toString())
+                            viewModel.addUser(user?.uid.toString(), user?.email.toString())
+                            Log.d("viewModel_2",viewModel.loginUserActivity.value.toString())
+
+                        } else if (it == "hardActivity" || it == "middleActivity" || it == "lightActivity") {
+
+                            Log.d("viewModel_3",viewModel.loginUserActivity.value.toString())
+                            moveMainPage()
+
+                        }
+
+                    }
 
                 } else {
                     // If sign in fails, display a message to the user.

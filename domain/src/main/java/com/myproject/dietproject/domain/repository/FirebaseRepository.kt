@@ -13,6 +13,8 @@ interface FirebaseRepository {
 
     suspend fun getUser(userId: String) : DatabaseReference
 
+    suspend fun getUserActivity(userId: String) : DatabaseReference
+
     suspend fun addUserInfo(userId: String,
                             gender: String,
                             age: Int,

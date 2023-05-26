@@ -1,6 +1,8 @@
 package com.myproject.dietproject.presentation.ui.login
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
@@ -13,6 +15,7 @@ import com.myproject.dietproject.domain.usecase.GetUserActivityUseCase
 import com.myproject.dietproject.domain.usecase.GetUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.floor
 
@@ -46,8 +49,14 @@ class LoginViewModel @Inject constructor(
         get() = _userActivity
 
 
+/*
     private var _loginUserActivity: Any? = "" // LoginFragment -> Home, PersonalInfo 분기점 기준 변수
     val loginUserActivity: Any?
+        get() = _loginUserActivity
+*/
+
+    private val _loginUserActivity = MutableLiveData<Any>()
+    val loginUserActivity: LiveData<Any>
         get() = _loginUserActivity
 
     fun addUser(userId: String, userEmail: String) {
@@ -84,17 +93,19 @@ class LoginViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            getUserActivityUseCase(userId).get().addOnSuccessListener {
+                getUserActivityUseCase(userId).get().addOnSuccessListener {
 
-                Log.i("viewModel_4", it.value.toString())
-                _loginUserActivity = it.value
-                Log.i("viewModel_5", _loginUserActivity.toString())
+                    //_loginUserActivity = it.value
+                    _loginUserActivity.postValue(it.value)
+                    Log.d("viewModel_4", _loginUserActivity.value.toString())
 
-            }.addOnFailureListener {
-                Log.i("sdfsdfsdfFailed", it.message.toString())
-            }
+                }.addOnFailureListener {
+                    Log.i("sdfsdfsdfFailed", it.message.toString())
+                }
+
 
         }
+
     }
 
 //        fun setGenderInfo(gender: String) {
