@@ -17,11 +17,10 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
 
     private val args by navArgs<PersonalInfoFragmentArgs>()
 
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val loginViewModel: PersonalInfoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
 
     }
@@ -31,10 +30,7 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
 
         val userId = args.userId
 
-
-       personalInfoWork(userId)
-
-
+        personalInfoWork(userId)
 
     }
 
@@ -83,8 +79,6 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
                 binding.maleButton.isSelected = binding.maleButton.isSelected != true
                 loginViewModel.setGenderInfo("male")
             }
-
-
         }
 
         binding.femaleButton.setOnClickListener {
