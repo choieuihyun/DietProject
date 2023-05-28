@@ -9,7 +9,7 @@ interface FirebaseRepository {
 
     suspend fun test(value: String)
 
-    suspend fun addUser(userId: String, user: UserModel)
+    suspend fun addUser(userId: String, userEmail: String)
 
     suspend fun getUser(userId: String) : DatabaseReference
 
@@ -22,6 +22,6 @@ interface FirebaseRepository {
                             weight: Float,
                             activity: String)
 
-    suspend fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: Date)
+    suspend fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: Int)
 
 }

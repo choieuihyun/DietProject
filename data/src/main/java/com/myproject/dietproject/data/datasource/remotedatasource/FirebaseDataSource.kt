@@ -72,11 +72,11 @@ class FirebaseDataSource @Inject constructor(
 
     }
 
-    fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: Date) {
+    fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: Int) {
         firebase.getReference("user").child(userId).child("todayKcal").let {
-            it.setValue(kcal)
-            it.setValue(foodName)
-            it.setValue(date)
+            it.child("kcal").setValue(kcal)
+            it.child("foodName").setValue(foodName)
+            it.child("date").setValue(date)
         }
     }
 }

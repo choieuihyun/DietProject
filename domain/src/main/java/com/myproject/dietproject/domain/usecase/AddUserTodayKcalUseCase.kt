@@ -8,7 +8,7 @@ class AddUserTodayKcalUseCase @Inject constructor(
     private val repository: FirebaseRepository
 ) {
 
-    suspend operator fun invoke(userId: String, kcal: Float, foodName: String, date: Date) {
+    suspend operator fun invoke(userId: String, kcal: Float, foodName: String, date: Int) {
         repository.addTodayKcal(userId, kcal, foodName, date)
     }
 

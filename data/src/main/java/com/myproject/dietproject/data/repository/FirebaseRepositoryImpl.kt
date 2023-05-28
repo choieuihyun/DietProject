@@ -40,7 +40,7 @@ class FirebaseRepositoryImpl @Inject constructor(
         firebaseDataSource.addUserInfo(userId, gender, age, height, weight, activity)
     }
 
-    override suspend fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: Date) {
+    override suspend fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: Int) {
         firebaseDataSource.addTodayKcal(userId, kcal, foodName, date)
     }
 
