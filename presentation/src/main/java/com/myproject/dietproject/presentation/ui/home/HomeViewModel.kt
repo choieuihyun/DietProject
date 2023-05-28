@@ -1,6 +1,7 @@
 package com.myproject.dietproject.presentation.ui.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,8 +15,8 @@ import com.myproject.dietproject.presentation.ui.util.toErrorMessage
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +42,6 @@ class HomeViewModel @Inject constructor(
     private val _isError: MutableLiveData<Boolean> = MutableLiveData()
     val isError: LiveData<Boolean> = _isError
 
-
     fun getKcalData(descKor : String) {
 
         viewModelScope.launch {
@@ -65,11 +65,16 @@ class HomeViewModel @Inject constructor(
 
     fun addUserTodayKcal(userId: String, kcal: Float, foodName: String) {
 
-        val date = Calendar.getInstance().time
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val a = dateFormat.format(calendar.time)
+        //val day = calendar.get()
 
-        viewModelScope.launch {
-            addUserTodayKcalUseCase(userId, kcal, foodName, date)
-        }
+        Log.d("sdfsdf", a.toString())
+
+//        viewModelScope.launch {
+//            addUserTodayKcalUseCase(userId, kcal, foodName, day)
+//        }
 
     }
 
