@@ -22,6 +22,6 @@ interface FirebaseRepository {
                             weight: Float,
                             activity: String)
 
-    suspend fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: Int)
+    suspend fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: String)
 
 }
