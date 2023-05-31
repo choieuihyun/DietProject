@@ -37,6 +37,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
     private lateinit var auth: FirebaseAuth
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var callback: OnBackPressedCallback
+    private lateinit var userId: String
 
     private var backPressedTime: Long = 0
 
@@ -70,6 +71,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
+
 
         //googleLogin() // 처음에 이걸로 로그인 되어있는지 안되어있는지 확인
 
@@ -119,7 +121,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
         auth.signInWithEmailAndPassword(binding.emailEdt.text.toString(), binding.pwEdt.text.toString())
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    moveMainPage()
+                    moveMainPage(auth)
                 } else {
                     Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT)
                         .show()
@@ -223,7 +225,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                         } else if (it == "hardActivity" || it == "middleActivity" || it == "lightActivity") {
 
                             Log.d("viewModel_3",viewModel.loginUserActivity.value.toString())
-                            moveMainPage()
+                            moveMainPage(auth)
 
                         }
 
@@ -240,9 +242,12 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
     }
 
 
-    private fun moveMainPage() {
+    private fun moveMainPage(auth: FirebaseAuth) {
 
-        Navigation.findNavController(binding.root).navigate(R.id.action_loginFragment_to_homeFragment)
+        userId = auth.currentUser!!.uid
+        val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment(userId)
+        findNavController().navigate(action)
+        //Navigation.findNavController(binding.root).navigate(R.id.action_loginFragment_to_homeFragment)
 
     }
 
