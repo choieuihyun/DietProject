@@ -23,4 +23,16 @@ class FirebaseRepositoryImpl @Inject constructor(
         return firebaseDataSource.getUser(userId)
     }
 
+    override suspend fun addUserInfo(
+        userId: String,
+        gender: String,
+        age: Int,
+        height: Float,
+        weight: Float,
+        activity: String
+    ) {
+        firebaseDataSource.addUserInfo(userId, gender, age, height, weight, activity)
+    }
+
+
 }

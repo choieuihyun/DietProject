@@ -186,18 +186,19 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                 val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
                     personId.toString(),
                     personEmail.toString(),
-                    24,
-                    160.4F,
-                    150.2F,
+                    "",
                     0,
+                    0.0F,
+                    0.0F,
+                    "",
                     null
                 )
                 viewModel.addUser(personId.toString(), user)
 
                 viewModel.getUser(personId.toString())
 
-                if(user.activity == 0)
-                    movePersonalInfoPage(user)
+                if(user.activity == "")
+                    movePersonalInfoPage(personId.toString())
                 else
                     moveMainPage()
 
@@ -245,10 +246,11 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
     }
 
-    private fun movePersonalInfoPage(user: UserModel) {
-        val action = LoginFragmentDirections.actionLoginFragmentToPersonalInfoFragment(user)
+    private fun movePersonalInfoPage(userId: String) {
+        val action = LoginFragmentDirections.actionLoginFragmentToPersonalInfoFragment(userId)
         findNavController().navigate(action)
     }
+
 
     companion object {
         private const val RC_SIGN_IN = 9001

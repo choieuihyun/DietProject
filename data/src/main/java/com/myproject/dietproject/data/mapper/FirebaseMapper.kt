@@ -8,6 +8,7 @@ fun User.toModel() = UserModel(
 
     uid = uid,
     email = email,
+    gender = gender,
     age = age,
     height = height,
     weight= weight,
