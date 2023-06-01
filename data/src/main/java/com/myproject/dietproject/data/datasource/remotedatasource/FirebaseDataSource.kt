@@ -3,7 +3,7 @@ package com.myproject.dietproject.data.datasource.remotedatasource
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.myproject.dietproject.data.db.remote.firebase.userdata.User
+import java.util.Date
 
 import javax.inject.Inject
 
@@ -15,19 +15,21 @@ class FirebaseDataSource @Inject constructor(
         return firebase.getReference("test")
     }
 
-    fun addUser(userId: String, user: User): Task<Void> {
-        return firebase.getReference("user").child(userId).setValue(user)
+    fun addUser(userId: String, userEmail: String): Task<Void> {
+        return firebase.getReference("user").child(userId).let {
+            it.child("email").setValue(userEmail)
+            it.child("uid").setValue(userId)
+        }
     }
-
 
     // 이걸 왜하냐면 로그인(구글,이메일)에서 personType이 비어있으면 personalInfo로 넘어가게 하려고 해놨음.
     fun getUser(userId: String): DatabaseReference { // 여기서 userId는 구글기준으론 account.id, 이메일 기준으론 uid
         return firebase.getReference("user").child(userId)
     }
 
-//    fun addUserInfo(userId: String, data: Any) { 이렇게 타입 검사로 분기해서 하고싶은데
-//
-//    }
+    fun getUserActivity(userId: String): DatabaseReference {
+        return firebase.getReference("user").child(userId).child("activity")
+    }
 
     fun addUserGenderInfo(userId: String, gender: String) {
         firebase.getReference("user").child(userId).child(gender).setValue(gender)
@@ -68,5 +70,12 @@ class FirebaseDataSource @Inject constructor(
 
         }
 
+    }
+
+    fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: String) {
+        firebase.getReference("user").child(userId).child("todayKcal").child(date).let {
+            it.child("kcal").setValue(kcal)
+            it.child("foodName").setValue(foodName)
+        }
     }
 }
