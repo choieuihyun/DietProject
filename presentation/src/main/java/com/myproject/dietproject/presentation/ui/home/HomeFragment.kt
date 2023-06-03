@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -46,9 +47,9 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
 
-      //  val userId = args.userId
+        //  val userId = args.userId
 
-            binding.dbTest.setOnClickListener {
+        binding.dbTest.setOnClickListener {
 
             viewModel.getKcalData("감자")
 
@@ -66,6 +67,12 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
                 }
             }
+
+        }
+
+        binding.setDataButton.setOnClickListener {
+
+            Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_kcalFragment)
 
         }
 
