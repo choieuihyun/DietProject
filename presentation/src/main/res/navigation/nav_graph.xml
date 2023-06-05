@@ -11,6 +11,9 @@
         <argument
             android:name="userId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_homeFragment_to_kcalFragment"
+            app:destination="@id/kcalFragment" />
     </fragment>
     <fragment
         android:id="@+id/calendarFragment"
@@ -68,4 +71,8 @@
             android:name="userId"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/kcalFragment"
+        android:name="com.myproject.dietproject.presentation.ui.userkcal.KcalFragment"
+        android:label="KcalFragment" />
 </navigation>
