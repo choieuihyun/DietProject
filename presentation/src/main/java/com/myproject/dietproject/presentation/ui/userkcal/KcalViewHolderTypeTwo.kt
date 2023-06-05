@@ -3,10 +3,10 @@ package com.myproject.dietproject.presentation.ui.userkcal
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.myproject.dietproject.domain.model.Kcal
-import com.myproject.dietproject.presentation.databinding.KcalListItemBinding
+import com.myproject.dietproject.presentation.databinding.KcalListItemTypeTwoBinding
 
-class KcalViewHolder(
-    private val binding: KcalListItemBinding
+class KcalViewHolderTypeTwo(
+    private val binding: KcalListItemTypeTwoBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(userKcal: Kcal) {
