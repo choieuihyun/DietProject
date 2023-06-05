@@ -3,6 +3,7 @@ package com.myproject.dietproject.presentation.ui.userkcal
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,7 +19,6 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
     private lateinit var kcalListAdapter : KcalAdapter
     private val viewModel: KcalViewModel by viewModels()
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -26,19 +26,24 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
 
         setupEdittext()
 
-        setupUI("감자")
+        setupUI()
 
     }
 
-    private fun setupUI(dESCKOR : String) {
+    private fun setupUI() {
 
-        viewModel.getKcalData(dESCKOR)
+        binding.searchButton.setOnClickListener {
 
-        viewModel.kcalData.observe(viewLifecycleOwner) {
-            if(it != null) {
-                kcalListAdapter.submitList(it)
-            } else {
-                binding.addUserKcalRecyclerView.visibility = View.GONE
+            val searchText = binding.appCompatEditText.text.toString()
+
+            viewModel.getKcalData(searchText)
+
+            viewModel.kcalData.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    kcalListAdapter.submitList(it)
+                } else {
+                    binding.addUserKcalRecyclerView.visibility = View.GONE
+                }
             }
         }
 
@@ -53,6 +58,10 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             adapter = kcalListAdapter
+        }
+
+        kcalListAdapter.setOnItemClickListener {
+            Log.d("AdapterClickEvent", it.toString())
         }
 
     }
@@ -70,8 +79,6 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
             }
 
             override fun afterTextChanged(s: Editable?) {
-
-                val searchText = binding.appCompatEditText.text.toString()
 
             }
 
