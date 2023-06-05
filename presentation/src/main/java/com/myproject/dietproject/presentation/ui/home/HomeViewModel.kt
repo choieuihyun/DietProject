@@ -1,6 +1,7 @@
 package com.myproject.dietproject.presentation.ui.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,6 @@ import com.myproject.dietproject.domain.error.NetworkResult
 import com.myproject.dietproject.domain.model.Kcal
 import com.myproject.dietproject.domain.usecase.AddUserTodayKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetKcalUseCase
-import com.myproject.dietproject.domain.usecase.GetUserUseCase
 import com.myproject.dietproject.presentation.ui.util.Event
 import com.myproject.dietproject.presentation.ui.util.toErrorMessage
 import dagger.hilt.android.internal.Contexts.getApplication
@@ -18,13 +18,11 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import javax.inject.Inject
-import kotlin.math.floor
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val application: Application,
     private val getKcalUseCase: GetKcalUseCase,
-    private val getUserUseCase: GetUserUseCase,
     private val addUserTodayKcalUseCase: AddUserTodayKcalUseCase
 ) : ViewModel() {
 
@@ -69,11 +67,14 @@ class HomeViewModel @Inject constructor(
 
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val date = dateFormat.format(calendar.time)
+        val a = dateFormat.format(calendar.time)
+        //val day = calendar.get()
 
-        viewModelScope.launch {
-            addUserTodayKcalUseCase(userId, floor(kcal), foodName, date.toString())
-        }
+        Log.d("sdfsdf", a.toString())
+
+//        viewModelScope.launch {
+//            addUserTodayKcalUseCase(userId, kcal, foodName, day)
+//        }
 
     }
 
