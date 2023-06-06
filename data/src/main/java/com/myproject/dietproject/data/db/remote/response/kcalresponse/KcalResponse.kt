@@ -36,12 +36,12 @@ data class KcalData(
 //    val nUM: String?,
     @SerializedName("NUTR_CONT1") // 열량(kcal) NUTR 붙은건 1회 제공량당
     val nUTRCONT1: String?,
-//    @SerializedName("NUTR_CONT2") // 탄수화물
-//    val nUTRCONT2: String?,
-//    @SerializedName("NUTR_CONT3") // 단백질
-//    val nUTRCONT3: String?,
-//    @SerializedName("NUTR_CONT4") // 지방
-//    val nUTRCONT4: String?,
+    @SerializedName("NUTR_CONT2") // 탄수화물
+    val nUTRCONT2: String?,
+    @SerializedName("NUTR_CONT3") // 단백질
+    val nUTRCONT3: String?,
+    @SerializedName("NUTR_CONT4") // 지방
+    val nUTRCONT4: String?,
 //    @SerializedName("NUTR_CONT5") // 당류
 //    val nUTRCONT5: String?,
 //    @SerializedName("NUTR_CONT6") // 나트륨
