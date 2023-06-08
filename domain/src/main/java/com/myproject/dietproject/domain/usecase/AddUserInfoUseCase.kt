@@ -12,9 +12,10 @@ class AddUserInfoUseCase @Inject constructor(
                                 age: Int,
                                 height: Float,
                                 weight: Float,
+                                recommendKcal: Int,
                                 activity: String) {
 
-        repository.addUserInfo(userId, gender, age, height, weight, activity)
+        repository.addUserInfo(userId, gender, age, height, weight, recommendKcal, activity)
 
     }
 }
