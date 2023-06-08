@@ -15,7 +15,7 @@ class KcalDetailViewModel @Inject constructor(
     private val addUserTodayKcalUseCase : AddUserTodayKcalUseCase
 ) : ViewModel() {
 
-    fun plusServing(serving: Float) : Float {
+    fun plusServingCalculator(serving: Float) : Float {
 
         var result = 0.0F
 
@@ -25,11 +25,9 @@ class KcalDetailViewModel @Inject constructor(
 
     }
 
-    fun minusServing(serving: Float) : Float {
+    fun minusServingCalculator(serving: Float) : Float {
 
-        var result = 0.0F
-
-        result = serving - 0.5F
+        var result = serving - 0.5F
 
         if(result <= 0)
             result = serving - 0.0F
@@ -38,11 +36,18 @@ class KcalDetailViewModel @Inject constructor(
 
     }
 
-    fun multiCalculator(data: Float, number: Float): Float {
+    fun plusCalculator(data: Float, number: Float): Float {
 
-        var result = 0.0F
+        return data * number
 
-        result = data + (data * 0.5F)
+    }
+
+    fun minusCalculator(data: Float, data2: Float): Float {
+
+        val result = data - (data2 * 0.5F)
+
+        if(result <= 0)
+            return data
 
         return result
 
@@ -51,7 +56,7 @@ class KcalDetailViewModel @Inject constructor(
     fun addUserTodayKcal(userId: String, kcal: Float, foodName: String) {
 
         val calendar = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val date = dateFormat.format(calendar.time)
 
         viewModelScope.launch {

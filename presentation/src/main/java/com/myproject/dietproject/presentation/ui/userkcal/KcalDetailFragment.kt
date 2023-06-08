@@ -3,6 +3,7 @@ package com.myproject.dietproject.presentation.ui.userkcal
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.KcalDetailFragmentBinding
@@ -36,16 +37,15 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
 
             val serving = binding.servingEdittext.text.toString().toFloat()
 
-            val servingResult = viewModel.plusServing(serving)
+            val servingResult = viewModel.plusServingCalculator(serving) // 이게 그 인분 쁠마
 
-            val servingKcal = binding.kcal.text.toString().toFloat()
+            val servingKcal = kcal?.nUTRCONT1
 
-            binding.kcal.text = viewModel.multiCalculator(servingKcal , servingResult).toString()
+            if (servingKcal != null) {
+                binding.kcal.text = viewModel.plusCalculator(servingKcal.toFloat() , servingResult).toString()
+            }
 
             binding.servingEdittext.setText(servingResult.toString())
-
-
-
 
         }
 
@@ -53,9 +53,25 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
 
             val serving = binding.servingEdittext.text.toString().toFloat()
 
-            val servingResult = viewModel.minusServing(serving)
+            val servingResult = viewModel.minusServingCalculator(serving)
+
+            val servingKcal = kcal?.nUTRCONT1
+
+            val kcalData = binding.kcal.text.toString().toFloat()
+
+            if (servingKcal != null) {
+                binding.kcal.text = viewModel.minusCalculator(kcalData, servingKcal.toFloat()).toString()
+            }
 
             binding.servingEdittext.setText(servingResult.toString())
+
+        }
+
+        binding.dataInputButton.setOnClickListener {
+
+            viewModel.addUserTodayKcal(args.userId, binding.kcal.text.toString().toFloat(), binding.foodName.text.toString())
+
+            Navigation.findNavController(binding.root).navigate(R.id.action_kcalDetailFragment_to_homeFragment)
 
         }
 
