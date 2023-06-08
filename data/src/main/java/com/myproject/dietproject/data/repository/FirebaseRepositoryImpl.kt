@@ -22,8 +22,17 @@ class FirebaseRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUser(userId: String) : DatabaseReference {
-        return firebaseDataSource.getUser(userId)
+        return firebaseDataSource.getUser().child(userId)
     }
+
+    override suspend fun getUserTodayKcal(userId: String, date: String): DatabaseReference {
+        return firebaseDataSource.getUser().child(userId).child("todayKcal")
+    }
+
+    override suspend fun getUserRecommendKcal(userId: String) : DatabaseReference {
+        return firebaseDataSource.getUser().child(userId).child("recommendKcal")
+    }
+
 
     override suspend fun getUserActivity(userId: String): DatabaseReference {
         return firebaseDataSource.getUserActivity(userId)
@@ -35,9 +44,10 @@ class FirebaseRepositoryImpl @Inject constructor(
         age: Int,
         height: Float,
         weight: Float,
+        recommendKcal: Int,
         activity: String
     ) {
-        firebaseDataSource.addUserInfo(userId, gender, age, height, weight, activity)
+        firebaseDataSource.addUserInfo(userId, gender, age, height, weight, recommendKcal, activity)
     }
 
     override suspend fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: String) {
