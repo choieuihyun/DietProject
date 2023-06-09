@@ -1,22 +1,31 @@
 package com.myproject.dietproject.presentation.ui.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import com.myproject.dietproject.domain.error.NetworkResult
 import com.myproject.dietproject.domain.model.Kcal
 import com.myproject.dietproject.domain.usecase.AddUserTodayKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetKcalUseCase
+import com.myproject.dietproject.domain.usecase.GetUserRecommendKcalUseCase
+import com.myproject.dietproject.domain.usecase.GetUserTodayKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserUseCase
 import com.myproject.dietproject.presentation.ui.util.Event
 import com.myproject.dietproject.presentation.ui.util.toErrorMessage
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.floor
 
@@ -25,7 +34,8 @@ class HomeViewModel @Inject constructor(
     private val application: Application,
     private val getKcalUseCase: GetKcalUseCase,
     private val getUserUseCase: GetUserUseCase,
-    private val addUserTodayKcalUseCase: AddUserTodayKcalUseCase
+    private val getUserTodayKcalUseCase: GetUserTodayKcalUseCase,
+    private val getUserRecommendKcalUseCase: GetUserRecommendKcalUseCase
 ) : ViewModel() {
 
     private val _kcalData = MutableLiveData<List<Kcal>?>()
@@ -44,38 +54,78 @@ class HomeViewModel @Inject constructor(
     private val _isError: MutableLiveData<Boolean> = MutableLiveData()
     val isError: LiveData<Boolean> = _isError
 
-    fun getKcalData(descKor : String) {
+    private var _todayKcal: MutableLiveData<Float> = MutableLiveData()
+    val todayKcal: LiveData<Float> = _todayKcal
 
-        viewModelScope.launch {
-            _isLoading.postValue(true)
-            when (val result = getKcalUseCase(descKor)) {
-                is NetworkResult.Success -> {
-                    _kcalData.value = result.data
-                    _isLoading.postValue(false)
-                    _isError.postValue(false)
-                }
+    private var _recommendKcal: MutableLiveData<Int> = MutableLiveData()
+    val recommendKcal: LiveData<Int> = _recommendKcal
 
-                is NetworkResult.Error -> {
-                    val msg = result.errorType.toErrorMessage(getApplication(application).applicationContext)
-                    _showToast.value = Event(msg)
-                    _isLoading.postValue(false)
-                    _isError.postValue(true)
-                }
-            }
-        }
-    }
+    private var _scarceKcal: MutableLiveData<Int> = MutableLiveData()
+    val scarceKcal: LiveData<Int> = _scarceKcal
 
-    fun addUserTodayKcal(userId: String, kcal: Float, foodName: String) {
+    private var calculTodayKcal: Float = 0.0F
+    private var calculRecommendKcal = 0
+
+    fun getUserTodayKcalData(userId: String) {
 
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val date = dateFormat.format(calendar.time)
+        //val today = dateFormat.format(calendar.time)
+        val currentDate = "2023-06-09"
 
-        viewModelScope.launch {
-            addUserTodayKcalUseCase(userId, floor(kcal), foodName, date.toString())
+        viewModelScope.launch(Dispatchers.IO) {
+
+            var sum = 0.0F
+
+            getUserTodayKcalUseCase(userId, currentDate).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    for (data in snapshot.children) {
+                        val dataDate = data.key?.substring(0, 10)
+
+                        if (dataDate == "2023-06-09") {
+                            val kcal = data.child("kcal").value
+                            sum += kcal.toString().toFloat()
+                        }
+                    }
+                    _todayKcal.value = sum
+                    calculTodayKcal = sum
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+
         }
 
     }
+
+    fun getRecommendKcalData(userId: String) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+
+            getUserRecommendKcalUseCase(userId).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    _recommendKcal.value = snapshot.value.toString().toInt()
+                    calculRecommendKcal = _recommendKcal.value.toString().toInt()
+                    _scarceKcal.value = calculRecommendKcal - calculTodayKcal.toInt()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+
+            })
+
+        }
+
+    }
+
+
+
 
 }
 
