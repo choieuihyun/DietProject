@@ -8,6 +8,10 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
+import androidx.navigation.findNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
@@ -19,14 +23,24 @@ import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.CalendarDayLayoutBinding
 import com.myproject.dietproject.presentation.databinding.CalendarFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.*
 
-
+@AndroidEntryPoint
 class CalendarFragment: BaseFragment<CalendarFragmentBinding>(R.layout.calendar_fragment) {
+
+    private lateinit var auth: FirebaseAuth
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        auth = Firebase.auth
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,20 +60,6 @@ class CalendarFragment: BaseFragment<CalendarFragmentBinding>(R.layout.calendar_
                 daySize = Size(binding.calendarView.width/7, binding.calendarView.height/5) // cell의 height
             }
 
-//            binding.btnMonthNext.setOnClickListener {
-//                monthScrollListener = {
-//                        calendarMonth -> onMonthScroll(calendarMonth.yearMonth.next)
-//                }
-//
-//            }
-//
-//            binding.btnMonthPrev.setOnClickListener {
-//                monthScrollListener = {
-//                        calendarMonth -> onMonthScroll(calendarMonth.yearMonth)
-//                }
-//            }
-
-
             val currentMonth = YearMonth.now()
             val firstMonth = currentMonth.minusMonths(240)
             val lastMonth = currentMonth.plusMonths(240)
@@ -76,9 +76,9 @@ class CalendarFragment: BaseFragment<CalendarFragmentBinding>(R.layout.calendar_
                 override fun bind(container: DayViewContainer, day: CalendarDay) {
                     val intent = Intent(requireContext(), com.myproject.dietproject.presentation.ui.MainActivity::class.java)
                     container.view.setOnClickListener {
-                        val clickedDate = "${day.date.year}-${(day.date.monthValue)}-${day.date.dayOfMonth}-${(day.date.dayOfWeek)}" // df.format(day.date.monthValue) 인데 에러때문에 빼봄
-//                        intent.putExtra("clickedDate", clickedDate)
-//                        startActivity(intent)
+                        val clickedDate = "${day.date}" // df.format(day.date.monthValue) 인데 에러때문에 빼봄
+                        val action = CalendarFragmentDirections.actionCalendarFragmentToCalenderDetailFragment(auth.currentUser!!.uid, clickedDate)
+                        findNavController().navigate(action)
                         Log.d("sdfsdf", clickedDate.toString())
                     }
 
