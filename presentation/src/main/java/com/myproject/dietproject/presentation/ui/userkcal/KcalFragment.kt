@@ -6,6 +6,8 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.myproject.dietproject.presentation.R
@@ -18,6 +20,7 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
 
     private lateinit var kcalListAdapter : KcalAdapter
     private val viewModel: KcalViewModel by viewModels()
+    private val args by navArgs<KcalFragmentArgs>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +64,9 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
         }
 
         kcalListAdapter.setOnItemClickListener {
-            Log.d("AdapterClickEvent", it.toString())
+            kcal ->
+            val action = KcalFragmentDirections.actionKcalFragmentToKcalDetailFragment(args.userId, kcal)
+            findNavController().navigate(action)
         }
 
     }
