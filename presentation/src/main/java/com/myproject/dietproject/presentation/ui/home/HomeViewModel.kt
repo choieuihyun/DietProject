@@ -1,7 +1,6 @@
 package com.myproject.dietproject.presentation.ui.home
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,25 +8,18 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.getValue
-import com.myproject.dietproject.domain.error.NetworkResult
 import com.myproject.dietproject.domain.model.Kcal
-import com.myproject.dietproject.domain.usecase.AddUserTodayKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserRecommendKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserTodayKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserUseCase
 import com.myproject.dietproject.presentation.ui.util.Event
-import com.myproject.dietproject.presentation.ui.util.toErrorMessage
-import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
-import kotlin.math.floor
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -70,20 +62,19 @@ class HomeViewModel @Inject constructor(
 
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        //val today = dateFormat.format(calendar.time)
-        val currentDate = "2023-06-09"
+        val today = dateFormat.format(calendar.time)
 
         viewModelScope.launch(Dispatchers.IO) {
 
             var sum = 0.0F
 
-            getUserTodayKcalUseCase(userId, currentDate).addValueEventListener(object : ValueEventListener {
+            getUserTodayKcalUseCase(userId, today).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     for (data in snapshot.children) {
                         val dataDate = data.key?.substring(0, 10)
 
-                        if (dataDate == "2023-06-09") {
+                        if (dataDate == today) {
                             val kcal = data.child("kcal").value
                             sum += kcal.toString().toFloat()
                         }
