@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -35,6 +36,8 @@ class CalendarFragment: BaseFragment<CalendarFragmentBinding>(R.layout.calendar_
 
     private lateinit var auth: FirebaseAuth
 
+    private val viewModel: CalendarViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,7 +48,13 @@ class CalendarFragment: BaseFragment<CalendarFragmentBinding>(R.layout.calendar_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getCalendarDate()
+
         setCalendarView()
+
+
+
+
     }
 
     class DayViewContainer(view: View) : ViewContainer(view) {
@@ -110,13 +119,16 @@ class CalendarFragment: BaseFragment<CalendarFragmentBinding>(R.layout.calendar_
             binding.btnMonthNext.setOnClickListener {
                 binding.calendarView.findFirstVisibleMonth()?.let {
                     binding.calendarView.smoothScrollToMonth(it.yearMonth.next)
-
+                    binding.tvCalendarIndicator.text = it.yearMonth.next.toString()
                 }
             }
+
+
 
             binding.btnMonthPrev.setOnClickListener {
                 binding.calendarView.findFirstVisibleMonth()?.let {
                     binding.calendarView.smoothScrollToMonth(it.yearMonth.previous)
+                    binding.tvCalendarIndicator.text = it.yearMonth.previous.toString()
                 }
             }
 
