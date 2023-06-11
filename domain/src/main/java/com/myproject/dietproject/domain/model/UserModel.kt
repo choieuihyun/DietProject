@@ -13,6 +13,7 @@ data class UserModel (
     val height: Float = 0.0F, // 키
     val weight: Float = 0.0F, // 몸무게
     val activity: String = "", // 활동량, 1(가벼움), 2(중간), 3(많음)
+    val recommendKcal: Float = 0.0F,
     val todayKcal: TodayKcal? = null // 오늘 먹은 칼로리
 ) : Serializable
 
@@ -21,6 +22,16 @@ data class TodayKcal ( // 하루에 먹은 칼로리
 
     val kcal: Float,
     val foodName: String,
+    val makerName: String,
     val date: Date
 
 )
+
+data class TodayKcalForCalendar ( // 하루에 먹은 칼로리
+
+    val kcal: Float,
+    val foodName: String,
+    val makerName: String,
+
+)
+

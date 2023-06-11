@@ -53,14 +53,14 @@ class KcalDetailViewModel @Inject constructor(
 
     }
 
-    fun addUserTodayKcal(userId: String, kcal: Float, foodName: String) {
+    fun addUserTodayKcal(userId: String, kcal: Float, foodName: String, makerName: String) {
 
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val date = dateFormat.format(calendar.time)
 
         viewModelScope.launch {
-            addUserTodayKcalUseCase(userId, floor(kcal), foodName, date.toString())
+            addUserTodayKcalUseCase(userId, floor(kcal), foodName, makerName, date.toString())
         }
 
     }
