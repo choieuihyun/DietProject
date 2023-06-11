@@ -17,6 +17,10 @@
     <string name="today">오늘 섭취 칼로리</string>
     <string name="not_enough">부족한 칼로리</string>
 
+    <!-- calendarDetail -->
+
+    <string name="calendar_detail_kcal">%s kcal</string>
+
     <!-- network error message -->
 
     <string name="error_msg">An error occurred during\nnetwork communication.</string>
