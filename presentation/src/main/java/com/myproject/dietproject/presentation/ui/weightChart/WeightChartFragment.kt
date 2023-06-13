@@ -15,6 +15,9 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.utils.EntryXComparator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -26,7 +29,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.weight_chart_fragment)  {
+class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.weight_chart_fragment) {
 
 //    private lateinit var lineChart: LineChart
 
@@ -49,10 +52,12 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
 
         weightChart = binding.weightChart
 
-        viewModel.weekDateArray.observe(viewLifecycleOwner) {
-                weekDateArray -> viewModel.weekKcalArray.observe(viewLifecycleOwner) {
+        /*        viewModel.weekDateArray.observe(viewLifecycleOwner) { weekDateArray ->
+            viewModel.weekKcalArray.observe(viewLifecycleOwner) { weekKcalArray ->
 
-                    weekKcalArray -> setupChartUI(viewModel.setChartData()).let {
+                viewModel.updateChartData()
+
+                setupChartUI(viewModel.entries).let {
 
                         chartData -> weightChart.data = chartData
                                      chartSetting(weightChart, chartData)
@@ -60,8 +65,23 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
 
                 }
             }
-        }
+        }*/
 
+        viewModel.weekDateArray.observe(viewLifecycleOwner) { weekData ->
+            viewModel.weekKcalArray.observe(viewLifecycleOwner) {
+
+                viewModel.updateChartData()
+
+                setupChartUI(viewModel.entries).let {
+
+                        chartData ->
+                    weightChart.data = chartData
+                    chartSetting(weightChart, chartData, weekData)
+                    chartMarkerSetting(weightChart)
+
+                }
+            }
+        }
 
         viewModel.startOfWeek.observe(viewLifecycleOwner) {
             binding.startOfWeek.text = it
@@ -82,16 +102,18 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
         binding.chartBtnWeekPrev.setOnClickListener {
             viewModel.movePreviousWeek()
             onPreviousButtonClicked(auth.currentUser!!.uid)
+
         }
 
     }
 
     // DataSet line custom
-    private fun setupChartUI(data: List<Entry>) : LineData {
+    private fun setupChartUI(data: List<Entry>): LineData {
 
         // 아 아까 데이터 여러개 붙였을때도 안됐던 이유가 x를 마구잡이로해서(역순) 그랬던 것이구나. x는 오름차순이 되어야함.
         // 그렇다고 정렬할 수는 없다? 는 아닌거같은데 흠 x기준으로 정렬하는게 맞지 사실. 근데 애초에 날짜 순으로 입력되는데 굳이 정렬을?
         val lineData = LineData()
+
         val lineDataSet = LineDataSet(data, "Kcal")
 
         lineData.addDataSet(lineDataSet)
@@ -106,72 +128,39 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
             setDrawHorizontalHighlightIndicator(false)
             setDrawHighlightIndicators(false)
             setDrawValues(false)
-
         }
 
         return lineData
 
     }
 
-/*    private fun chartDataSetting() : LineData {
-
-        val lineData = LineData()
-
-        val entries: ArrayList<Entry> = ArrayList() // 여긴 나중에 데이터 받아올테니까 getChartData 메소드로 빼줘야하나?
-        entries.add(Entry(0.0F,5.0F)) // 아마 x가 날짜, y가 칼로리가 될 듯 하다.
-        entries.add(Entry(1.0F,2.0F))
-        entries.add(Entry(2.0F,3.0F))
-        entries.add(Entry(3.0F,1.0F))
-        entries.add(Entry(4.0F,4.0F))
-        entries.add(Entry(5.0F,6.0F))
-        entries.add(Entry(6.0F,3.0F))
-
-
-        // 아 아까 데이터 여러개 붙였을때도 안됐던 이유가 x를 마구잡이로해서(역순) 그랬던 것이구나. x는 오름차순이 되어야함.
-        // 그렇다고 정렬할 수는 없다? 는 아닌거같은데 흠 x기준으로 정렬하는게 맞지 사실. 근데 애초에 날짜 순으로 입력되는데 굳이 정렬을?
-
-        val lineDataSet = LineDataSet(entries, "Kcal")
-        lineData.addDataSet(lineDataSet)
-
-        lineDataSet.lineWidth = 2f
-        lineDataSet.circleRadius = 6f
-        lineDataSet.setCircleColor(Color.parseColor("#FFA1B4DC"))
-        lineDataSet.circleHoleColor // (Color.BLUE)가 안들어가는데?
-        lineDataSet.color = Color.parseColor("#FFA1B4DC")
-        lineDataSet.setDrawCircleHole(true)
-        lineDataSet.setDrawCircles(true)
-        lineDataSet.setDrawHorizontalHighlightIndicator(false)
-        lineDataSet.setDrawHighlightIndicators(false)
-        lineDataSet.setDrawValues(false)
-
-        return lineData
-
-    }*/
-
-    private fun chartSetting(lineChart: LineChart, lineData: LineData) {
+    private fun chartSetting(lineChart: LineChart, lineData: LineData, dateList: MutableList<String>) {
 
         // 차트 범례 조정
         val legend: Legend = lineChart.legend
         legend.apply {
             form = Legend.LegendForm.CIRCLE
-            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM;
-            horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER;
-            orientation = Legend.LegendOrientation.VERTICAL;
-            yEntrySpace = 10f;
+            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+            horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+            orientation = Legend.LegendOrientation.VERTICAL
+            yEntrySpace = 10f
             textSize = 20f
-            xOffset = 80f;
-            yOffset = 20f;
+            xOffset = 80f
+            yOffset = 20f
         }
 
+        Log.d("previousDateList", dateList.toString())
         // x축 조정
         val xAxis: XAxis = lineChart.xAxis
-        xAxis.apply{
+        xAxis.apply {
             position = XAxis.XAxisPosition.BOTTOM
             textColor = Color.BLACK
             enableGridDashedLine(8f, 24f, 0f)
             spaceMin = 0.1f
             spaceMax = 0.1f
             textSize = 16f
+            valueFormatter = IndexAxisValueFormatter(dateList) // String 형태의 x 값이 들어있는 배열을 Formmatter 인자값으로 넣어줌
+            valueFormatter = xAxis.valueFormatter
             setDrawGridLines(false)
         }
 
@@ -180,13 +169,13 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
         yLAxis.apply {
             textColor = Color.BLACK
             axisMinimum = 0f
-            axisMaximum = lineData.yMax * 1.5.toFloat() // yMax하면 안됨 + 그냥 yMax로하면 차트 볼때 맨날 최대치 채워져있잖아 많이 먹은거마냥..
+            axisMaximum =
+                lineData.yMax * 1.5.toFloat() // yMax하면 안됨 + 그냥 yMax로하면 차트 볼때 맨날 최대치 채워져있잖아 많이 먹은거마냥..
             axisLineWidth = 2f // 축의 굵기
             textSize = 16f
             setDrawGridLines(false)
         }
 
-        Log.d("yMax", lineData.yMax.toString())
 
         // y축(오른쪽) 조정
         val yRAxis: YAxis = lineChart.axisRight
@@ -204,18 +193,23 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
         lineChart.description = description
         lineChart.animateY(2000, Easing.EaseInCubic)
         // EasingOption.EaseInCubic 원래 이거였음음
-        lineChart.invalidate()
 
-//        // XAxis에 원하는 String 설정하기 (날짜)
-//        xAxis.setValueFormatter(object : ValueFormatter() {
+
+        // XAxis에 원하는 String 설정하기 (날짜)
+//        xAxis.valueFormatter = object : ValueFormatter() {
 //            override fun getFormattedValue(value: Float): String {
 //                return LABEL.get(range).get(value.toInt())
 //            }
-//        })
+//        }
+
+
+
+        lineChart.invalidate()
     }
 
     private fun chartMarkerSetting(lineChart: LineChart) {
-        val marker = ChartMarkerView(requireContext(), R.layout.weight_chart_marker) // 이것도 구조 변경해야함.
+        val marker =
+            ChartMarkerView(requireContext(), R.layout.weight_chart_marker) // 이것도 구조 변경해야함.
         marker.chartView = lineChart
         lineChart.marker = marker
     }
@@ -229,25 +223,36 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
         val currentEndOfWeek = viewModel.endOfWeek.value
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val calendar = Calendar.getInstance()
 
-        calendar.time = dateFormat.parse(currentEndOfWeek)
-        calendar.add(Calendar.DAY_OF_WEEK, -7)
-        val previousEndOfWeek = dateFormat.format(calendar.time)
+        dateFormat.parse(currentStartOfWeek!!)
+        dateFormat.parse(currentEndOfWeek!!)
 
-        calendar.time = dateFormat.parse(previousEndOfWeek)
-        calendar.add(Calendar.DAY_OF_WEEK, -6)
-        val previousStartOfWeek = dateFormat.format(calendar.time)
+        viewModel.getPreviousWeekData(userId, currentStartOfWeek, currentEndOfWeek)
 
-//        calendar.time = dateFormat.parse(currentStartOfWeek.toString())
-//        calendar.add(Calendar.DAY_OF_WEEK, -7)
-//        val previousStartOfWeek = dateFormat.format(calendar.time)
-//
-//        calendar.time = dateFormat.parse(currentEndOfWeek.toString())
-//        calendar.add(Calendar.DAY_OF_WEEK, -7)
-//        val previousEndOfWeek = dateFormat.format(calendar.time)
+        Log.d("chartStartOfPreviousWeek", currentStartOfWeek.toString())
+        Log.d("chartEndOfPreviousWeek", currentEndOfWeek.toString())
 
-        viewModel.getPreviousWeekData(userId, previousStartOfWeek, previousEndOfWeek)
+        viewModel.previousWeekDateArray.observe(viewLifecycleOwner) { weekData ->
+            viewModel.previousWeekKcalArray.observe(viewLifecycleOwner) {
+
+                viewModel.updateChartPreviousData() // 왜 viewModel의 get function에서 안쓰냐면 위의 데이터들이 변화되고 난 후 변화된 데이터들로 이루어진 entries를 갈아줘야 제대로 된 엔트리를 사용하지
+                                                    // 실제로 viewModel.getPreviousWeekData(userId, currentStartOfWeek, currentEndOfWeek) 여기 아래에 array 로그 찍어보면 뭔지 알 수 있음.
+
+                setupChartUI(viewModel.entries).let {
+
+                        chartData ->
+
+                    weightChart.data = chartData
+                    chartSetting(weightChart,chartData, weekData)
+                    chartMarkerSetting(weightChart)
+
+                    Log.d("previousWeekDateArray", viewModel.previousWeekDateArray.value.toString())
+                    Log.d("previousWeekKcalArray", viewModel.previousWeekKcalArray.value.toString())
+                    Log.d("previousWeekEntry", viewModel.entries.toString())
+
+                }
+            }
+        }
     }
 }
 
