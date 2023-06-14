@@ -14,6 +14,7 @@ import com.google.firebase.database.ValueEventListener
 import com.myproject.dietproject.domain.model.TodayKcal
 import com.myproject.dietproject.domain.usecase.GetUserTodayKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserWeekKcalUseCase
+import com.myproject.dietproject.presentation.ui.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -44,17 +45,17 @@ class WeightChartViewModel @Inject constructor(
     private var _endOfPreviousWeek: MutableLiveData<String> = MutableLiveData()
     val endOfPreviousWeek: LiveData<String> = _endOfWeek
 
-    private var _weekKcalArray: MutableLiveData<MutableList<Int>> = MutableLiveData()
-    val weekKcalArray: LiveData<MutableList<Int>> = _weekKcalArray
+    private var _weekKcalArray: MutableLiveData<Event<MutableList<Int>>> = MutableLiveData()
+    val weekKcalArray: LiveData<Event<MutableList<Int>>> = _weekKcalArray
 
-    private var _weekDateArray: MutableLiveData<MutableList<String>> = MutableLiveData()
-    val weekDateArray: LiveData<MutableList<String>> = _weekDateArray
+    private var _weekDateArray: MutableLiveData<Event<MutableList<String>>> = MutableLiveData()
+    val weekDateArray: LiveData<Event<MutableList<String>>> = _weekDateArray
 
-    private var _previousWeekDateArray: MutableLiveData<MutableList<String>> = MutableLiveData()
-    val previousWeekDateArray: LiveData<MutableList<String>> = _previousWeekDateArray
+    private var _previousWeekDateArray: MutableLiveData<Event<MutableList<String>>> = MutableLiveData()
+    val previousWeekDateArray: LiveData<Event<MutableList<String>>> = _previousWeekDateArray
 
-    private var _previousWeekKcalArray: MutableLiveData<MutableList<Int>> = MutableLiveData()
-    val previousWeekKcalArray: LiveData<MutableList<Int>> = _previousWeekKcalArray
+    private var _previousWeekKcalArray: MutableLiveData<Event<MutableList<Int>>> = MutableLiveData()
+    val previousWeekKcalArray: LiveData<Event<MutableList<Int>>> = _previousWeekKcalArray
 
     private val _isNextButtonEnabled: MutableLiveData<Boolean> = MutableLiveData(true)
     val isNextButtonEnabled: LiveData<Boolean> = _isNextButtonEnabled
@@ -99,8 +100,7 @@ class WeightChartViewModel @Inject constructor(
 
                     while (calendar.time <= endOfWeekCalendar) {
 
-                        val currentDate =
-                            dateFormat.format(calendar.time) // 2023-06-12 ~ 2023-06-18 이런식으로 1주일 단위
+                        val currentDate = dateFormat.format(calendar.time) // 2023-06-12 ~ 2023-06-18 이런식으로 1주일 단위
                         Log.d("newCurrentDate", currentDate)
                         calendar.add(Calendar.DAY_OF_WEEK, 1)
 
@@ -120,10 +120,8 @@ class WeightChartViewModel @Inject constructor(
                         weekKcalArray.add(sum)
                         weekDateArray.add(currentDate.substring(8, 10))
                     }
-                    _weekKcalArray.value = weekKcalArray
-                    _weekDateArray.value = weekDateArray
-
-
+                    _weekKcalArray.value = Event(weekKcalArray)
+                    _weekDateArray.value = Event(weekDateArray)
 
                     Log.d("currentKcalList", _weekKcalArray.value.toString())
                     Log.d("currentDateList", _weekDateArray.value.toString())
@@ -149,10 +147,10 @@ class WeightChartViewModel @Inject constructor(
             val previousWeekKcalArray = mutableListOf<Int>()
             val previousWeekDateArray = mutableListOf<String>()
 
-            _previousWeekKcalArray.value = previousWeekKcalArray
-            _previousWeekDateArray.value = previousWeekDateArray
+            _previousWeekKcalArray.value = Event(previousWeekKcalArray)
+            _previousWeekDateArray.value = Event(previousWeekDateArray)
 
-            getUserWeekKcalUseCase(userId).addValueEventListener(object :
+            getUserWeekKcalUseCase(userId).addListenerForSingleValueEvent(object :
                 ValueEventListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -181,12 +179,12 @@ class WeightChartViewModel @Inject constructor(
                         previousWeekKcalArray.add(sum)
                         previousWeekDateArray.add(previousDate.substring(8, 10))
                     }
-                    _previousWeekKcalArray.value = previousWeekKcalArray
-                    _previousWeekDateArray.value = previousWeekDateArray
+                    _previousWeekKcalArray.value = Event(previousWeekKcalArray)
+                    _previousWeekDateArray.value = Event(previousWeekDateArray)
 
-                    Log.d("previousKcalList", _previousWeekKcalArray.value.toString())
-                    Log.d("previousDateList", _previousWeekDateArray.value.toString())
-                    Log.d("previousEntry", _entries.toString())
+//                    Log.d("previousKcalList", _previousWeekKcalArray.value.toString())
+//                    Log.d("previousDateList", _previousWeekDateArray.value.toString())
+//                    Log.d("previousEntry", _entries.toString())
 
                 }
 
@@ -206,17 +204,17 @@ class WeightChartViewModel @Inject constructor(
                 for (i in 0..6) {
                     _entries.add(
                         Entry(
-                            _weekDateArray.value?.get(i)?.toFloat() ?: 0.0F,
-                            _weekKcalArray.value?.get(i)?.toFloat() ?: 0.0F
+                            _weekDateArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F,
+                            _weekKcalArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F
                         )
                     )
-                    Log.d("currentEntry1", _weekDateArray.value?.get(i).toString())
+                    Log.d("currentEntry1", _weekDateArray.value?.peekContent()?.get(i).toString())
                     Log.d("currentEntry2", _entries.toString())
                 }
-                Collections.sort(
-                    _entries,
-                    EntryXComparator()
-                ) // 이거 안쓰면 다른화면 갔다가 차트올때 음수 배열 에러 뜸. 공식 깃허브 피셜 해결방법.
+//                Collections.sort(
+//                    _entries,
+//                    EntryXComparator()
+//                ) // 이거 안쓰면 다른화면 갔다가 차트올때 음수 배열 에러 뜸. 공식 깃허브 피셜 해결방법. 근데 이제 안해도 되네? 왜지?
             }
         } catch (e: Exception) {
             Log.e("currentError", e.message.toString())
@@ -227,23 +225,19 @@ class WeightChartViewModel @Inject constructor(
 
         _entries.clear()
 
-        viewModelScope.launch {
-
-            try {
-                for (i in 0..6) {
-                    _entries.add(
-                        Entry(
-                            _previousWeekDateArray.value?.get(i)?.toFloat() ?: 0.0F,
-                            _previousWeekKcalArray.value?.get(i)?.toFloat() ?: 0.0F
-                        )
+        try {
+            for (i in 0..6) {
+                _entries.add(
+                    Entry(
+                        _previousWeekDateArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F,
+                        _previousWeekKcalArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F
                     )
-                    Log.d("previousEntry1", _previousWeekDateArray.value?.get(i).toString())
-                    Log.d("previousEntry2", _entries.toString())
-                }
-
-            } catch (e: Exception) {
-                Log.e("previousError", e.message.toString())
+                )
             }
+
+
+        } catch (e: Exception) {
+            Log.e("previousError", e.message.toString())
         }
     }
 
