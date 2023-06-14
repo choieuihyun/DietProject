@@ -38,9 +38,9 @@ class CalendarDetailViewModel @Inject constructor(
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     for (data in snapshot.children) {
-                        val dataDate = data.key?.substring(0, 10)
+                        val dateData = data.key?.substring(0, 10)
 
-                        if (dataDate == date) {
+                        if (dateData == date) {
                             val kcal = data.child("kcal").value
                             sum += kcal.toString().toInt()
                             val todayKcalForCalendar = TodayKcalForCalendar(
