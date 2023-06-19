@@ -8,6 +8,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -18,6 +19,10 @@ import com.myproject.dietproject.presentation.databinding.HomeFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
 import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.NullPointerException
 
 @AndroidEntryPoint
 class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
@@ -46,33 +51,36 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getUserTodayKcalData(auth.currentUser!!.uid)
+        viewModel.getRecommendKcalData(auth.currentUser!!.uid)
 
-        //  val userId = args.userId
+        viewModel.todayKcal.observe(viewLifecycleOwner) {
 
-        binding.dbTest.setOnClickListener {
-
-            viewModel.getKcalData("감자")
-
-            viewModel.kcalData.observe(viewLifecycleOwner) {
-                if (it != null) {
-
-                    progressBarSetting(viewModel.kcalData.value?.get(0)?.nUTRCONT1?.toFloat()
-                        ?: 0.0f) // 여긴 엘비스 연산자로 했고 근데 에러처리도 어차피 여기서 하는게 아니지 않을까?
-
-                    viewModel.addUserTodayKcal(
-                        auth.currentUser!!.uid,
-                        viewModel.kcalData.value?.get(0)?.nUTRCONT1?.toFloat()!!,
-                        viewModel.kcalData.value?.get(0)?.dESCKOR.toString()
-                    ) // non assert 제거 요망
-
-                }
-            }
+            progressBarSetting(it)
+            binding.todayKcal.text = it.toInt().toString() + " Kcal"
+            Log.d("homeFragment1", it.toString())
 
         }
 
+        viewModel.recommendKcal.observe(viewLifecycleOwner) {
+
+            binding.recommendKcal.text = "$it Kcal"
+            Log.d("homeFragment2", it.toString())
+
+        }
+
+        viewModel.scarceKcal.observe(viewLifecycleOwner) {
+
+            Log.d("homeFragment3", it.toString())
+            binding.scarceKcal.text = "$it Kcal"
+
+        }
+
+
         binding.setDataButton.setOnClickListener {
 
-            Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_kcalFragment)
+            val action = HomeFragmentDirections.actionHomeFragmentToKcalFragment(auth.currentUser!!.uid)
+            findNavController().navigate(action)
 
         }
 

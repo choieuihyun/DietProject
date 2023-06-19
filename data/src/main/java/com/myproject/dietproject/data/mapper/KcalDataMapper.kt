@@ -10,6 +10,9 @@ fun KcalData.toModel() = Kcal(
         dESCKOR = dESCKOR,
         mAKERNAME = mAKERNAME,
         nUTRCONT1 = nUTRCONT1,
+        nUTRCONT2 = nUTRCONT2,
+        nUTRCONT3 = nUTRCONT3,
+        nUTRCONT4 = nUTRCONT4,
         sERVINGSIZE = sERVINGSIZE
 
     )

@@ -18,7 +18,11 @@
     <fragment
         android:id="@+id/calendarFragment"
         android:name="com.myproject.dietproject.presentation.ui.calendar.CalendarFragment"
-        android:label="CalendarFragment" />
+        android:label="CalendarFragment" >
+        <action
+            android:id="@+id/action_calendarFragment_to_calenderDetailFragment"
+            app:destination="@id/calenderDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/weightChartFragment"
         android:name="com.myproject.dietproject.presentation.ui.weightChart.WeightChartFragment"
@@ -74,5 +78,40 @@
     <fragment
         android:id="@+id/kcalFragment"
         android:name="com.myproject.dietproject.presentation.ui.userkcal.KcalFragment"
-        android:label="KcalFragment" />
+        android:label="KcalFragment" >
+        <action
+            android:id="@+id/action_kcalFragment_to_kcalDetailFragment"
+            app:destination="@id/kcalDetailFragment" />
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/kcalDetailFragment"
+        android:name="com.myproject.dietproject.presentation.ui.userkcal.KcalDetailFragment"
+        android:label="KcalDetailFragment" >
+        <action
+            android:id="@+id/action_kcalDetailFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <argument
+            android:name="kcal"
+            app:argType="com.myproject.dietproject.domain.model.Kcal"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/calenderDetailFragment"
+        android:name="com.myproject.dietproject.presentation.ui.calendar.CalenderDetailFragment"
+        android:label="CalenderDetailFragment" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <argument
+            android:name="date"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

@@ -4,6 +4,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="homeFragmentViewModel"
+            type="com.myproject.dietproject.presentation.ui.home.HomeViewModel" />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -39,7 +47,7 @@
             app:cpb_background_progressbar_color="#b6bbd8"
             app:cpb_background_progressbar_width="40dp"
             app:cpb_progress_direction="to_right"
-            app:cpb_progress_max="1000"
+            app:cpb_progress_max="4000"
             app:cpb_progressbar_color="#3f51b5"
             app:cpb_progressbar_width="40dp"
             app:cpb_round_border="false"
@@ -107,7 +115,7 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView4"
+                android:id="@+id/recommendKcal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -117,7 +125,7 @@
                 android:text="2000kcal" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView3"
+                android:id="@+id/todayKcal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -127,6 +135,7 @@
                 android:text="1800kcal" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/scarceKcal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

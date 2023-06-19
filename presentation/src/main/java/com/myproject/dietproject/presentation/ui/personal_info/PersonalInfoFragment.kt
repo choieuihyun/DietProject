@@ -61,7 +61,7 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
                         loginViewModel.setHeightInfo(binding.heightEditText.text.toString().toFloat())
                         loginViewModel.setWeightInfo(binding.weightEditText.text.toString().toFloat())
 
-                        loginViewModel.addUserInfo(userId, loginViewModel.userGender, loginViewModel.userAge, loginViewModel.userHeight, loginViewModel.userWeight, loginViewModel.userActivity)
+                        loginViewModel.addUserInfo(userId)
                         moveHomeFragment(userId)
                     }
                 }

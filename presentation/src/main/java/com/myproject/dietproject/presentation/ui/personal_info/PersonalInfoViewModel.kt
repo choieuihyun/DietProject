@@ -29,6 +29,10 @@ class PersonalInfoViewModel @Inject constructor(
     val userWeight: Float
         get() = _userWeight
 
+    private var _userRecommendKcal: Float = 0.0F
+    val userRecommendKcal: Float
+        get() = _userRecommendKcal
+
     private var _userActivity: String = ""
     val userActivity: String
         get() = _userActivity
@@ -55,15 +59,39 @@ class PersonalInfoViewModel @Inject constructor(
         _userActivity = activity
     }
 
+    private fun setRecommendKcal() : Int { // 다이어트시 하루 권장 섭취 칼로리 공식
+
+        var avgWeight = 0.0F
+
+        if(_userGender == "male") {
+
+            avgWeight = (_userHeight/100) * (_userHeight/100) * 22
+
+            when (_userActivity) {
+                "lightActivity" -> _userRecommendKcal = (avgWeight * 27) - 500
+                "middleActivity" -> _userRecommendKcal = (avgWeight * 32) - 500
+                "hardActivity" -> _userRecommendKcal = (avgWeight * 37) - 500
+            }
+
+
+        } else if(_userGender == "female") {
+
+            avgWeight = (_userHeight/100) * (_userHeight/100) * 21
+
+            when (_userActivity) {
+                "lightActivity" -> _userRecommendKcal = (avgWeight * 27) - 500
+                "middleActivity" -> _userRecommendKcal = (avgWeight * 32) - 500
+                "hardActivity" -> _userRecommendKcal = (avgWeight * 37) - 500
+            }
+
+        }
+
+        return _userRecommendKcal.toInt()
+    }
 
 
     fun addUserInfo(
-        userId: String,
-        gender: String,
-        age: Int,
-        height: Float,
-        weight: Float,
-        activity: String
+        userId: String
     ) {
 
         viewModelScope.launch {
@@ -77,13 +105,9 @@ class PersonalInfoViewModel @Inject constructor(
                 _userAge,
                 roundToHeight,
                 roundToWeight,
+                setRecommendKcal(),
                 _userActivity
             )
-
         }
-
     }
-
-
-
 }

@@ -23,33 +23,14 @@ class FirebaseDataSource @Inject constructor(
     }
 
     // 이걸 왜하냐면 로그인(구글,이메일)에서 personType이 비어있으면 personalInfo로 넘어가게 하려고 해놨음.
-    fun getUser(userId: String): DatabaseReference { // 여기서 userId는 구글기준으론 account.id, 이메일 기준으론 uid
-        return firebase.getReference("user").child(userId)
+    fun getUser(): DatabaseReference { // 여기서 userId는 구글기준으론 account.id, 이메일 기준으론 uid
+        return firebase.getReference("user")
     }
 
     fun getUserActivity(userId: String): DatabaseReference {
         return firebase.getReference("user").child(userId).child("activity")
     }
 
-    fun addUserGenderInfo(userId: String, gender: String) {
-        firebase.getReference("user").child(userId).child(gender).setValue(gender)
-    }
-
-    fun addUserAgeInfo(userId: String, age: Int) {
-        firebase.getReference("user").child(userId).child("age").setValue(age)
-    }
-
-    fun addUserHeightInfo(userId: String, height: Float) {
-        firebase.getReference("user").child(userId).child("height").setValue(height)
-    }
-
-    fun addUserWeightInfo(userId: String, weight: Float) {
-        firebase.getReference("user").child(userId).child("weight").setValue(weight)
-    }
-
-    fun addUserActivityInfo(userId: String, activity: String) {
-        firebase.getReference("user").child(userId).child(activity).setValue(activity)
-    }
 
     fun addUserInfo(
         userId: String,
@@ -57,6 +38,7 @@ class FirebaseDataSource @Inject constructor(
         age: Int,
         height: Float,
         weight: Float,
+        recommendKcal: Int,
         activity: String
     ) {
 
@@ -66,15 +48,17 @@ class FirebaseDataSource @Inject constructor(
             it.child("age").setValue(age)
             it.child("height").setValue(height)
             it.child("weight").setValue(weight)
+            it.child("recommendKcal").setValue(recommendKcal)
             it.child("activity").setValue(activity)
 
         }
 
     }
 
-    fun addTodayKcal(userId: String, kcal: Float, foodName: String, date: String) {
+    fun addTodayKcal(userId: String, kcal: Float, foodName: String, makerName: String, date: String) {
         firebase.getReference("user").child(userId).child("todayKcal").child(date).let {
             it.child("kcal").setValue(kcal)
+            it.child("makerName").setValue(makerName)
             it.child("foodName").setValue(foodName)
         }
     }
