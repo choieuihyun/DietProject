@@ -1,6 +1,7 @@
 package com.myproject.dietproject.presentation.ui.home
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,6 +29,7 @@ class HomeViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val getUserTodayKcalUseCase: GetUserTodayKcalUseCase,
     private val getUserRecommendKcalUseCase: GetUserRecommendKcalUseCase
+    private val addUserTodayKcalUseCase: AddUserTodayKcalUseCase
 ) : ViewModel() {
 
     private val _kcalData = MutableLiveData<List<Kcal>?>()
