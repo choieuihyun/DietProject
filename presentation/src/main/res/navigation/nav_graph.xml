@@ -44,7 +44,7 @@
             app:destination="@id/personalInfoFragment" />
     </fragment>
     <fragment
-        android:id="@+id/myInfoFragment"
+        android:id="@+id/InfoFragment"
         android:name="com.myproject.dietproject.presentation.ui.info.InfoFragment"
         android:label="InfoFragment" >
         <action
@@ -52,6 +52,9 @@
             app:destination="@id/loginFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_InfoFragment_to_infoFragmentDetail"
+            app:destination="@id/infoFragmentDetail" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -114,4 +117,8 @@
             app:argType="string"
             app:nullable="true" />
     </fragment>
+    <fragment
+        android:id="@+id/infoFragmentDetail"
+        android:name="com.myproject.dietproject.presentation.ui.info.InfoFragmentDetail"
+        android:label="InfoFragmentDetail" />
 </navigation>
