@@ -18,6 +18,8 @@ interface FirebaseRepository {
 
     suspend fun getUserWeekKcal(userId: String) : DatabaseReference
 
+    suspend fun getUserEmail(userId: String) : DatabaseReference
+
     suspend fun getUserRecommendKcal(userId: String) : DatabaseReference
 
     suspend fun getUserActivity(userId: String) : DatabaseReference

@@ -33,6 +33,10 @@ class FirebaseRepositoryImpl @Inject constructor(
         return firebaseDataSource.getUser().child(userId).child("todayKcal")
     }
 
+    override suspend fun getUserEmail(userId: String): DatabaseReference {
+        return firebaseDataSource.getUser().child(userId).child("email")
+    }
+
     override suspend fun getUserRecommendKcal(userId: String) : DatabaseReference {
         return firebaseDataSource.getUser().child(userId).child("recommendKcal")
     }
