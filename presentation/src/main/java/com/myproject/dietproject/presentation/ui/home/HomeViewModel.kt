@@ -29,7 +29,6 @@ class HomeViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val getUserTodayKcalUseCase: GetUserTodayKcalUseCase,
     private val getUserRecommendKcalUseCase: GetUserRecommendKcalUseCase
-    private val addUserTodayKcalUseCase: AddUserTodayKcalUseCase
 ) : ViewModel() {
 
     private val _kcalData = MutableLiveData<List<Kcal>?>()
