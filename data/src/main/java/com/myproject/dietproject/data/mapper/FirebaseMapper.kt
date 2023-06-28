@@ -7,23 +7,30 @@ import com.myproject.dietproject.domain.model.UserModel
 fun User.toModel() = UserModel(
 
     uid = uid,
+    name = name,
     email = email,
     gender = gender,
     age = age,
     height = height,
     weight= weight,
+    targetWeight = targetWeight,
     activity = activity,
+    overKcal = overKcal,
     todayKcal = null
 
 )
 
 fun UserModel.toEntity() = User(
     uid = uid,
+    name = name,
     email = email,
+    gender = gender,
     age = age,
     height = height,
     weight = weight,
+    targetWeight = targetWeight,
     activity = activity,
+    overKcal = overKcal,
     todayKcal = null
 )
 
