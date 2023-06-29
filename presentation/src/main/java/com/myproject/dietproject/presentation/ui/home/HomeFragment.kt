@@ -51,6 +51,8 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.homeFragmentViewModel = viewModel
+
         viewModel.getUserTodayKcalData(auth.currentUser!!.uid)
         viewModel.getRecommendKcalData(auth.currentUser!!.uid)
 
@@ -81,6 +83,12 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
             val action = HomeFragmentDirections.actionHomeFragmentToKcalFragment(auth.currentUser!!.uid)
             findNavController().navigate(action)
+
+        }
+
+        binding.previousButton.setOnClickListener {
+
+            viewModel.movePreviousDate(auth.currentUser!!.uid)
 
         }
 

@@ -56,14 +56,47 @@ class HomeViewModel @Inject constructor(
     private var _scarceKcal: MutableLiveData<Int> = MutableLiveData()
     val scarceKcal: LiveData<Int> = _scarceKcal
 
+    private var _homeDateText: MutableLiveData<String> = MutableLiveData()
+    val homeDateText: LiveData<String>
+        get() = _homeDateText
+
+    private var _homeDataByDate: MutableLiveData<String> = MutableLiveData()
+    val homeDataByDate: LiveData<String>
+        get() = _homeDataByDate
+
     private var calculTodayKcal: Float = 0.0F
     private var calculRecommendKcal = 0
 
+    private val calendar = Calendar.getInstance()
+
     fun getUserTodayKcalData(userId: String) {
 
-        val calendar = Calendar.getInstance()
+
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         val today = dateFormat.format(calendar.time)
+
+        var dateText = today.substring(5,10) // 6-28로 자르기
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+
+        when(dayOfWeek) {
+
+            Calendar.MONDAY -> dateText = "$dateText(월)"
+
+            Calendar.TUESDAY -> dateText = "$dateText(화)"
+
+            Calendar.WEDNESDAY -> dateText = "$dateText(수)"
+
+            Calendar.THURSDAY -> dateText = "$dateText(목)"
+
+            Calendar.FRIDAY -> dateText = "$dateText(금)"
+
+            Calendar.SATURDAY -> dateText = "$dateText(토)"
+
+            Calendar.SUNDAY -> dateText = "$dateText(일)"
+
+        }
+
+        Log.d("sdfsdf", dateText.toString())
 
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -81,7 +114,7 @@ class HomeViewModel @Inject constructor(
                         }
                     }
                     _todayKcal.value = sum
-                    calculTodayKcal = sum
+                    calculTodayKcal = sum // 위에꺼랑 같은데?
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -89,6 +122,7 @@ class HomeViewModel @Inject constructor(
                 }
             })
 
+            _homeDateText.postValue(dateText)
 
         }
 
@@ -112,6 +146,101 @@ class HomeViewModel @Inject constructor(
 
             })
 
+        }
+
+    }
+
+    fun movePreviousDate(userId: String) {
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+        calendar.add(Calendar.DAY_OF_MONTH, -1)
+
+        val previousDataByDate = dateFormat.format(calendar.time)
+        var previousDateText = dateFormat.format(calendar.time).substring(5,10)
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+
+        Log.d("sdfsdf4", previousDateText)
+        Log.d("sdfsdf5", previousDataByDate)
+
+        viewModelScope.launch {
+
+            var sum = 0.0F
+
+            getUserTodayKcalUseCase(userId, previousDataByDate).addValueEventListener(object :
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    for (data in snapshot.children) {
+                        val dataDate = data.key?.substring(0, 10)
+
+                        if (dataDate == previousDataByDate) {
+                            val kcal = data.child("kcal").value
+                            sum += kcal.toString().toFloat()
+                        }
+                    }
+                    _todayKcal.value = sum
+                    calculTodayKcal = sum
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+            when(dayOfWeek) {
+
+                Calendar.MONDAY -> previousDateText = "$previousDateText(월)"
+
+                Calendar.TUESDAY -> previousDateText = "$previousDateText(화)"
+
+                Calendar.WEDNESDAY -> previousDateText = "$previousDateText(수)"
+
+                Calendar.THURSDAY -> previousDateText = "$previousDateText(목)"
+
+                Calendar.FRIDAY -> previousDateText = "$previousDateText(금)"
+
+                Calendar.SATURDAY -> previousDateText = "$previousDateText(토)"
+
+                Calendar.SUNDAY -> previousDateText = "$previousDateText(일)"
+
+            }
+
+            _homeDateText.postValue(previousDateText)
+            _homeDataByDate.postValue(previousDataByDate)
+        }
+
+    }
+
+    fun moveNextDate() {
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        calendar.add(Calendar.DAY_OF_MONTH, 1)
+        val nextDataByDate = dateFormat.format(calendar.time)
+        var nextDate = dateFormat.format(calendar.time).substring(5,10)
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+
+        when(dayOfWeek) {
+
+            Calendar.MONDAY -> nextDate = "$nextDate(월)"
+
+            Calendar.TUESDAY -> nextDate = "$nextDate(화)"
+
+            Calendar.WEDNESDAY -> nextDate = "$nextDate(수)"
+
+            Calendar.THURSDAY -> nextDate = "$nextDate(목)"
+
+            Calendar.FRIDAY -> nextDate = "$nextDate(금)"
+
+            Calendar.SATURDAY -> nextDate = "$nextDate(토)"
+
+            Calendar.SUNDAY -> nextDate = "$nextDate(일)"
+
+        }
+
+        viewModelScope.launch {
+            _homeDateText.postValue(nextDate)
+            _homeDataByDate.postValue(nextDataByDate)
         }
 
     }
