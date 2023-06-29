@@ -10,22 +10,79 @@
             name="kcalDetailData"
             type="com.myproject.dietproject.domain.model.Kcal" />
 
+        <variable
+            name="kcalDetailViewModel"
+            type="com.myproject.dietproject.presentation.ui.userkcal.KcalDetailViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/previous_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/kcal_detail_previous"
+            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/next_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/kcal_detail_next"
+            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/kcal_detail_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{kcalDetailViewModel.kcalDetailDateText}'
+            android:textSize="28sp"
+            app:layout_constraintBottom_toTopOf="@+id/view"
+            app:layout_constraintEnd_toStartOf="@+id/next_button"
+            app:layout_constraintStart_toEndOf="@+id/previous_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.48"
+            tools:text="6.28(수)" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#FFFF0000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.133" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/maker_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="24dp"
+            android:text='@{kcalDetailData.MAKERNAME}'
             android:textSize="18sp"
-            android:text="비비고"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.077"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view"
+            app:layout_constraintVertical_bias="0.061"
             tools:text="비비고">
 
         </androidx.appcompat.widget.AppCompatTextView>
@@ -35,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="순살고등어구이"
+            android:text='@{kcalDetailData.DESCKOR}'
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,9 +111,12 @@
             android:layout_marginTop="24dp"
             android:text="탄수화물"
             android:textSize="24sp"
-            app:layout_constraintEnd_toStartOf="@+id/appCompatTextView7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.148"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/food_name">
+            app:layout_constraintTop_toBottomOf="@+id/food_name"
+            app:layout_constraintVertical_bias="0.0">
 
         </androidx.appcompat.widget.AppCompatTextView>
 
@@ -67,10 +127,12 @@
             android:layout_marginTop="24dp"
             android:text="단백질"
             android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/appCompatTextView9"
-            app:layout_constraintHorizontal_bias="0.782"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/food_name">
+            app:layout_constraintHorizontal_bias="0.464"
+            app:layout_constraintStart_toEndOf="@+id/appCompatTextView10"
+            app:layout_constraintTop_toBottomOf="@+id/food_name"
+            app:layout_constraintVertical_bias="0.0">
 
         </androidx.appcompat.widget.AppCompatTextView>
 
@@ -81,10 +143,12 @@
             android:layout_marginTop="24dp"
             android:text="지방"
             android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.82"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/food_name">
+            app:layout_constraintTop_toBottomOf="@+id/food_name"
+            app:layout_constraintVertical_bias="0.0">
 
         </androidx.appcompat.widget.AppCompatTextView>
 
@@ -93,12 +157,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="20.2"
+            android:text='@{kcalDetailData.NUTRCONT2}'
             android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/protein"
-            app:layout_constraintHorizontal_bias="0.474"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.185"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView10">
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView10"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="20.2">
 
         </androidx.appcompat.widget.AppCompatTextView>
 
@@ -107,12 +174,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="20.3"
+            android:text='@{kcalDetailData.NUTRCONT3}'
             android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/fat"
-            app:layout_constraintHorizontal_bias="0.747"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView7">
+            app:layout_constraintHorizontal_bias="0.557"
+            app:layout_constraintStart_toEndOf="@+id/carbohydrate"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView7"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="20.3">
 
         </androidx.appcompat.widget.AppCompatTextView>
 
@@ -121,12 +191,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="20.4"
+            android:text='@{kcalDetailData.NUTRCONT4}'
             android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.811"
+            app:layout_constraintHorizontal_bias="0.822"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView9">
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView9"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="20.4">
 
         </androidx.appcompat.widget.AppCompatTextView>
 
@@ -135,12 +208,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="44dp"
-            android:text="350kcal"
+            android:text='@{kcalDetailData.NUTRCONT1}'
             android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.141"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/protein"
+            app:layout_constraintVertical_bias="0.0"
             tools:text="350kcal">
 
         </androidx.appcompat.widget.AppCompatTextView>
@@ -167,10 +242,12 @@
             android:layout_marginTop="56dp"
             android:layout_marginEnd="28dp"
             android:background="@drawable/plus"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.738"
+            app:layout_constraintHorizontal_bias="0.746"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/kcal" />
+            app:layout_constraintTop_toBottomOf="@+id/kcal"
+            app:layout_constraintVertical_bias="0.006" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/minusButton"
@@ -178,10 +255,12 @@
             android:layout_height="24dp"
             android:layout_marginTop="56dp"
             android:background="@drawable/minus"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.891"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/kcal" />
+            app:layout_constraintTop_toBottomOf="@+id/kcal"
+            app:layout_constraintVertical_bias="0.006" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/servingEdittext"
