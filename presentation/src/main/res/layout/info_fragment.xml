@@ -63,6 +63,7 @@
             android:id="@+id/profile_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{viewModel.name}"
             app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.916"
@@ -102,6 +103,7 @@
             android:id="@+id/profile_weight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text='@{Float.valueOf(viewModel.targetWeight).toString() + "kg"}'
             app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.285"
@@ -169,7 +171,7 @@
                 android:id="@+id/tab_item1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="나의 식습관은?"
+                android:text="반성문"
                 tools:layout_editor_absoluteX="7dp"
                 tools:layout_editor_absoluteY="324dp" />
 
@@ -223,12 +225,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text='@{"하루 평균 섭취한 칼로리(Kcal) : " + viewModel.dayKcal + " Kcal"}'
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/over_recommendKcal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/most_numerous_food"
                 app:layout_constraintVertical_weight="1"
-                tools:text='하루 평균 먹은 칼로리 : 1200 kcal'/>
+                tools:text='하루 평균 먹은 칼로리 : 1200 kcal' />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/over_recommendKcal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/most_numerous_kcal"
+                tools:text="권장 칼로리 초과한 날 : 3일" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
