@@ -1,6 +1,5 @@
 package com.myproject.dietproject.presentation.ui.info
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +10,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.myproject.dietproject.domain.usecase.GetUserEmailUseCase
+import com.myproject.dietproject.domain.usecase.GetUserNameUseCase
 import com.myproject.dietproject.domain.usecase.GetUserRecommendKcalUseCase
+import com.myproject.dietproject.domain.usecase.GetUserTargetWeightUseCase
 import com.myproject.dietproject.domain.usecase.GetUserWeekKcalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,30 +23,44 @@ class InfoViewModel @Inject constructor(
 
     private val getUserEmailUseCase: GetUserEmailUseCase,
     private val getUserRecommendKcalUseCase: GetUserRecommendKcalUseCase,
+    private val getUserNameUseCase: GetUserNameUseCase,
+    private val getUserTargetWeightUseCase: GetUserTargetWeightUseCase,
     private val getUserNumerousKcalByFoodUseCase: GetUserWeekKcalUseCase,
     private val getUserNumerousKcalByDateUseCase: GetUserWeekKcalUseCase
 
 ) : ViewModel() {
 
-    private var _email: MutableLiveData<String> = MutableLiveData<String>()
-    val email : LiveData<String>
+    private var _name: MutableLiveData<String> = MutableLiveData()
+    val name: LiveData<String>
+        get() = _name
+
+    private var _email: MutableLiveData<String> = MutableLiveData()
+    val email: LiveData<String>
         get() = _email
 
-    private var _recommendKcal: MutableLiveData<String> = MutableLiveData<String>()
-    val recommendKcal : LiveData<String>
+    private var _recommendKcal: MutableLiveData<String> = MutableLiveData()
+    val recommendKcal: LiveData<String>
         get() = _recommendKcal
 
     private var _mostNumerousFood: MutableLiveData<Int> = MutableLiveData()
-    val mostNumerousFood: MutableLiveData<Int>
+    val mostNumerousFood: LiveData<Int>
         get() = _mostNumerousFood
 
     private var _mostNumerousDate: MutableLiveData<String?> = MutableLiveData()
-    val mostNumerousDate: MutableLiveData<String?>
+    val mostNumerousDate: LiveData<String?>
         get() = _mostNumerousDate
 
     private var _dayKcal: MutableLiveData<Int?> = MutableLiveData()
-    val dayKcal: MutableLiveData<Int?>
+    val dayKcal: LiveData<Int?>
         get() = _dayKcal
+
+    private var _targetWeight: MutableLiveData<Int?> = MutableLiveData()
+    val targetWeight: LiveData<Int?>
+        get() = _targetWeight
+
+    private var _overKcal: MutableLiveData<Int?> = MutableLiveData()
+    val overKcal: LiveData<Int?>
+        get() = _overKcal
 
 
     fun getUserEmail(userId: String) {
@@ -56,7 +71,6 @@ class InfoViewModel @Inject constructor(
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     _email.postValue(snapshot.value.toString())
-                    Log.d("infoEmail", email.value.toString())
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -77,7 +91,6 @@ class InfoViewModel @Inject constructor(
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     _recommendKcal.postValue(snapshot.value.toString())
-                    Log.d("infoEmail", recommendKcal.value.toString())
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -111,11 +124,9 @@ class InfoViewModel @Inject constructor(
                             if(childValue > max)
                                 max = childValue
 
-                            Log.d("iterator", childValue.toString())
                         }
 
                         _mostNumerousFood.postValue(max)
-                        Log.d("iteratorMax", _mostNumerousFood.value.toString())
                     }
 
                     override fun onCancelled(error: DatabaseError) {
@@ -123,6 +134,49 @@ class InfoViewModel @Inject constructor(
                     }
 
                 })
+        }
+    }
+
+    fun getUserName(userId: String) {
+
+        viewModelScope.launch {
+
+            getUserNameUseCase(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    _name.postValue(snapshot.value.toString())
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+
+        }
+    }
+
+    fun getUserTargetWeight(userId: String) {
+
+        viewModelScope.launch {
+
+            getUserTargetWeightUseCase(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    _targetWeight.postValue(snapshot.value.toString().toInt())
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                    TODO("Not yet implemented")
+
+                }
+
+            })
 
         }
 
@@ -151,7 +205,7 @@ class InfoViewModel @Inject constructor(
 
                     val mergedMap = mutableMapOf<String, Int?>()
 
-                    for(entry in dateTotalMap.entries()) {
+                    for(entry in dateTotalMap.entries()) { // multimap 내의 entry를 통해 날짜 연산
 
                         val date = entry.key
                         val kcal = entry.value
@@ -160,12 +214,12 @@ class InfoViewModel @Inject constructor(
 
                     }
 
-
                     var maxDate: String? = null
                     var maxKcal = 0
                     var sumKcal = 0
 
                     for((date, kcal) in mergedMap) {
+
                         if(kcal != null && kcal > maxKcal) {
                             maxDate = date
                             maxKcal = kcal
@@ -175,12 +229,23 @@ class InfoViewModel @Inject constructor(
                             sumKcal += kcal
                         }
 
+//                        if (kcal != null) { // 하루 권장 칼로리 초과한 횟수
+//                            if(kcal > _recommendKcal.value!!.toInt()) {
+//
+//                            }
+//                        }
                     }
 
-                    _mostNumerousDate.postValue(maxDate)
-                    _dayKcal.postValue(sumKcal / mergedMap.size)
+                    if(maxDate != null)
+                        _mostNumerousDate.postValue(maxDate)
+                    else
+                        _mostNumerousDate.postValue("")
 
-                    Log.d("sdfsdf", sumKcal.toString())
+                    if(sumKcal != 0)
+                        _dayKcal.postValue(sumKcal / mergedMap.size)
+                    else
+                        _dayKcal.postValue(0)
+
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -189,7 +254,6 @@ class InfoViewModel @Inject constructor(
 
             })
         }
-
 
     }
 
