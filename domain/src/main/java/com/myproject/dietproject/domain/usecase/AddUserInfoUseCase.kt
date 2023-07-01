@@ -8,14 +8,16 @@ class AddUserInfoUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(userId: String,
+                                name: String,
                                 gender: String,
                                 age: Int,
                                 height: Float,
                                 weight: Float,
+                                targetWeight: Float,
                                 recommendKcal: Int,
                                 activity: String) {
 
-        repository.addUserInfo(userId, gender, age, height, weight, recommendKcal, activity)
+        repository.addUserInfo(userId, name, gender, age, height, weight, targetWeight, recommendKcal, activity)
 
     }
 }
