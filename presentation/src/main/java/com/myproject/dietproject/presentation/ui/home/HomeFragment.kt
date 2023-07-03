@@ -51,12 +51,18 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.homeFragmentViewModel = viewModel
+
         viewModel.getUserTodayKcalData(auth.currentUser!!.uid)
         viewModel.getRecommendKcalData(auth.currentUser!!.uid)
+        //viewModel.imageSetting()
+
+        Log.d("sdeeee", viewModel.imageResultLiveData.value.toString())
+
 
         viewModel.todayKcal.observe(viewLifecycleOwner) {
 
-            progressBarSetting(it)
+            progressBarSetting(it, viewModel.recommendKcal.value!!.toFloat())
             binding.todayKcal.text = it.toInt().toString() + " Kcal"
             Log.d("homeFragment1", it.toString())
 
@@ -76,6 +82,12 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
         }
 
+        viewModel.imageResultLiveData.observe(viewLifecycleOwner) {
+
+            imageViewSetting()
+
+        }
+
 
         binding.setDataButton.setOnClickListener {
 
@@ -84,13 +96,20 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
         }
 
+        binding.previousButton.setOnClickListener {
+
+            viewModel.movePreviousDate(auth.currentUser!!.uid)
+
+        }
+
     }
 
-    private fun progressBarSetting(sumKcal: Float) {
+    private fun progressBarSetting(sumKcal: Float, max: Float) {
 
         val circleProgressBar = binding.circularProgressBar
 
         circleProgressBar.apply {
+            progressMax = max
             // Set Progress
             progress = sumKcal
 
@@ -98,7 +117,18 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
             setProgressWithAnimation(progress, 1500)
 
 
+
+
         }
+    }
+
+    private fun imageViewSetting() {
+
+        if(viewModel.imageResultLiveData.value == 1)
+            binding.homeFragmentImageView.setImageResource(R.drawable.hungry)
+        else
+            binding.homeFragmentImageView.setImageResource(R.drawable.obesity)
+
     }
 
 }

@@ -165,6 +165,12 @@ dependencies {
 
     // Chart Library
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // Circle ImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // Guava
+    implementation 'com.google.guava:guava:30.1-jre'
 }
 
 kapt {

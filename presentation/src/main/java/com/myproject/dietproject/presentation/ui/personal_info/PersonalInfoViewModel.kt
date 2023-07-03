@@ -1,5 +1,7 @@
 package com.myproject.dietproject.presentation.ui.personal_info
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myproject.dietproject.domain.usecase.AddUserInfoUseCase
@@ -12,6 +14,10 @@ import kotlin.math.floor
 class PersonalInfoViewModel @Inject constructor(
     private val addUserInfoUseCase: AddUserInfoUseCase
 ) : ViewModel(){
+
+    private var _userName: String = ""
+    val userName: String
+        get() = _userName
 
     private var _userGender: String = ""
     val userGender: String
@@ -37,7 +43,14 @@ class PersonalInfoViewModel @Inject constructor(
     val userActivity: String
         get() = _userActivity
 
+    private var _userTargetWeight: Float = 0.0F
+    val userTargetWeight: Float
+        get() = _userTargetWeight
 
+
+    fun setNameInfo(name: String) {
+        _userName = name
+    }
 
     fun setGenderInfo(gender: String) {
         _userGender = gender
@@ -53,6 +66,10 @@ class PersonalInfoViewModel @Inject constructor(
 
     fun setWeightInfo(weight: Float) {
         _userWeight = weight
+    }
+
+    fun setTargetWeightInfo(targetWeight: Float) {
+        _userTargetWeight = targetWeight
     }
 
     fun setActivityInfo(activity: String) {
@@ -101,13 +118,17 @@ class PersonalInfoViewModel @Inject constructor(
 
             addUserInfoUseCase.invoke(
                 userId,
+                _userName,
                 _userGender,
                 _userAge,
                 roundToHeight,
                 roundToWeight,
+                _userTargetWeight,
                 setRecommendKcal(),
                 _userActivity
             )
         }
     }
+
+
 }

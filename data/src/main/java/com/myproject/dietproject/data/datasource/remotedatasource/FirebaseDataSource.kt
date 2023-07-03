@@ -34,20 +34,24 @@ class FirebaseDataSource @Inject constructor(
 
     fun addUserInfo(
         userId: String,
+        name: String,
         gender: String,
         age: Int,
         height: Float,
         weight: Float,
+        targetWeight: Float,
         recommendKcal: Int,
         activity: String
     ) {
 
         firebase.getReference("user").child(userId).let {
 
+            it.child("name").setValue(name)
             it.child("gender").setValue(gender)
             it.child("age").setValue(age)
             it.child("height").setValue(height)
             it.child("weight").setValue(weight)
+            it.child("targetWeight").setValue(targetWeight)
             it.child("recommendKcal").setValue(recommendKcal)
             it.child("activity").setValue(activity)
 
@@ -60,6 +64,12 @@ class FirebaseDataSource @Inject constructor(
             it.child("kcal").setValue(kcal)
             it.child("makerName").setValue(makerName)
             it.child("foodName").setValue(foodName)
+        }
+    }
+
+    fun addOverKcal(userId: String, overKcal: Int) {
+        firebase.getReference("user").child(userId).let {
+            it.child("overKcal").setValue(overKcal)
         }
     }
 }

@@ -42,7 +42,11 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
 
             if(!binding.maleButton.isSelected || !binding.femaleButton.isSelected) {
 
-                if (binding.ageEditText.text.toString().isEmpty() || binding.heightEditText.text.toString().isEmpty() || binding.weightEditText.text.toString().isEmpty()
+                if (binding.nameEditText.text.toString().isEmpty() ||
+                    binding.ageEditText.text.toString().isEmpty() ||
+                    binding.heightEditText.text.toString().isEmpty() ||
+                    binding.weightEditText.text.toString().isEmpty() ||
+                    binding.targetWeightEditText.text.toString().isEmpty()
                 ) {
                     if(!binding.lightActivity.isSelected || !binding.middleActivity.isSelected || !binding.hardActivity.isSelected) {
                         Toast.makeText(requireContext(), "데이터 넣어라", Toast.LENGTH_SHORT).show()
@@ -52,14 +56,20 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
 
             if(binding.maleButton.isSelected || binding.femaleButton.isSelected) {
 
-                if (binding.ageEditText.text.toString().isNotEmpty() && binding.heightEditText.text.toString().isNotEmpty() && binding.weightEditText.text.toString().isNotEmpty()
+                if (binding.ageEditText.text.toString().isNotEmpty() &&
+                    binding.nameEditText.text.toString().isNotEmpty() &&
+                    binding.heightEditText.text.toString().isNotEmpty() &&
+                    binding.weightEditText.text.toString().isNotEmpty() &&
+                    binding.targetWeightEditText.text.toString().isNotEmpty()
                 ) {
                     if(binding.lightActivity.isSelected || binding.middleActivity.isSelected || binding.hardActivity.isSelected) {
                         Toast.makeText(requireContext(), "데이터 넣었네", Toast.LENGTH_SHORT).show()
 
+                        loginViewModel.setNameInfo(binding.nameEditText.text.toString())
                         loginViewModel.setAgeInfo(binding.ageEditText.text.toString().toInt())
                         loginViewModel.setHeightInfo(binding.heightEditText.text.toString().toFloat())
                         loginViewModel.setWeightInfo(binding.weightEditText.text.toString().toFloat())
+                        loginViewModel.setTargetWeightInfo(binding.weightEditText.text.toString().toFloat())
 
                         loginViewModel.addUserInfo(userId)
                         moveHomeFragment(userId)

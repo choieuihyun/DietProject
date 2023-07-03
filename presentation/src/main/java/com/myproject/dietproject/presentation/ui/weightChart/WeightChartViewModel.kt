@@ -34,10 +34,12 @@ class WeightChartViewModel @Inject constructor(
 
 
     private var _startOfWeek: MutableLiveData<String> = MutableLiveData()
-    val startOfWeek: LiveData<String> = _startOfWeek
+    val startOfWeek: LiveData<String>
+        get() = _startOfWeek
 
     private var _endOfWeek: MutableLiveData<String> = MutableLiveData()
-    val endOfWeek: LiveData<String> = _endOfWeek
+    val endOfWeek: LiveData<String>
+        get() = _endOfWeek
 
     private var _startOfPreviousWeek: MutableLiveData<String> = MutableLiveData()
     val startOfPreviousWeek: LiveData<String> = _startOfWeek
@@ -46,19 +48,24 @@ class WeightChartViewModel @Inject constructor(
     val endOfPreviousWeek: LiveData<String> = _endOfWeek
 
     private var _weekKcalArray: MutableLiveData<Event<MutableList<Int>>> = MutableLiveData()
-    val weekKcalArray: LiveData<Event<MutableList<Int>>> = _weekKcalArray
+    val weekKcalArray: LiveData<Event<MutableList<Int>>>
+        get() = _weekKcalArray
 
     private var _weekDateArray: MutableLiveData<Event<MutableList<String>>> = MutableLiveData()
-    val weekDateArray: LiveData<Event<MutableList<String>>> = _weekDateArray
+    val weekDateArray: LiveData<Event<MutableList<String>>>
+        get() = _weekDateArray
 
     private var _previousWeekDateArray: MutableLiveData<Event<MutableList<String>>> = MutableLiveData()
-    val previousWeekDateArray: LiveData<Event<MutableList<String>>> = _previousWeekDateArray
+    val previousWeekDateArray: LiveData<Event<MutableList<String>>>
+        get() = _previousWeekDateArray
 
     private var _previousWeekKcalArray: MutableLiveData<Event<MutableList<Int>>> = MutableLiveData()
-    val previousWeekKcalArray: LiveData<Event<MutableList<Int>>> = _previousWeekKcalArray
+    val previousWeekKcalArray: LiveData<Event<MutableList<Int>>>
+        get() = _previousWeekKcalArray
 
     private val _isNextButtonEnabled: MutableLiveData<Boolean> = MutableLiveData(true)
-    val isNextButtonEnabled: LiveData<Boolean> = _isNextButtonEnabled
+    val isNextButtonEnabled: LiveData<Boolean>
+        get() = _isNextButtonEnabled
 
     private val _entries: MutableList<Entry> = mutableListOf()
     val entries: MutableList<Entry>

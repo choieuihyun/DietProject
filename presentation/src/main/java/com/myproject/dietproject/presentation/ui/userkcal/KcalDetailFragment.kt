@@ -24,14 +24,24 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val kcal = args.kcal
+        val kcal = args.kcal // KcalFragment에서 현지 직송해온 데이터로 바로 넣음.
 
-        binding.makerName.text = kcal?.mAKERNAME
-        binding.foodName.text = kcal?.dESCKOR
-        binding.kcal.text = kcal?.nUTRCONT1
-        binding.carbohydrate.text = kcal?.nUTRCONT2
-        binding.protein.text = kcal?.nUTRCONT3
-        binding.fat.text = kcal?.nUTRCONT4
+        binding.kcalDetailData = args.kcal
+        binding.kcalDetailViewModel = viewModel
+
+        viewModel.getDate()
+
+        binding.previousButton.setOnClickListener {
+
+            viewModel.movePreviousDate()
+
+        }
+
+        binding.nextButton.setOnClickListener {
+
+            viewModel.moveNextDate()
+
+        }
 
         binding.plusButton.setOnClickListener {
 
@@ -69,7 +79,12 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
 
         binding.dataInputButton.setOnClickListener {
 
-            viewModel.addUserTodayKcal(args.userId, binding.kcal.text.toString().toFloat(), binding.foodName.text.toString(), binding.makerName.text.toString())
+            viewModel.addUserTodayKcal(args.userId,
+                binding.kcal.text.toString().toFloat(),
+                binding.foodName.text.toString(),
+                binding.makerName.text.toString(),
+                viewModel.kcalDetailDataByDate.value.toString()
+            )
 
             Navigation.findNavController(binding.root).navigate(R.id.action_kcalDetailFragment_to_homeFragment)
 
