@@ -4,6 +4,21 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- 투명도 -->
+
+<!--    완전 불투명 (투명도 100%): #FF000000-->
+<!--    반 투명 (투명도 50%): #80000000-->
+<!--    완전 투명 (투명도 0%): #00000000-->
+<!--    https://developer-eungb.tistory.com/31-->
+
+    <color name = "invisible100">#FF000000</color>
+    <color name = "invisible50">#80000000</color>
+    <color name = "invisible0">#00000000</color>
+    <color name = "invisible20">#33000000</color>
+
+    <color name = "invisible20red">#33FF0000</color>
+    <color name = "invisible20blue">#331976D2</color>
+
     <!-- Grey -->
 
     <color name="grey_50">#FAFAFA</color>
