@@ -30,10 +30,12 @@
             android:textColor="@color/indigo_400"
             android:textSize="20sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/thursday"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             tools:text="2021년 9월" />
 
         <ImageButton
@@ -58,9 +60,126 @@
             app:layout_constraintStart_toEndOf="@+id/tv_calendar_indicator"
             app:layout_constraintTop_toTopOf="@id/tv_calendar_indicator" />
 
+        <!--        app:cv_inDateStyle="allMonths"-->
+<!--        app:cv_outDateStyle="endOfGrid"-->
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/monday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_300"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="월"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/calendar_view"
+            app:layout_constraintEnd_toStartOf="@+id/tuesday"
+            app:layout_constraintHorizontal_bias="0.487"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_calendar_indicator"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tuesday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_300"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="화"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/calendar_view"
+            app:layout_constraintEnd_toStartOf="@+id/wednesday"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/monday"
+            app:layout_constraintTop_toBottomOf="@+id/tv_calendar_indicator"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/wednesday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_300"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="수"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/calendar_view"
+            app:layout_constraintEnd_toStartOf="@+id/thursday"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/tuesday"
+            app:layout_constraintTop_toBottomOf="@+id/tv_calendar_indicator"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/thursday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_300"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="목"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/calendar_view"
+            app:layout_constraintEnd_toStartOf="@+id/friday"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/wednesday"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/friday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_300"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="금"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/calendar_view"
+            app:layout_constraintEnd_toStartOf="@+id/saturday"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/thursday"
+            app:layout_constraintTop_toBottomOf="@+id/tv_calendar_indicator"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/saturday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_300"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="토"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/calendar_view"
+            app:layout_constraintEnd_toStartOf="@+id/sunday"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/friday"
+            app:layout_constraintTop_toBottomOf="@+id/tv_calendar_indicator"
+            app:layout_constraintVertical_bias="1.0" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sunday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_300"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="일"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/calendar_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@+id/saturday"
+            app:layout_constraintTop_toBottomOf="@+id/tv_calendar_indicator"
+            app:layout_constraintVertical_bias="1.0" />
+
         <com.kizitonwose.calendarview.CalendarView
             android:id="@+id/calendar_view"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/brown_100"
             app:cv_dayViewResource="@layout/calendar_day_layout"
@@ -69,24 +188,11 @@
             app:cv_scrollMode="paged"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.372" />
+            app:layout_constraintVertical_bias="0.544" />
 
-        <TextView
-            android:id="@+id/calendar_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="먹은것들, 칼로리 등등 어떻게 넣을까?"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendar_view"
-            app:layout_constraintVertical_bias="0.531"
-            tools:text="먹은것들, 칼로리 등등 어떻게 넣을까?" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
