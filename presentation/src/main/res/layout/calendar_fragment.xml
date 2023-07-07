@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/red_400">
+        android:background="@color/white">
 
         <!-- 여기 text에 livedata로 날짜 받아와서 넣어줘야할듯 -->
 
@@ -22,7 +22,7 @@
             android:id="@+id/tv_calendar_indicator_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/red_A100"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
                 android:lineSpacingExtra="5.6sp"
                 android:padding="12dp"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/ic_previous_calendar"
+                android:src="@drawable/ic_previous"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/tv_calendar_indicator"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:src="@drawable/ic_next_calendar"
+                android:src="@drawable/ic_next"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -89,7 +89,7 @@
             android:id="@+id/linearLayoutCompat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/red_400"
+            android:background="@color/purple_100"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -187,7 +187,7 @@
             android:id="@+id/calendar_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/purple_100"
             app:cv_dayViewResource="@layout/calendar_day_layout"
             app:cv_hasBoundaries="true"
             app:cv_orientation="horizontal"
