@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/green_A100"/>
+    <solid android:color="@color/white"/>
 
     <padding
         android:bottom="5dp"
@@ -9,8 +9,5 @@
         android:right="5dp"
         android:top="5dp"/>
     <corners
-        android:bottomLeftRadius="40dp"
-        android:bottomRightRadius="40dp"
-        android:topLeftRadius="40dp"
-        android:topRightRadius="40dp"/>
+        android:radius="12dp"/>
 </shape>
