@@ -1,18 +1,17 @@
 package com.myproject.dietproject.presentation.ui.calendar
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.CalendarDetailFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
-import com.myproject.dietproject.presentation.ui.userkcal.KcalAdapter
-import com.myproject.dietproject.presentation.ui.userkcal.KcalFragmentDirections
+import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,10 +19,20 @@ class CalenderDetailFragment : BaseFragment<CalendarDetailFragmentBinding>(R.lay
 
     private lateinit var calendarDetailAdapter: CalendarDetailAdapter
     private val args by navArgs<CalenderDetailFragmentArgs>()
+    private lateinit var mainActivity: MainActivity
     private val viewModel: CalendarDetailViewModel by viewModels()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        mainActivity = context as MainActivity
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mainActivity.getBinding.bottomNavigationView.isVisible = false
 
     }
 
@@ -37,12 +46,22 @@ class CalenderDetailFragment : BaseFragment<CalendarDetailFragmentBinding>(R.lay
         binding.viewModel = viewModel
 
         viewModel.getCalendarDetailData(args.userId, args.date.toString()) // null 경우 처리
+        viewModel.getRecommendKcalData(args.userId)
 
         viewModel.dayKcalList.observe(viewLifecycleOwner) {
-            Log.d("calendarFragment", it.toString())
             calendarDetailAdapter.submitList(it)
         }
 
+        viewModel.imageResultLiveData.observe(viewLifecycleOwner) {
+            imageViewSetting()
+        }
+
+
+
+    }
+
+    override fun onPause() {
+        super.onPause()
 
     }
 
@@ -53,9 +72,20 @@ class CalenderDetailFragment : BaseFragment<CalendarDetailFragmentBinding>(R.lay
         binding.calendarDetailRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             adapter = calendarDetailAdapter
         }
+
+    }
+
+    private fun imageViewSetting() {
+
+        if (viewModel.imageResultLiveData.value == 1)
+
+            binding.calendarDetailImageView.setImageResource(R.drawable.calendar_detail_weight)
+
+        else
+
+            binding.calendarDetailImageView.setImageResource(R.drawable.calendar_detail_good)
 
     }
 

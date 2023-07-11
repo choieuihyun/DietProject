@@ -1,13 +1,16 @@
 package com.myproject.dietproject.presentation.ui.userkcal
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.KcalDetailFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
+import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,9 +18,18 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
 
     private val args by navArgs<KcalDetailFragmentArgs>()
     private val viewModel : KcalDetailViewModel by viewModels()
+    private lateinit var mainActivity: MainActivity
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        mainActivity = context as MainActivity
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mainActivity.getBinding.bottomNavigationView.isVisible = false
 
     }
 
@@ -89,6 +101,12 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
             Navigation.findNavController(binding.root).navigate(R.id.action_kcalDetailFragment_to_homeFragment)
 
         }
+
+
+    }
+
+    override fun onPause() {
+        super.onPause()
 
 
     }

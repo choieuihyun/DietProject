@@ -1,10 +1,12 @@
 package com.myproject.dietproject.presentation.ui.userkcal
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.KcalFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
+import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,7 +23,22 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
 
     private lateinit var kcalListAdapter : KcalAdapter
     private val viewModel: KcalViewModel by viewModels()
+    private lateinit var mainActivity: MainActivity
     private val args by navArgs<KcalFragmentArgs>()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        mainActivity = context as MainActivity
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        mainActivity.getBinding.bottomNavigationView.isVisible = false
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,6 +48,11 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
         setupEdittext()
 
         setupUI()
+
+    }
+
+    override fun onPause() {
+        super.onPause()
 
     }
 
@@ -59,7 +82,6 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
         binding.addUserKcalRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             adapter = kcalListAdapter
         }
 
