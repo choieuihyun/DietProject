@@ -1,6 +1,7 @@
 package com.myproject.dietproject.presentation.ui.calendar
 
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -27,6 +28,7 @@ import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.CalendarDayLayoutBinding
 import com.myproject.dietproject.presentation.databinding.CalendarFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
+import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
 
@@ -42,6 +44,15 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(R.layout.calendar
 
     private val viewModel: CalendarViewModel by viewModels()
 
+    private lateinit var mainActivity: MainActivity
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        mainActivity = context as MainActivity
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,6 +67,13 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(R.layout.calendar
         viewModel.getCalendarDate()
 
         setCalendarView()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        mainActivity.getBinding.bottomNavigationView.isVisible = true
 
     }
 
