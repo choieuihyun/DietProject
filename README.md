@@ -1,6 +1,6 @@
 # DietProject
 
-사실 내가 살빼보려고 만든 앱
+사실 내가 살빼보려고 만든 앱 (미완)
 
 # Desciption
 
