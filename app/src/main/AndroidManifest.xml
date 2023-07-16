@@ -19,8 +19,9 @@
         android:theme="@style/Theme.DietProject">
         <activity
             android:name=".presentation.ui.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+            android:theme="@style/Theme.DietProject">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

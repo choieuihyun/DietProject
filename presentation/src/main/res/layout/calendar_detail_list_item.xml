@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
@@ -11,58 +12,64 @@
 
     </data>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/kcal_list_item_border"
-        android:layout_margin="16dp">
+        android:background="@drawable/calendar_detail_list_item_border"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/foodName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:padding="20dp"
+            android:text="@{todayKcal.foodName}"
+            android:textSize="18sp"
+            android:fontFamily="@font/kangwon_bold"
+            app:layout_constraintBottom_toTopOf="@id/makerName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="고등어구이" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/foodName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{todayKcal.foodName}"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
-                android:textSize="18sp"
-                tools:text="고등어구이"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/makerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{todayKcal.makerName}"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
-                android:textSize="18sp"
-                tools:text="하림" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/makerName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:padding="20dp"
+            android:text="@{todayKcal.makerName}"
+            android:textSize="18sp"
+            android:fontFamily="@font/kangwon_bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/foodName"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="하림" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/kcal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{Float.valueOf(todayKcal.kcal).toString()}"
-                android:gravity="end"
-                android:padding="20dp"
-                android:textSize="18sp"
-                tools:text="300kcal" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/kcal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:padding="20dp"
+            android:text='@{Float.valueOf(todayKcal.kcal).toString() + " kcal"}'
+            android:textSize="16sp"
+            android:fontFamily="@font/kangwon_bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="300kcal" />
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

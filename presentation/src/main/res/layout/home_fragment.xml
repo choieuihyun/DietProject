@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -10,209 +10,328 @@
             name="homeFragmentViewModel"
             type="com.myproject.dietproject.presentation.ui.home.HomeViewModel" />
 
+        <variable
+            name="user"
+            type="com.myproject.dietproject.domain.model.UserModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/previous_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/kcal_detail_previous"
-            app:layout_constraintBottom_toTopOf="@+id/view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.25"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/next_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/kcal_detail_next"
-            app:layout_constraintBottom_toTopOf="@+id/view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.75"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/home_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text='@{homeFragmentViewModel.homeDateText}'
-            android:textSize="28sp"
-            app:layout_constraintBottom_toTopOf="@+id/view"
-            app:layout_constraintEnd_toStartOf="@+id/next_button"
-            app:layout_constraintStart_toEndOf="@+id/previous_button"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5"
-            tools:text="6.28(수)" />
-
-        <View
-            android:id="@+id/view"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/date_layout"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#FFFF0000"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/previous_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@null"
+                android:src="@drawable/kcal_detail_previous"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/next_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@null"
+                android:src="@drawable/kcal_detail_next"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.9"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/home_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kangwon_bold"
+                android:text='@{homeFragmentViewModel.homeDateText}'
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/next_button"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/previous_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5"
+                tools:text="6.28(수)" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/progressbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/cyan_100"
+            app:layout_constraintBottom_toTopOf="@+id/view2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.133" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline"
+            app:layout_constraintVertical_bias="1.0">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/setDataButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="먹은거 등록 버튼"
-            app:layout_constraintBottom_toTopOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.913"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view"
-            app:layout_constraintVertical_bias="0.074" />
+            <!--            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/setDataButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:fontFamily="@font/kangwon_bold"
+                android:src="@drawable/homefragment_add"
+                app:layout_constraintBottom_toBottomOf="@+id/progressbar_layout"
+                app:layout_constraintEnd_toEndOf="@+id/progressbar_layout"
+                app:layout_constraintHorizontal_bias="0.898"
+                app:layout_constraintStart_toStartOf="@+id/progressbar_layout"
+                app:layout_constraintTop_toTopOf="@+id/progressbar_layout"
+                app:layout_constraintVertical_bias="0.092" />-->
 
-        <com.mikhaellopez.circularprogressbar.CircularProgressBar
-            android:id="@+id/circularProgressBar"
-            android:layout_width="330dp"
-            android:layout_height="330dp"
-            android:layout_marginTop="28dp"
-            app:cpb_background_progressbar_color="#b6bbd8"
-            app:cpb_background_progressbar_width="25dp"
-            app:cpb_progress_direction="to_right"
-            app:cpb_progress_max="4000"
-            app:cpb_progressbar_color="#3f51b5"
-            app:cpb_progressbar_width="40dp"
-            app:cpb_round_border="false"
-            app:layout_constraintBottom_toTopOf="@+id/view2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.492"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setDataButton"
-            app:layout_constraintVertical_bias="0.0" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kangwon_bold"
+                android:text="오늘 하루"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.128"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.096" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@color/cardview_dark_background"
-            app:layout_constraintBottom_toBottomOf="@+id/circularProgressBar"
-            app:layout_constraintEnd_toEndOf="@+id/circularProgressBar"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/circularProgressBar"
-            app:layout_constraintTop_toTopOf="@+id/circularProgressBar"
-            app:layout_constraintVertical_bias="0.5" />
+            <Button
+                android:id="@+id/setDataButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/teal_300"
+                android:fontFamily="@font/kangwon_bold"
+                android:text="식단"
+                app:icon="@drawable/plus"
+                app:layout_constraintBottom_toBottomOf="@+id/progressbar_layout"
+                app:layout_constraintEnd_toEndOf="@+id/progressbar_layout"
+                app:layout_constraintHorizontal_bias="0.882"
+                app:layout_constraintStart_toStartOf="@+id/progressbar_layout"
+                app:layout_constraintTop_toTopOf="@+id/progressbar_layout"
+                app:layout_constraintVertical_bias="0.082" />
+
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/circularProgressBar"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                app:cpb_background_progressbar_color="@color/grey_500"
+                app:cpb_background_progressbar_width="30dp"
+                app:cpb_progress_direction="to_right"
+                app:cpb_progressbar_color="@color/yellow_200"
+                app:cpb_progressbar_width="30dp"
+                app:cpb_round_border="false"
+                app:layout_constraintBottom_toBottomOf="@+id/progressbar_layout"
+                app:layout_constraintEnd_toEndOf="@+id/progressbar_layout"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="@+id/progressbar_layout"
+                app:layout_constraintTop_toTopOf="@+id/progressbar_layout"
+                app:layout_constraintVertical_bias="0.72" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/homeFragmentImageView"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                app:layout_constraintBottom_toBottomOf="@+id/circularProgressBar"
+                app:layout_constraintEnd_toEndOf="@+id/circularProgressBar"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/circularProgressBar"
+                app:layout_constraintTop_toTopOf="@+id/circularProgressBar"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/kcalAlert"
+                android:layout_width="140dp"
+                android:layout_height="100dp"
+                android:background="@drawable/home_alert"
+                android:fontFamily="@font/kangwon_bold"
+                android:gravity="center"
+                android:paddingBottom="6dp"
+                android:text='@{homeFragmentViewModel.kcalAlert}'
+                app:layout_constraintBottom_toBottomOf="@+id/progressbar_layout"
+                app:layout_constraintEnd_toEndOf="@+id/progressbar_layout"
+                app:layout_constraintHorizontal_bias="0.859"
+                app:layout_constraintStart_toStartOf="@+id/progressbar_layout"
+                app:layout_constraintTop_toTopOf="@+id/progressbar_layout"
+                app:layout_constraintVertical_bias="0.319"
+                tools:text="초과했어요!" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:id="@+id/view2"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#FFFF0000"
+            android:layout_height="1dp"
+            android:background="@color/cyan_100"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/kcalText_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/cyan_100"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.786" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/recommendKcal_textView"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/recommand"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/todayKcal_textView"
-            app:layout_constraintHorizontal_bias="0.43"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view2"
-            app:layout_constraintVertical_bias="0.15" />
+            app:layout_constraintVertical_bias="0.0">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/todayKcal_textView"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/today"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/scarceKcal_textView"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@id/recommendKcal_textView"
-            app:layout_constraintTop_toBottomOf="@+id/view2"
-            app:layout_constraintVertical_bias="0.15" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/kcalText_innerLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corner_background_16"
+                android:backgroundTint="@color/cyan_200"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.15">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/scarceKcal_textView"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/not_enough"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.949"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@id/todayKcal_textView"
-            app:layout_constraintTop_toBottomOf="@+id/view2"
-            app:layout_constraintVertical_bias="0.147" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/recommendKcal"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:gravity="center"
-            android:text="2000kcal"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/todayKcal"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recommendKcal_textView"
-            app:layout_constraintVertical_bias="0.0" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/recommendKcal_textView"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kangwon_bold"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/recommand"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/todayKcal_textView"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/kcalText_innerLayout"
+                    app:layout_constraintVertical_bias="0.15" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/todayKcal"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:gravity="center"
-            android:text="1800kcal"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/scarceKcal"
-            app:layout_constraintStart_toEndOf="@id/recommendKcal"
-            app:layout_constraintTop_toBottomOf="@+id/todayKcal_textView"
-            app:layout_constraintVertical_bias="0.0" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/todayKcal_textView"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kangwon_bold"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/today"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/scarceKcal_textView"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintStart_toEndOf="@id/recommendKcal_textView"
+                    app:layout_constraintTop_toTopOf="@+id/kcalText_innerLayout"
+                    app:layout_constraintVertical_bias="0.15" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/scarceKcal"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:gravity="center"
-            android:text="200kcal"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/todayKcal"
-            app:layout_constraintTop_toBottomOf="@+id/scarceKcal_textView"
-            app:layout_constraintVertical_bias="0.0" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/scarceKcal_textView"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kangwon_bold"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/not_enough"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.949"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintStart_toEndOf="@id/todayKcal_textView"
+                    app:layout_constraintTop_toTopOf="@+id/kcalText_innerLayout"
+                    app:layout_constraintVertical_bias="0.15" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/recommendKcal"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kangwon_bold"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text='@{String.valueOf(homeFragmentViewModel.recommendKcal) + "kcal"}'
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/todayKcal"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recommendKcal_textView"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="2000kcal" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/todayKcal"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kangwon_bold"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text='@{String.valueOf(homeFragmentViewModel.todayKcal).toString() + "kcal"}'
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/scarceKcal"
+                    app:layout_constraintStart_toEndOf="@id/recommendKcal"
+                    app:layout_constraintTop_toBottomOf="@+id/todayKcal_textView"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="1800kcal" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/scarceKcal"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kangwon_bold"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text='@{String.valueOf(homeFragmentViewModel.scarceKcal) + "kcal"}'
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/todayKcal"
+                    app:layout_constraintTop_toBottomOf="@+id/scarceKcal_textView"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="200kcal" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
