@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.15" />
+            app:layout_constraintGuide_percent="0.1" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -84,9 +84,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/kangwon_bold"
-                android:text="내가 얼마나 먹었었지?"
+                android:text="@{viewModel.calendarDetailAlert}"
                 android:textColor="@color/teal_700"
                 android:textSize="20sp"
+                tools:text="참 잘했어요 !"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -113,10 +114,10 @@
             </androidx.appcompat.widget.AppCompatTextView>
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/appCompatImageView"
+                android:id="@+id/calendarDetailImageView"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:background="@drawable/ic_launcher_background"
+                android:background="@color/orange_200"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
@@ -139,7 +140,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/orange_200"
-            android:layout_marginBottom="56dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -151,8 +151,10 @@
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
                 tools:listitem="@layout/kcal_list_item">
 
             </androidx.recyclerview.widget.RecyclerView>
