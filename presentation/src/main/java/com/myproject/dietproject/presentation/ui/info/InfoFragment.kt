@@ -1,8 +1,10 @@
 package com.myproject.dietproject.presentation.ui.info
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -12,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.InfoFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
+import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,6 +22,14 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
 
     private lateinit var auth: FirebaseAuth
     private val viewModel: InfoViewModel by viewModels()
+    private lateinit var mainActivity: MainActivity
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        mainActivity = context as MainActivity
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +67,13 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
 
         }
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        mainActivity.getBinding.bottomNavigationView.isVisible = true
 
     }
 
