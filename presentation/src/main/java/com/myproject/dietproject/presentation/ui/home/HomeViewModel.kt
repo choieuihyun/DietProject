@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
@@ -16,17 +17,16 @@ import com.myproject.dietproject.domain.usecase.GetUserTodayKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserUseCase
 import com.myproject.dietproject.presentation.ui.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val application: Application,
-    private val getKcalUseCase: GetKcalUseCase,
-    private val getUserUseCase: GetUserUseCase,
     private val getUserTodayKcalUseCase: GetUserTodayKcalUseCase,
     private val getUserRecommendKcalUseCase: GetUserRecommendKcalUseCase
 ) : ViewModel() {
@@ -68,10 +68,23 @@ class HomeViewModel @Inject constructor(
     val imageResultLiveData: LiveData<Int>
         get() = _imageResultLiveData
 
+    private var _kcalAlert: MutableLiveData<String> = MutableLiveData()
+    val kcalAlert: LiveData<String>
+        get() = _kcalAlert
+
     private var calculTodayKcal: Float = 0.0F // 연산용도 오늘 섭취한 칼로리
     private var calculRecommendKcal = 0 // 연산용도 권장 칼로리
 
     private val calendar = Calendar.getInstance()
+
+    init {
+        Log.d("HomeViewModelCreated", "ViewModel created")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("HomeViewModelCleared", "ViewModel cleared")
+    }
 
     fun getUserTodayKcalData(userId: String) {
 
@@ -81,29 +94,29 @@ class HomeViewModel @Inject constructor(
         var dateText = today.substring(5, 10) // 6-28로 자르기
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
+        var sum = 0.0F
+
         when (dayOfWeek) {
 
-            Calendar.MONDAY -> dateText = "$dateText(월)"
+            Calendar.MONDAY -> dateText = "$dateText (월)"
 
-            Calendar.TUESDAY -> dateText = "$dateText(화)"
+            Calendar.TUESDAY -> dateText = "$dateText (화)"
 
-            Calendar.WEDNESDAY -> dateText = "$dateText(수)"
+            Calendar.WEDNESDAY -> dateText = "$dateText (수)"
 
-            Calendar.THURSDAY -> dateText = "$dateText(목)"
+            Calendar.THURSDAY -> dateText = "$dateText (목)"
 
-            Calendar.FRIDAY -> dateText = "$dateText(금)"
+            Calendar.FRIDAY -> dateText = "$dateText (금)"
 
-            Calendar.SATURDAY -> dateText = "$dateText(토)"
+            Calendar.SATURDAY -> dateText = "$dateText (토)"
 
-            Calendar.SUNDAY -> dateText = "$dateText(일)"
+            Calendar.SUNDAY -> dateText = "$dateText (일)"
 
         }
 
         Log.d("sdfsdf", dateText.toString())
 
         viewModelScope.launch(Dispatchers.IO) {
-
-            var sum = 0.0F
 
             getUserTodayKcalUseCase(userId, today).addValueEventListener(object :
                 ValueEventListener {
@@ -117,9 +130,6 @@ class HomeViewModel @Inject constructor(
                             sum += kcal.toString().toFloat()
                         }
                     }
-                    _todayKcal.value = sum
-                    calculTodayKcal = sum // 위에꺼랑 같은데?
-
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -127,10 +137,16 @@ class HomeViewModel @Inject constructor(
                 }
             })
 
-            _homeDateText.postValue(dateText)
+            withContext(Dispatchers.Main) {
 
+                _todayKcal.value = sum
+
+                calculTodayKcal = sum // 위에꺼랑 같은데?
+
+                _homeDateText.value = dateText
+
+            }
         }
-
     }
 
     fun getRecommendKcalData(userId: String) {
@@ -153,6 +169,7 @@ class HomeViewModel @Inject constructor(
             })
         }
     }
+
 
     fun movePreviousDate(userId: String) {
 
@@ -198,19 +215,19 @@ class HomeViewModel @Inject constructor(
 
             when (dayOfWeek) {
 
-                Calendar.MONDAY -> previousDateText = "$previousDateText(월)"
+                Calendar.MONDAY -> previousDateText = "$previousDateText (월)"
 
-                Calendar.TUESDAY -> previousDateText = "$previousDateText(화)"
+                Calendar.TUESDAY -> previousDateText = "$previousDateText (화)"
 
-                Calendar.WEDNESDAY -> previousDateText = "$previousDateText(수)"
+                Calendar.WEDNESDAY -> previousDateText = "$previousDateText (수)"
 
-                Calendar.THURSDAY -> previousDateText = "$previousDateText(목)"
+                Calendar.THURSDAY -> previousDateText = "$previousDateText (목)"
 
-                Calendar.FRIDAY -> previousDateText = "$previousDateText(금)"
+                Calendar.FRIDAY -> previousDateText = "$previousDateText (금)"
 
-                Calendar.SATURDAY -> previousDateText = "$previousDateText(토)"
+                Calendar.SATURDAY -> previousDateText = "$previousDateText (토)"
 
-                Calendar.SUNDAY -> previousDateText = "$previousDateText(일)"
+                Calendar.SUNDAY -> previousDateText = "$previousDateText (일)"
 
             }
 
@@ -220,52 +237,88 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    fun moveNextDate() {
+    fun moveNextDate(userId: String) {
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         calendar.add(Calendar.DAY_OF_MONTH, 1)
 
         val nextDataByDate = dateFormat.format(calendar.time)
         var nextDate = dateFormat.format(calendar.time).substring(5, 10)
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
-        when (dayOfWeek) {
-
-            Calendar.MONDAY -> nextDate = "$nextDate(월)"
-
-            Calendar.TUESDAY -> nextDate = "$nextDate(화)"
-
-            Calendar.WEDNESDAY -> nextDate = "$nextDate(수)"
-
-            Calendar.THURSDAY -> nextDate = "$nextDate(목)"
-
-            Calendar.FRIDAY -> nextDate = "$nextDate(금)"
-
-            Calendar.SATURDAY -> nextDate = "$nextDate(토)"
-
-            Calendar.SUNDAY -> nextDate = "$nextDate(일)"
-
-        }
-
         viewModelScope.launch {
+
+            var sum = 0.0F
+
+            getUserTodayKcalUseCase(userId, nextDataByDate).addValueEventListener(object :
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    for (data in snapshot.children) {
+                        val dataDate = data.key?.substring(0, 10)
+
+                        if (dataDate == nextDataByDate) {
+                            val kcal = data.child("kcal").value
+                            sum += kcal.toString().toFloat()
+                        }
+                    }
+                    _todayKcal.value = sum
+                    calculTodayKcal = sum
+                    _scarceKcal.value = calculRecommendKcal - calculTodayKcal.toInt()
+
+                    imageSetting()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+
+            when (dayOfWeek) {
+
+                Calendar.MONDAY -> nextDate = "$nextDate (월)"
+
+                Calendar.TUESDAY -> nextDate = "$nextDate (화)"
+
+                Calendar.WEDNESDAY -> nextDate = "$nextDate (수)"
+
+                Calendar.THURSDAY -> nextDate = "$nextDate (목)"
+
+                Calendar.FRIDAY -> nextDate = "$nextDate (금)"
+
+                Calendar.SATURDAY -> nextDate = "$nextDate (토)"
+
+                Calendar.SUNDAY -> nextDate = "$nextDate (일)"
+
+            }
+
             _homeDateText.postValue(nextDate)
             _homeDataByDate.postValue(nextDataByDate)
         }
 
     }
 
-    fun imageSetting() {
+    fun imageSetting() { // 파라미터로 받아서 처리하는 것은 순서가 꼬이나?
 
-        viewModelScope.launch {
+        if (_recommendKcal.value!! * 0.8 > _todayKcal.value?.toInt()!!) { // 권장 섭취 칼로리 * 0.6 > 오늘 섭취 칼로리
 
-            if (_recommendKcal.value!! * 0.6 > _todayKcal.value?.toInt()!!) // 권장 섭취 칼로리 * 0.6 > 오늘 섭취 칼로리
+            _kcalAlert.postValue("더 먹어야 해요 !")
+            _imageResultLiveData.value = 1// 배고픈 이미지
 
-                _imageResultLiveData.postValue(1)// 배고픈 이미지
-            else
+        } else if (_recommendKcal.value!! * 0.8 < _todayKcal.value?.toInt()!! && _todayKcal.value?.toInt()!! <= recommendKcal.value!!
 
-                _imageResultLiveData.postValue(2) // 배부른 이미지
+        ) {
+
+            _kcalAlert.postValue("슬슬 배가 불러요 !")
+            _imageResultLiveData.value = 2 // 배부른 이미지
+
+        } else {
+
+            _kcalAlert.postValue("그만 먹어라")
+            _imageResultLiveData.value = 3 // 배부른 이미지는 같은데 초과
 
         }
+
     }
 
 
