@@ -2,6 +2,7 @@ package com.myproject.dietproject.data.repository
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.storage.StorageReference
 import com.myproject.dietproject.data.datasource.remotedatasource.FirebaseDataSource
 import com.myproject.dietproject.data.mapper.toEntity
 import com.myproject.dietproject.domain.model.UserModel
@@ -12,6 +13,8 @@ import javax.inject.Inject
 class FirebaseRepositoryImpl @Inject constructor(
     private val firebaseDataSource: FirebaseDataSource
 ) : FirebaseRepository {
+
+    override val firebaseStorageReference = firebaseDataSource.getFirebaseStorageReference
 
     override suspend fun test(value: String) {
         firebaseDataSource.dbTest().setValue(value)
@@ -77,6 +80,15 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override suspend fun addOverKcal(userId: String, overKcal: Int) {
         firebaseDataSource.addOverKcal(userId, overKcal)
+    }
+
+    override suspend fun getProfileImage(userId: String, path: String) : StorageReference {
+        val reference = firebaseDataSource.getFirebaseStorageReference
+        return reference.child(userId).child(path)
+    }
+
+    override suspend fun addProfileImage(userId: String, path: String){
+        firebaseDataSource.getFirebaseStorageReference.child(userId).child(path)
     }
 
 
