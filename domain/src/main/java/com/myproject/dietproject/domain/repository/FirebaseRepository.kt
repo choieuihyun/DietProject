@@ -1,9 +1,13 @@
 package com.myproject.dietproject.domain.repository
 
 import android.provider.ContactsContract.Data
+import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.storage.StorageReference
 
 interface FirebaseRepository {
+
+    val firebaseStorageReference: StorageReference
 
     suspend fun test(value: String)
 
@@ -40,5 +44,9 @@ interface FirebaseRepository {
     suspend fun addTodayKcal(userId: String, kcal: Float, foodName: String, makerName: String, date: String)
 
     suspend fun addOverKcal(userId: String, overKcal: Int)
+
+    suspend fun getProfileImage(userId: String, path: String) : StorageReference
+
+    suspend fun addProfileImage(userId: String, path: String)
 
 }
