@@ -1,33 +1,27 @@
 package com.myproject.dietproject.presentation.ui.home
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import androidx.core.view.isVisible
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.HomeFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
 import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.NullPointerException
 
 @AndroidEntryPoint
-class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
+class HomeFragment : BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
-    private val viewModel : HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
     private lateinit var mainActivity: MainActivity
     private lateinit var auth: FirebaseAuth
 
@@ -37,6 +31,7 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
         super.onAttach(context)
 
         mainActivity = context as MainActivity
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +39,14 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
         auth = Firebase.auth
 
-        mainActivity.getBinding.bottomNavigationView.isVisible = true
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return super.onCreateView(inflater, container, savedInstanceState)
 
     }
 
@@ -53,32 +55,24 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
         binding.homeFragmentViewModel = viewModel
 
-        viewModel.getUserTodayKcalData(auth.currentUser!!.uid)
         viewModel.getRecommendKcalData(auth.currentUser!!.uid)
-        //viewModel.imageSetting()
+        viewModel.getUserTodayKcalData(auth.currentUser!!.uid)
 
-        Log.d("sdeeee", viewModel.imageResultLiveData.value.toString())
+        viewModel.todayKcal.observe(viewLifecycleOwner) { todayKcal ->
+            viewModel.recommendKcal.observe(viewLifecycleOwner) { recommendKcal -> // recommendKcal가 변화가 없어서 지속적으로 관찰할 수 없음.
+                // 그래서 todayKcal 안에 두면 될 것 같았는데 안그래도 되긴 함. 어차피 변동 없는 값이라.
+                Log.d("homeFragmentTodayKcal", todayKcal.toString())
+                progressBarSetting(todayKcal, recommendKcal.toFloat())
+                Log.d(
+                    "homeFragmentRecommendKcal",
+                    viewModel.recommendKcal.value?.toFloat().toString()
+                )
 
-
-        viewModel.todayKcal.observe(viewLifecycleOwner) {
-
-            progressBarSetting(it, viewModel.recommendKcal.value!!.toFloat())
-            binding.todayKcal.text = it.toInt().toString() + " Kcal"
-            Log.d("homeFragment1", it.toString())
-
-        }
-
-        viewModel.recommendKcal.observe(viewLifecycleOwner) {
-
-            binding.recommendKcal.text = "$it Kcal"
-            Log.d("homeFragment2", it.toString())
-
+            }
         }
 
         viewModel.scarceKcal.observe(viewLifecycleOwner) {
 
-            Log.d("homeFragment3", it.toString())
-            binding.scarceKcal.text = "$it Kcal"
 
         }
 
@@ -88,10 +82,10 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
         }
 
-
         binding.setDataButton.setOnClickListener {
 
-            val action = HomeFragmentDirections.actionHomeFragmentToKcalFragment(auth.currentUser!!.uid)
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToKcalFragment(auth.currentUser!!.uid)
             findNavController().navigate(action)
 
         }
@@ -102,6 +96,12 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
         }
 
+        binding.nextButton.setOnClickListener {
+
+            viewModel.moveNextDate(auth.currentUser!!.uid)
+
+        }
+
     }
 
     private fun progressBarSetting(sumKcal: Float, max: Float) {
@@ -109,22 +109,17 @@ class HomeFragment: BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
         val circleProgressBar = binding.circularProgressBar
 
         circleProgressBar.apply {
+            progress = 0.0F
+
             progressMax = max
             // Set Progress
             progress = sumKcal
-
-            // or with animation 이게 xml에 없던데
-            setProgressWithAnimation(progress, 1500)
-
-
-
-
         }
     }
 
     private fun imageViewSetting() {
 
-        if(viewModel.imageResultLiveData.value == 1)
+        if (viewModel.imageResultLiveData.value == 1)
             binding.homeFragmentImageView.setImageResource(R.drawable.hungry)
         else
             binding.homeFragmentImageView.setImageResource(R.drawable.obesity)

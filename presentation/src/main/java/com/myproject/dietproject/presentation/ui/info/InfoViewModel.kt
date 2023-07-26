@@ -1,20 +1,32 @@
 package com.myproject.dietproject.presentation.ui.info
 
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.util.Log
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
+import com.myproject.dietproject.domain.usecase.AddUserProfileImage
+import com.myproject.dietproject.domain.usecase.GetFirebaseStorageRef
 import com.myproject.dietproject.domain.usecase.GetUserEmailUseCase
 import com.myproject.dietproject.domain.usecase.GetUserNameUseCase
+import com.myproject.dietproject.domain.usecase.GetUserProfileImage
 import com.myproject.dietproject.domain.usecase.GetUserRecommendKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserTargetWeightUseCase
 import com.myproject.dietproject.domain.usecase.GetUserWeekKcalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,7 +38,10 @@ class InfoViewModel @Inject constructor(
     private val getUserNameUseCase: GetUserNameUseCase,
     private val getUserTargetWeightUseCase: GetUserTargetWeightUseCase,
     private val getUserNumerousKcalByFoodUseCase: GetUserWeekKcalUseCase,
-    private val getUserNumerousKcalByDateUseCase: GetUserWeekKcalUseCase
+    private val getUserNumerousKcalByDateUseCase: GetUserWeekKcalUseCase,
+    private val getUserProfileImage: GetUserProfileImage,
+    private val addUserProfileImage: AddUserProfileImage, // 이거 쓰면 이상해짐
+    private val getFirebaseStorageRef: GetFirebaseStorageRef
 
 ) : ViewModel() {
 
@@ -257,5 +272,70 @@ class InfoViewModel @Inject constructor(
 
     }
 
+    fun getUserProfileImage(c: Context,
+                            userId: String,
+                            path: String,
+                            v: ImageView,
+                            nothing: Int) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            getUserProfileImage(userId,path).downloadUrl.addOnSuccessListener { uri ->
+                Glide.with(c).load(uri).into(v)
+            }.addOnFailureListener {
+                Glide.with(c).load(nothing).into(v)
+            }
+        }
+    }
+
+    fun addUserProfileImage(userId: String, path: String, uri: Uri) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val uploadRef = getFirebaseStorageRef().child(userId).child(path)
+            val imageName = uri.toString().substring(38,43)
+            val imageRef = uploadRef.putFile(uri)
+            imageRef.addOnCompleteListener { task ->
+
+                if(task.isSuccessful) {
+
+                    Log.d("ImageSuccess2", "success")
+
+                } else {
+
+                    Log.d("ImageFailure2", "${task.exception?.message}")
+
+                }
+            }
+
+
+        }
+    }
+
+    /*            uploadRef.parent.let { parentRef ->
+
+                parentRef?.listAll()?.addOnSuccessListener { listResult ->
+
+                    val pathExists = listResult.items.any { item ->
+                        item.name == uploadRef.name
+                    }
+
+                    if (!pathExists) {
+
+                        uploadRef.parent?.child(uploadRef.name)?.putFile(uri)?.addOnSuccessListener { task ->
+
+                            if(task.task.isSuccessful)
+                                Log.d("ImageSuccess", "success")
+                            else
+                                Log.d("ImageFailure", "failure")
+
+                        }
+
+                    } else {
+
+
+
+                    }
+                }
+
+            }*/
 }
 

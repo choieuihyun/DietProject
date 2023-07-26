@@ -3,13 +3,18 @@ package com.myproject.dietproject.data.datasource.remotedatasource
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.util.Date
 
 import javax.inject.Inject
 
 class FirebaseDataSource @Inject constructor(
-    private val firebase: FirebaseDatabase
+    private val firebase: FirebaseDatabase,
+    private val firebaseStorage: FirebaseStorage
 ) {
+
+    val getFirebaseStorageReference = firebaseStorage.reference
 
     fun dbTest(): DatabaseReference {
         return firebase.getReference("test")
@@ -68,8 +73,7 @@ class FirebaseDataSource @Inject constructor(
     }
 
     fun addOverKcal(userId: String, overKcal: Int) {
-        firebase.getReference("user").child(userId).let {
-            it.child("overKcal").setValue(overKcal)
-        }
+        firebase.getReference("user").child(userId).child("overKcal").setValue(overKcal)
     }
+
 }

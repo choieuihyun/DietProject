@@ -28,19 +28,32 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:background="@drawable/ic_launcher_background"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/info_fragment_image_background"
                 app:civ_border_overlay="true"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.088"
+                app:layout_constraintHorizontal_bias="0.086"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.588"
-                tools:background="@drawable/ic_launcher_background">
+                app:layout_constraintVertical_bias="0.604"
+                tools:background="@drawable/profile_nothing">
 
             </de.hdodenhof.circleimageview.CircleImageView>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/profile_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/info_fragment_image_plus_background"
+                android:src="@drawable/info_fragment_plus"
+                app:layout_constraintBottom_toTopOf="@+id/guideline2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.31"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.739" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/setting_button"
