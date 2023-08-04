@@ -1,11 +1,15 @@
 package com.myproject.dietproject.presentation.ui.personal_info
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.PersonalInfoFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
@@ -15,13 +19,21 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.personal_info_fragment) {
 
+    private lateinit var auth: FirebaseAuth
+
     private val args by navArgs<PersonalInfoFragmentArgs>()
 
-    private val loginViewModel: PersonalInfoViewModel by viewModels()
+    private val personalInfoViewModel: PersonalInfoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        auth = Firebase.auth
+
+    }
+
+    override fun onStart() {
+        super.onStart()
 
     }
 
@@ -29,12 +41,13 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
         super.onViewCreated(view, savedInstanceState)
 
         val userId = args.userId
+        val email = args.email
 
-        personalInfoWork(userId)
+        personalInfoWork(userId, email)
 
     }
 
-    private fun personalInfoWork(userId: String) {
+    private fun personalInfoWork(userId: String, email: String) {
 
         buttonSetting()
 
@@ -65,14 +78,21 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
                     if(binding.lightActivity.isSelected || binding.middleActivity.isSelected || binding.hardActivity.isSelected) {
                         Toast.makeText(requireContext(), "데이터 넣었네", Toast.LENGTH_SHORT).show()
 
-                        loginViewModel.setNameInfo(binding.nameEditText.text.toString())
-                        loginViewModel.setAgeInfo(binding.ageEditText.text.toString().toInt())
-                        loginViewModel.setHeightInfo(binding.heightEditText.text.toString().toFloat())
-                        loginViewModel.setWeightInfo(binding.weightEditText.text.toString().toFloat())
-                        loginViewModel.setTargetWeightInfo(binding.weightEditText.text.toString().toFloat())
+                        personalInfoViewModel.addUser(auth.uid.toString(), email)
 
-                        loginViewModel.addUserInfo(userId)
+                        personalInfoViewModel.getUser(auth.uid.toString())
+
+                        personalInfoViewModel.setNameInfo(binding.nameEditText.text.toString())
+                        personalInfoViewModel.setAgeInfo(binding.ageEditText.text.toString().toInt())
+                        personalInfoViewModel.setHeightInfo(binding.heightEditText.text.toString().toFloat())
+                        personalInfoViewModel.setWeightInfo(binding.weightEditText.text.toString().toFloat())
+                        personalInfoViewModel.setTargetWeightInfo(binding.weightEditText.text.toString().toFloat())
+
+                        personalInfoViewModel.addUserInfo(userId)
+
                         moveHomeFragment(userId)
+
+
                     }
                 }
             }
@@ -87,7 +107,7 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
 
             if(binding.maleButton.isClickable) {
                 binding.maleButton.isSelected = binding.maleButton.isSelected != true
-                loginViewModel.setGenderInfo("male")
+                personalInfoViewModel.setGenderInfo("male")
             }
         }
 
@@ -97,7 +117,7 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
 
             if(binding.femaleButton.isClickable) {
                 binding.femaleButton.isSelected = binding.femaleButton.isSelected != true
-                loginViewModel.setGenderInfo("female")
+                personalInfoViewModel.setGenderInfo("female")
             }
         }
 
@@ -108,7 +128,7 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
 
             if(binding.lightActivity.isClickable) {
                 binding.lightActivity.isSelected = binding.lightActivity.isSelected != true
-                loginViewModel.setActivityInfo("lightActivity")
+                personalInfoViewModel.setActivityInfo("lightActivity")
             }
         }
 
@@ -119,7 +139,7 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
 
             if(binding.middleActivity.isClickable) {
                 binding.middleActivity.isSelected = binding.middleActivity.isSelected != true
-                loginViewModel.setActivityInfo("middleActivity")
+                personalInfoViewModel.setActivityInfo("middleActivity")
             }
         }
 
@@ -130,13 +150,15 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
 
             if(binding.hardActivity.isClickable) {
                 binding.hardActivity.isSelected = binding.hardActivity.isSelected != true
-                loginViewModel.setActivityInfo("hardActivity")
+                personalInfoViewModel.setActivityInfo("hardActivity")
             }
         }
 
     }
 
+
     private fun moveHomeFragment(userId: String) {
+
         val action = PersonalInfoFragmentDirections.actionPersonalInfoFragmentToHomeFragment(userId)
         findNavController().navigate(action)
     }
