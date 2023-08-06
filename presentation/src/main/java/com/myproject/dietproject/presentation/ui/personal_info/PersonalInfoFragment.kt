@@ -40,14 +40,14 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userId = args.userId
         val email = args.email
+        val pw = args.pw
 
-        personalInfoWork(userId, email)
+        personalInfoWork(email, pw)
 
     }
 
-    private fun personalInfoWork(userId: String, email: String) {
+    private fun personalInfoWork(email: String, pw: String) {
 
         buttonSetting()
 
@@ -78,7 +78,7 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
                     if(binding.lightActivity.isSelected || binding.middleActivity.isSelected || binding.hardActivity.isSelected) {
                         Toast.makeText(requireContext(), "데이터 넣었네", Toast.LENGTH_SHORT).show()
 
-                        personalInfoViewModel.addUser(auth.uid.toString(), email)
+ /*                       personalInfoViewModel.addUser(auth.uid.toString(), email)
 
                         personalInfoViewModel.getUser(auth.uid.toString())
 
@@ -88,9 +88,30 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
                         personalInfoViewModel.setWeightInfo(binding.weightEditText.text.toString().toFloat())
                         personalInfoViewModel.setTargetWeightInfo(binding.weightEditText.text.toString().toFloat())
 
-                        personalInfoViewModel.addUserInfo(userId)
+                        personalInfoViewModel.addUserInfo(userId)*/
 
-                        moveHomeFragment(userId)
+                        auth.createUserWithEmailAndPassword(email, pw)
+                            .addOnCompleteListener { task ->
+                                if(task.isSuccessful) {
+
+                                    personalInfoViewModel.addUser(auth.uid.toString(), email)
+
+                                    personalInfoViewModel.getUser(auth.uid.toString())
+
+                                    personalInfoViewModel.setNameInfo(binding.nameEditText.text.toString())
+                                    personalInfoViewModel.setAgeInfo(binding.ageEditText.text.toString().toInt())
+                                    personalInfoViewModel.setHeightInfo(binding.heightEditText.text.toString().toFloat())
+                                    personalInfoViewModel.setWeightInfo(binding.weightEditText.text.toString().toFloat())
+                                    personalInfoViewModel.setTargetWeightInfo(binding.weightEditText.text.toString().toFloat())
+
+                                    personalInfoViewModel.addUserInfo(auth.uid.toString())
+
+                                    moveHomeFragment(auth.uid.toString())
+
+                                } else if (task.exception?.message.isNullOrEmpty()) {
+                                    Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
+                                }
+                            }
 
 
                     }
