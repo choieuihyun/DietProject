@@ -26,12 +26,14 @@
                 android:id="@+id/male_button"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
+                android:background="@drawable/personal_info_fragment_man"
                 android:layout_marginEnd="20dp" />
 
             <androidx.constraintlayout.utils.widget.ImageFilterButton
                 android:id="@+id/female_button"
                 android:layout_width="150dp"
-                android:layout_height="150dp" />
+                android:layout_height="150dp"
+                android:background="@drawable/personal_info_fragment_woman"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -186,31 +188,69 @@
             android:layout_marginEnd="24dp"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@id/nextButtonLinearLayout"
+            app:layout_constraintBottom_toTopOf="@id/activityTextLinearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/targetWeightLinearLayout">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/light_activity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_weight="1"
-                android:text="활동 적음\n(앉아서 하는 일)" />
+                android:background="@drawable/personal_info_fragment_light_activity" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/middle_activity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_weight="1"
-                android:text="일반적임\n(서서 하는 일)" />
+                android:background="@drawable/personal_info_fragment_middle_activity"
+/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/hard_activity"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:background="@drawable/personal_info_fragment_hard_activity" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/activityTextLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toTopOf="@+id/nextButtonLinearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activityLinearLayout">
+
+            <TextView
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="활동 많음\n(앉아서 하는 일)" />
+                android:gravity="center"
+                android:text="적은 활동량\n(앉아서 하는 일)" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="중간 활동량\n(서서 하는 일)" />
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="많은 활동량\n(운동, 농업 등)" />
+
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -222,7 +262,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.925"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activityLinearLayout">
+            app:layout_constraintTop_toBottomOf="@+id/activityLinearLayout"
+            app:layout_constraintVertical_bias="0.536">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/nextButton"
