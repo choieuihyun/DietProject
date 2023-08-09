@@ -12,14 +12,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.myproject.dietproject.presentation.R
-import com.myproject.dietproject.presentation.databinding.InfoFragmentDetailBinding
+import com.myproject.dietproject.presentation.databinding.InfoFragmentOptionBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
 import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class InfoFragmentDetail : BaseFragment<InfoFragmentDetailBinding>(R.layout.info_fragment_detail){
+class InfoFragmentOption : BaseFragment<InfoFragmentOptionBinding>(R.layout.info_fragment_option){
 
     private lateinit var auth: FirebaseAuth
     private lateinit var mGoogleSignInClient: GoogleSignInClient
