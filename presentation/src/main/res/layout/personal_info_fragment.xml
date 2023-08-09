@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
+            android:layout_marginTop="24dp"
             app:layout_constraintBottom_toTopOf="@id/nameLinearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -26,14 +27,14 @@
                 android:id="@+id/male_button"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:background="@drawable/personal_info_fragment_man"
-                android:layout_marginEnd="20dp" />
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/personal_info_fragment_man" />
 
             <androidx.constraintlayout.utils.widget.ImageFilterButton
                 android:id="@+id/female_button"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:background="@drawable/personal_info_fragment_woman"/>
+                android:background="@drawable/personal_info_fragment_woman" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -262,8 +263,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.925"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activityLinearLayout"
-            app:layout_constraintVertical_bias="0.536">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.956">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/nextButton"
