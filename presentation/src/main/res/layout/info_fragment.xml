@@ -28,32 +28,32 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:background="@drawable/info_fragment_image_background"
                 app:civ_border_overlay="true"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.086"
+                app:layout_constraintHorizontal_bias="0.063"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.604"
+                app:layout_constraintVertical_bias="0.526"
                 tools:background="@drawable/profile_nothing">
 
             </de.hdodenhof.circleimageview.CircleImageView>
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/profile_image_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/info_fragment_image_plus_background"
                 android:src="@drawable/info_fragment_plus"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.31"
+                app:layout_constraintHorizontal_bias="0.354"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.739" />
+                app:layout_constraintVertical_bias="0.79" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/setting_button"
@@ -61,11 +61,11 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/setting"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.918"
+                app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.292" />
+                app:layout_constraintVertical_bias="0.25" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/profile_email"
@@ -74,11 +74,11 @@
                 android:text="@{viewModel.email}"
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.862"
+                app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.534"
+                app:layout_constraintVertical_bias="0.5"
                 tools:text="amammmaa1@gmail.com">
 
             </androidx.appcompat.widget.AppCompatTextView>
@@ -90,11 +90,11 @@
                 android:text="@{viewModel.name}"
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toTopOf="@+id/guideline2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.915"
+                app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.74"
+                app:layout_constraintVertical_bias="0.75"
                 tools:text="최의현">
 
             </androidx.appcompat.widget.AppCompatTextView>
@@ -105,6 +105,13 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.6" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.95" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/targetLayout"
@@ -202,8 +209,8 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="나의 목표"
                 android:fontFamily="@font/kangwon_bold"
+                android:text="나의 목표"
                 android:textColor="@color/black"
                 android:textSize="18dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -226,10 +233,6 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabRippleColor="@android:color/transparent"
-            app:tabTextColor="@color/grey_500"
-            app:tabSelectedTextColor="@color/black"
-            app:tabIndicatorColor="@color/grey_200"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -237,7 +240,11 @@
             app:layout_constraintTop_toBottomOf="@+id/guideline"
             app:layout_constraintVertical_bias="0.0"
             app:tabGravity="fill"
-            app:tabMode="fixed">
+            app:tabIndicatorColor="@color/grey_200"
+            app:tabMode="fixed"
+            app:tabRippleColor="@android:color/transparent"
+            app:tabSelectedTextColor="@color/black"
+            app:tabTextColor="@color/grey_500">
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tab_item1"
@@ -249,78 +256,91 @@
                 android:id="@+id/tab_item2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tab 2" />
+                android:text="공유하기" />
 
         </com.google.android.material.tabs.TabLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/tabLayout_constraint"
+        <FrameLayout
+            android:id="@+id/frame_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabLayout"
-            app:layout_constraintVertical_bias="1.0"
-            app:layout_constraintVertical_chainStyle="spread">
+            app:layout_constraintTop_toBottomOf="@id/tabLayout"
+            app:layout_constraintVertical_bias="0.0">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/most_numerous_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text='@{"가장 많이 먹은 날(Kcal) : " + viewModel.mostNumerousDate.toString()}'
-                android:fontFamily="@font/kangwon_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                app:layout_constraintBottom_toTopOf="@+id/most_numerous_food"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_weight="1"
-                tools:text="가장 많이 먹은 날 : 2023-06-09" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/most_numerous_food"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text='@{"한 번에 가장 많이 섭취한 칼로리(Kcal) : " + viewModel.mostNumerousFood.toString() + " Kcal"}'
-                android:fontFamily="@font/kangwon_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                app:layout_constraintBottom_toTopOf="@+id/most_numerous_kcal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/most_numerous_date"
-                app:layout_constraintVertical_weight="1"
-                tools:text="한번에 제일 많이 먹은 양 (kcal) : 초콜릿 (2000 kcal)" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/most_numerous_kcal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text='@{"하루 평균 섭취한 칼로리(Kcal) : " + viewModel.dayKcal + " Kcal"}'
-                android:fontFamily="@font/kangwon_bold"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                app:layout_constraintBottom_toTopOf="@+id/over_recommendKcal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/most_numerous_food"
-                app:layout_constraintVertical_weight="1"
-                tools:text='하루 평균 먹은 칼로리 : 1200 kcal' />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/over_recommendKcal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tabLayout_constraint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/most_numerous_kcal"
-                tools:text="권장 칼로리 초과한 날 : 3일" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                app:layout_constraintVertical_chainStyle="spread">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/most_numerous_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kangwon_bold"
+                    android:text='@{"가장 많이 먹은 날(Kcal) : " + viewModel.mostNumerousDate.toString()}'
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    app:layout_constraintBottom_toTopOf="@+id/most_numerous_food"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_weight="1"
+                    tools:text="가장 많이 먹은 날 : 2023-06-09" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/most_numerous_food"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kangwon_bold"
+                    android:text='@{"한 번에 가장 많이 섭취한 칼로리(Kcal) : " + viewModel.mostNumerousFood.toString() + " Kcal"}'
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    app:layout_constraintBottom_toTopOf="@+id/most_numerous_kcal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/most_numerous_date"
+                    app:layout_constraintVertical_weight="1"
+                    tools:text="한번에 제일 많이 먹은 양 (kcal) : 초콜릿 (2000 kcal)" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/most_numerous_kcal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kangwon_bold"
+                    android:text='@{"하루 평균 섭취한 칼로리(Kcal) : " + viewModel.dayKcal + " Kcal"}'
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    app:layout_constraintBottom_toTopOf="@+id/over_recommendKcal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/most_numerous_food"
+                    app:layout_constraintVertical_weight="1"
+                    tools:text='하루 평균 먹은 칼로리 : 1200 kcal' />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/over_recommendKcal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/most_numerous_kcal"
+                    tools:text="권장 칼로리 초과한 날 : 3일" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
