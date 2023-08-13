@@ -84,15 +84,15 @@ class KcalDetailViewModel @Inject constructor(
 
         when(dayOfWeek) {
 
-            Calendar.MONDAY -> dateText = "$dateText(월)"
+            Calendar.MONDAY -> dateText = "$dateText (월)"
 
-            Calendar.TUESDAY -> dateText = "$dateText(화)"
+            Calendar.TUESDAY -> dateText = "$dateText (화)"
 
-            Calendar.WEDNESDAY -> dateText = "$dateText(수)"
+            Calendar.WEDNESDAY -> dateText = "$dateText (수)"
 
-            Calendar.THURSDAY -> dateText = "$dateText(목)"
+            Calendar.THURSDAY -> dateText = "$dateText (목)"
 
-            Calendar.FRIDAY -> dateText = "$dateText(금)"
+            Calendar.FRIDAY -> dateText = "$dateText (금)"
 
             Calendar.SATURDAY -> dateText = "$dateText(토)"
 
@@ -115,23 +115,21 @@ class KcalDetailViewModel @Inject constructor(
         var previousDateText = dateFormat.format(calendar.time).substring(5,10)
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
-        Log.d("previousDate", previousDateText.toString())
-
         when(dayOfWeek) {
 
-            Calendar.MONDAY -> previousDateText = "$previousDateText(월)"
+            Calendar.MONDAY -> previousDateText = "$previousDateText (월)"
 
-            Calendar.TUESDAY -> previousDateText = "$previousDateText(화)"
+            Calendar.TUESDAY -> previousDateText = "$previousDateText (화)"
 
-            Calendar.WEDNESDAY -> previousDateText = "$previousDateText(수)"
+            Calendar.WEDNESDAY -> previousDateText = "$previousDateText (수)"
 
-            Calendar.THURSDAY -> previousDateText = "$previousDateText(목)"
+            Calendar.THURSDAY -> previousDateText = "$previousDateText (목)"
 
-            Calendar.FRIDAY -> previousDateText = "$previousDateText(금)"
+            Calendar.FRIDAY -> previousDateText = "$previousDateText (금)"
 
-            Calendar.SATURDAY -> previousDateText = "$previousDateText(토)"
+            Calendar.SATURDAY -> previousDateText = "$previousDateText (토)"
 
-            Calendar.SUNDAY -> previousDateText = "$previousDateText(일)"
+            Calendar.SUNDAY -> previousDateText = "$previousDateText (일)"
 
         }
 
@@ -152,19 +150,19 @@ class KcalDetailViewModel @Inject constructor(
 
         when(dayOfWeek) {
 
-            Calendar.MONDAY -> nextDate = "$nextDate(월)"
+            Calendar.MONDAY -> nextDate = "$nextDate (월)"
 
-            Calendar.TUESDAY -> nextDate = "$nextDate(화)"
+            Calendar.TUESDAY -> nextDate = "$nextDate (화)"
 
-            Calendar.WEDNESDAY -> nextDate = "$nextDate(수)"
+            Calendar.WEDNESDAY -> nextDate = "$nextDate (수)"
 
-            Calendar.THURSDAY -> nextDate = "$nextDate(목)"
+            Calendar.THURSDAY -> nextDate = "$nextDate (목)"
 
-            Calendar.FRIDAY -> nextDate = "$nextDate(금)"
+            Calendar.FRIDAY -> nextDate = "$nextDate (금)"
 
-            Calendar.SATURDAY -> nextDate = "$nextDate(토)"
+            Calendar.SATURDAY -> nextDate = "$nextDate (토)"
 
-            Calendar.SUNDAY -> nextDate = "$nextDate(일)"
+            Calendar.SUNDAY -> nextDate = "$nextDate (일)"
 
         }
 
