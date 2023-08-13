@@ -12,6 +12,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "KCAL_API_KEY", properties["kcalApikey"]
+        buildConfigField "String", "KAKAO_KEY", properties["kakaoApikey"]
+
+        manifestPlaceholders = [KAKAO_KEY: properties['kakaoApikey']]
         // Required ONLY if your minSdkVersion is below 21 --> CalenderView Library
         multiDexEnabled true
 
