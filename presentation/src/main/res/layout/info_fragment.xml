@@ -229,7 +229,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.5" />
 
-        <com.google.android.material.tabs.TabLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -246,19 +246,24 @@
             app:tabSelectedTextColor="@color/black"
             app:tabTextColor="@color/grey_500">
 
-            <com.google.android.material.tabs.TabItem
+            <TextView
                 android:id="@+id/tab_item1"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="반성문" />
+                android:textSize="20sp"
+                android:padding="8dp"
+                android:fontFamily="@font/kangwon_bold"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:text="반 성 문" />
 
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/tab_item2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="공유하기" />
+<!--            <com.google.android.material.tabs.TabItem-->
+<!--                android:id="@+id/tab_item2"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="공유하기" />-->
 
-        </com.google.android.material.tabs.TabLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <FrameLayout
             android:id="@+id/frame_layout"
