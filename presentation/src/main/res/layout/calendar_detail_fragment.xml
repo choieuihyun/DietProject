@@ -34,7 +34,7 @@
                 android:fontFamily="@font/kangwon_bold"
                 android:text="나의 기록일지"
                 android:textColor="@color/black"
-                android:textSize="28sp"
+                android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.1"
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/kangwon_bold"
                 android:textColor="@color/black"
-                android:textSize="28sp"
+                android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.9"
@@ -73,11 +73,37 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/orange_200"
+            android:background="@color/blue_100"
             app:layout_constraintBottom_toBottomOf="@+id/guideline2"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideline">
+            app:layout_constraintTop_toTopOf="@id/guideline"
+            app:layout_constraintVertical_bias="1.0">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/kakaoTalkButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/kakaotalk"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.35"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.4" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/messageButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/message"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.65"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.4" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textview2"
@@ -87,12 +113,12 @@
                 android:text="@{viewModel.calendarDetailAlert}"
                 android:textColor="@color/teal_700"
                 android:textSize="20sp"
-                tools:text="참 잘했어요 !"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.15">
+                app:layout_constraintVertical_bias="0.125"
+                tools:text="참 잘했어요 !">
 
             </androidx.appcompat.widget.AppCompatTextView>
 
@@ -106,9 +132,10 @@
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.32"
+                app:layout_constraintVertical_bias="0.25"
                 tools:text="2500kcal">
 
             </androidx.appcompat.widget.AppCompatTextView>
@@ -117,13 +144,12 @@
                 android:id="@+id/calendarDetailImageView"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:background="@color/orange_200"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.796">
+                app:layout_constraintVertical_bias="0.85">
 
             </androidx.appcompat.widget.AppCompatImageView>
 
@@ -139,7 +165,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/teal_200"
+            android:background="@color/teal_100"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
