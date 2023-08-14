@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -18,7 +19,7 @@ import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class InfoFragmentOption : BaseFragment<InfoFragmentOptionBinding>(R.layout.info_fragment_option){
+class OptionFragment : BaseFragment<InfoFragmentOptionBinding>(R.layout.info_fragment_option){
 
     private lateinit var auth: FirebaseAuth
     private lateinit var mGoogleSignInClient: GoogleSignInClient
@@ -45,15 +46,14 @@ class InfoFragmentOption : BaseFragment<InfoFragmentOptionBinding>(R.layout.info
 
         googleLogout()
 
+        movePersonalInfo()
+
     }
 
     override fun onPause() {
         super.onPause()
 
-
-
     }
-
 
     private fun googleLogout() {
 
@@ -76,4 +76,14 @@ class InfoFragmentOption : BaseFragment<InfoFragmentOptionBinding>(R.layout.info
 
     }
 
+    private fun movePersonalInfo() {
+
+        binding.modifyInfoButton.setOnClickListener {
+
+            val action = OptionFragmentDirections.actionOptionFragmentToPersonalInfoFragment("", "")
+            findNavController().navigate(action)
+
+        }
+
+    }
 }
