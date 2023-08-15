@@ -21,6 +21,9 @@
 
     <string name="calendar_detail_kcal">%s kcal</string>
 
+    <!-- loadingProgress -->
+    <string name="loading_text">잠시만 기다려주세요..</string>
+
     <!-- network error message -->
 
     <string name="error_msg">An error occurred during\nnetwork communication.</string>
@@ -32,4 +35,10 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- kakao link setting -->
+
+    <string name="kakaolink_host">kakaolink</string>
+
+
 </resources>

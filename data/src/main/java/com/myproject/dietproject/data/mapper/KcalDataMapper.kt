@@ -1,21 +1,44 @@
 package com.myproject.dietproject.data.mapper
 
+import android.util.Log
 import com.myproject.dietproject.data.db.remote.response.kcalresponse.KcalData
 import com.myproject.dietproject.domain.error.NetworkResult
 
 import com.myproject.dietproject.domain.model.Kcal
+import java.lang.NumberFormatException
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 fun KcalData.toModel() = Kcal(
 
         dESCKOR = dESCKOR,
         mAKERNAME = mAKERNAME,
-        nUTRCONT1 = nUTRCONT1,
-        nUTRCONT2 = nUTRCONT2,
-        nUTRCONT3 = nUTRCONT3,
-        nUTRCONT4 = nUTRCONT4,
+        nUTRCONT1 = convertStringToInt(nUTRCONT1.toString()),
+        nUTRCONT2 = convertStringToInt(nUTRCONT2.toString()),
+        nUTRCONT3 = convertStringToInt(nUTRCONT3.toString()),
+        nUTRCONT4 = convertStringToInt(nUTRCONT4.toString()),
         sERVINGSIZE = sERVINGSIZE
 
     )
+
+
+private fun convertStringToInt(value: String) : String {
+
+    var stringValue = ""
+
+    try {
+
+        val convertValue = value.toFloat().roundToInt()
+
+        stringValue = convertValue.toString()
+
+    } catch (n : NumberFormatException) {
+
+    }
+
+    return stringValue
+}
+
 
 fun <T> NetworkResult<T>.toNetworkResult() : T =
     (this as NetworkResult.Success).data

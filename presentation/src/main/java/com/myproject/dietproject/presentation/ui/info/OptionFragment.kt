@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -12,14 +13,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.myproject.dietproject.presentation.R
-import com.myproject.dietproject.presentation.databinding.InfoFragmentDetailBinding
+import com.myproject.dietproject.presentation.databinding.InfoFragmentOptionBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
 import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class InfoFragmentDetail : BaseFragment<InfoFragmentDetailBinding>(R.layout.info_fragment_detail){
+class OptionFragment : BaseFragment<InfoFragmentOptionBinding>(R.layout.info_fragment_option){
 
     private lateinit var auth: FirebaseAuth
     private lateinit var mGoogleSignInClient: GoogleSignInClient
@@ -46,15 +46,14 @@ class InfoFragmentDetail : BaseFragment<InfoFragmentDetailBinding>(R.layout.info
 
         googleLogout()
 
+        movePersonalInfo()
+
     }
 
     override fun onPause() {
         super.onPause()
 
-
-
     }
-
 
     private fun googleLogout() {
 
@@ -77,4 +76,14 @@ class InfoFragmentDetail : BaseFragment<InfoFragmentDetailBinding>(R.layout.info
 
     }
 
+    private fun movePersonalInfo() {
+
+        binding.modifyInfoButton.setOnClickListener {
+
+            val action = OptionFragmentDirections.actionOptionFragmentToPersonalInfoFragment("", "")
+            findNavController().navigate(action)
+
+        }
+
+    }
 }

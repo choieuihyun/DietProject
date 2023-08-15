@@ -47,21 +47,7 @@ class SignUpFragment : BaseFragment<SignupFragmentBinding>(R.layout.signup_fragm
             .addOnCompleteListener { task ->
                 if(task.isSuccessful) {
 
-//                    val user: UserModel = UserModel( // view에서 model에 대해서 안다..음..
-//                        auth.uid.toString(),
-//                        binding.signupEmail.text.toString(),
-//                        "",
-//                        0,
-//                        0.0F,
-//                        0.0F,
-//                        "",
-//                        null
-//                    )
-                    loginViewModel.addUser(auth.uid.toString(), binding.signupEmail.text.toString())
-
-                    loginViewModel.getUser(auth.uid.toString())
-
-                    movePersonalInfoPage(auth.uid.toString())
+                    movePersonalInfoPage(auth.uid.toString(), binding.signupEmail.text.toString())
 
                 } else if (task.exception?.message.isNullOrEmpty()) {
                     Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
@@ -69,9 +55,9 @@ class SignUpFragment : BaseFragment<SignupFragmentBinding>(R.layout.signup_fragm
             }
     }
 
-    private fun movePersonalInfoPage(userId: String) {
+    private fun movePersonalInfoPage(userId: String, email: String) {
 
-        val action = SignUpFragmentDirections.actionSignUpFragmentToPersonalInfoFragment(userId)
+        val action = SignUpFragmentDirections.actionSignUpFragmentToPersonalInfoFragment(userId, email)
         findNavController().navigate(action)
 
     }

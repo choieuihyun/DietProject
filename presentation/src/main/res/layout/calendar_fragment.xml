@@ -187,7 +187,7 @@
         <com.kizitonwose.calendarview.CalendarView
             android:id="@+id/calendar_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="400dp"
             android:background="@color/purple_100"
             app:cv_dayViewResource="@layout/calendar_day_layout"
             app:cv_hasBoundaries="true"

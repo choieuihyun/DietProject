@@ -77,10 +77,9 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
              R.drawable.profile_nothing
         )
 
-
         binding.settingButton.setOnClickListener {
 
-            Navigation.findNavController(binding.root).navigate(R.id.action_InfoFragment_to_infoFragmentDetail)
+            Navigation.findNavController(binding.root).navigate(R.id.action_InfoFragment_to_OptionFragment)
 
         }
 
@@ -95,7 +94,6 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
             openGallery()
 
         }
-
 
     }
 

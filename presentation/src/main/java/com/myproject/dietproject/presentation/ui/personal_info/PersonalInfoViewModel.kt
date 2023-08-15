@@ -1,10 +1,17 @@
 package com.myproject.dietproject.presentation.ui.personal_info
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.myproject.dietproject.domain.model.UserModel
 import com.myproject.dietproject.domain.usecase.AddUserInfoUseCase
+import com.myproject.dietproject.domain.usecase.AddUserUseCase
+import com.myproject.dietproject.domain.usecase.GetUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -12,7 +19,9 @@ import kotlin.math.floor
 
 @HiltViewModel
 class PersonalInfoViewModel @Inject constructor(
-    private val addUserInfoUseCase: AddUserInfoUseCase
+    private val addUserInfoUseCase: AddUserInfoUseCase,
+    private val addUserUseCase: AddUserUseCase,
+    private val getUserUseCase: GetUserUseCase
 ) : ViewModel(){
 
     private var _userName: String = ""
@@ -128,6 +137,36 @@ class PersonalInfoViewModel @Inject constructor(
                 _userActivity
             )
         }
+    }
+
+    fun addUser(userId: String, userEmail: String) {
+
+        viewModelScope.launch {
+
+            addUserUseCase(userId, userEmail)
+
+        }
+    }
+
+    fun getUser(userId: String) {
+
+        viewModelScope.launch {
+
+            getUserUseCase(userId).addValueEventListener(object :
+                ValueEventListener { // 데이터 변화를 감지하는 리스너이기 때문에
+                // 회원가입에만 반응해야 하는데 왜 구글 로그인에는 다 반응함?
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    Log.d("getUserByViewModel", snapshot.getValue(UserModel::class.java).toString())
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            })
+        }
+
     }
 
 

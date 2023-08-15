@@ -64,7 +64,7 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
             val servingKcal = kcal?.nUTRCONT1
 
             if (servingKcal != null) {
-                binding.kcal.text = viewModel.plusCalculator(servingKcal.toFloat() , servingResult).toString()
+                binding.kcal.text = viewModel.plusCalculator(servingKcal.toFloat() , servingResult).toInt().toString()
             }
 
             binding.servingEdittext.setText(servingResult.toString())
@@ -73,7 +73,7 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
 
         binding.minusButton.setOnClickListener {
 
-            val serving = binding.servingEdittext.text.toString().toFloat()
+            val serving = binding.servingEdittext.text.toString().toFloat() // 인분
 
             val servingResult = viewModel.minusServingCalculator(serving) // 몇인분 먹었는지 적는곳 마이너스 기능
 
@@ -82,7 +82,7 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
             val kcalData = binding.kcal.text.toString().toFloat()
 
             if (servingKcal != null) {
-                binding.kcal.text = viewModel.minusCalculator(kcalData, servingKcal.toFloat()).toString()
+                binding.kcal.text = viewModel.minusCalculator(kcalData, servingKcal.toFloat()).toInt().toString()
             }
 
             binding.servingEdittext.setText(servingResult.toString())

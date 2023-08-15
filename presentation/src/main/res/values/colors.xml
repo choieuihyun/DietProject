@@ -18,6 +18,7 @@
 
     <color name = "invisible20red">#33FF0000</color>
     <color name = "invisible20blue">#331976D2</color>
+    <color name = "invisible50gray">#90CFD8DC</color>
 
     <!-- Grey -->
 
@@ -179,6 +180,11 @@
 
     <!-- Deep Purple -->
 
+    <color name="navy">#11264f</color>
+
+    <color name="bold_navy">#1F1B59</color>
+
+    <color name="blackGray">#2C2C4A</color>
 
 
     <!-- Indigo -->
@@ -639,5 +645,11 @@
 
     <!-- Blue Grey -->
 
+    <color name="selected_color">#000000</color>
+    <color name="unselected_color">#616161</color>
+
+    <!-- bottomNavi Color -->
+
+    <color name="login_fragment_background">#28B4B4</color>
 </resources>
 

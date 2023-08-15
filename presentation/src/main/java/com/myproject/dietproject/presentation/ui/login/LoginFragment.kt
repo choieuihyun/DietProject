@@ -61,7 +61,6 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                     Toast.makeText(requireContext(), "", Toast.LENGTH_SHORT).show()
                 }
 
-
             }
         }
         mainActivity.onBackPressedDispatcher.addCallback(this,callback)
@@ -218,7 +217,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
                         if(it == null) {
 
-                            movePersonalInfoPage(user?.uid.toString())
+                            movePersonalInfoPage(user?.uid.toString(), user?.email.toString())
                             viewModel.addUser(user?.uid.toString(), user?.email.toString())
                             Log.d("viewModel_2",viewModel.loginUserActivity.value.toString())
 
@@ -257,8 +256,8 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
 
     }
 
-    private fun movePersonalInfoPage(userId: String) {
-        val action = LoginFragmentDirections.actionLoginFragmentToPersonalInfoFragment(userId)
+    private fun movePersonalInfoPage(userId: String, email: String) {
+        val action = LoginFragmentDirections.actionLoginFragmentToPersonalInfoFragment(userId, email)
         findNavController().navigate(action)
     }
 

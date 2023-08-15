@@ -52,6 +52,7 @@
             android:layout_height="wrap_content"
             android:text='@{kcalDetailViewModel.kcalDetailDateText}'
             android:textSize="20sp"
+            android:fontFamily="@font/kangwon_bold"
             app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintEnd_toStartOf="@+id/next_button"
             app:layout_constraintStart_toEndOf="@+id/previous_button"
@@ -73,7 +74,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/overallLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/blackGray"
             app:layout_constraintBottom_toBottomOf="@id/guideline2"
@@ -90,6 +91,7 @@
                 android:text='@{kcalDetailData.MAKERNAME}'
                 android:textColor="@color/white"
                 android:textSize="18sp"
+                android:fontFamily="@font/gmarket_ttf_medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.077"
@@ -108,6 +110,7 @@
                 android:text='@{kcalDetailData.DESCKOR}'
                 android:textColor="@color/white"
                 android:textSize="24sp"
+                android:fontFamily="@font/gmarket_ttf_medium"
                 app:layout_constraintBottom_toTopOf="@+id/nutrientLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.11"
@@ -141,6 +144,7 @@
                     android:text="탄수화물"
                     android:textColor="@color/white"
                     android:textSize="18sp"
+                    android:fontFamily="@font/gmarket_ttf_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/proteinText"
                     app:layout_constraintHorizontal_chainStyle="packed"
@@ -159,6 +163,7 @@
                     android:text="단백질"
                     android:textColor="@color/white"
                     android:textSize="18sp"
+                    android:fontFamily="@font/gmarket_ttf_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/fatText"
                     app:layout_constraintHorizontal_bias="0.464"
@@ -178,6 +183,7 @@
                     android:text="지방"
                     android:textColor="@color/white"
                     android:textSize="18sp"
+                    android:fontFamily="@font/gmarket_ttf_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_chainStyle="packed"
@@ -195,7 +201,7 @@
                     android:text='@{kcalDetailData.NUTRCONT2 + " g"}'
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:fontFamily="@font/kangwon_bold"
+                    android:fontFamily="@font/gmarket_ttf_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/protein"
                     app:layout_constraintHorizontal_chainStyle="packed"
@@ -214,7 +220,7 @@
                     android:text='@{kcalDetailData.NUTRCONT3 + " g"}'
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:fontFamily="@font/kangwon_bold"
+                    android:fontFamily="@font/gmarket_ttf_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/fat"
                     app:layout_constraintHorizontal_chainStyle="packed"
@@ -233,7 +239,7 @@
                     android:text='@{kcalDetailData.NUTRCONT4 + " g"}'
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:fontFamily="@font/kangwon_bold"
+                    android:fontFamily="@font/gmarket_ttf_medium"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_chainStyle="packed"
@@ -246,23 +252,41 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/kcal"
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28dp"
                     android:layout_marginBottom="24dp"
+                    android:fontFamily="@font/gmarket_ttf_medium"
                     android:gravity="center"
-                    android:text='@{kcalDetailData.NUTRCONT1 + " kcal"}'
+                    android:text='@{kcalDetailData.NUTRCONT1}'
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/kcalText"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/protein"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="350">
+
+                </androidx.appcompat.widget.AppCompatTextView>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/kcalText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginBottom="24dp"
+                    android:fontFamily="@font/gmarket_ttf_medium"
+                    android:text=" kcal"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintHorizontal_bias="0.227"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/protein"
-                    app:layout_constraintVertical_bias="1.0"
-                    tools:text="350kcal">
-
-                </androidx.appcompat.widget.AppCompatTextView>
+                    app:layout_constraintTop_toBottomOf="@+id/carbohydrate"
+                    app:layout_constraintVertical_bias="0.0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -285,6 +309,7 @@
                     android:text="몇 인분?"
                     android:gravity="center"
                     android:textSize="18sp"
+                    android:fontFamily="@font/gmarket_ttf_medium"
                     android:layout_marginEnd="60dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/plusButton"
@@ -324,6 +349,7 @@
                     android:layout_width="120dp"
                     android:layout_height="0dp"
                     android:background="@color/white"
+                    android:includeFontPadding="false"
                     android:gravity="center"
                     android:inputType="number"
                     android:focusable="false"
@@ -332,6 +358,7 @@
                     android:padding="8dp"
                     android:text="1.0"
                     android:textSize="24sp"
+                    android:fontFamily="@font/gmarket_ttf_medium"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/minusButton"
@@ -361,7 +388,7 @@
             app:layout_constraintHorizontal_bias="0.869"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/overallLayout"
-            app:layout_constraintVertical_bias="0.438">
+            app:layout_constraintVertical_bias="0.257">
 
         </androidx.appcompat.widget.AppCompatButton>
 
