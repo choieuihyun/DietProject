@@ -43,24 +43,15 @@ class SignUpFragment : BaseFragment<SignupFragmentBinding>(R.layout.signup_fragm
 
     private fun signUpEmail() {
 
-        auth.createUserWithEmailAndPassword(binding.signupEmail.text.toString(), binding.signupPw.text.toString())
-            .addOnCompleteListener { task ->
-                if(task.isSuccessful) {
+        movePersonalInfoPage(binding.signupEmail.text.toString(), binding.signupPw.text.toString())
 
-                    movePersonalInfoPage(auth.uid.toString(), binding.signupEmail.text.toString())
-
-                } else if (task.exception?.message.isNullOrEmpty()) {
-                    Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
-                }
-            }
     }
 
-    private fun movePersonalInfoPage(userId: String, email: String) {
+    private fun movePersonalInfoPage(email: String, pw: String) {
 
-        val action = SignUpFragmentDirections.actionSignUpFragmentToPersonalInfoFragment(userId, email)
+        val action = SignUpFragmentDirections.actionSignUpFragmentToPersonalInfoFragment(email, pw)
         findNavController().navigate(action)
 
     }
-
 
 }
