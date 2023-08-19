@@ -1,7 +1,6 @@
 package com.myproject.dietproject.presentation.ui.personal_info
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
@@ -13,7 +12,6 @@ import com.google.firebase.ktx.Firebase
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.PersonalInfoFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
-import com.myproject.dietproject.presentation.ui.login.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -78,42 +76,68 @@ class PersonalInfoFragment : BaseFragment<PersonalInfoFragmentBinding>(R.layout.
                     if(binding.lightActivity.isSelected || binding.middleActivity.isSelected || binding.hardActivity.isSelected) {
                         Toast.makeText(requireContext(), "데이터 넣었네", Toast.LENGTH_SHORT).show()
 
- /*                       personalInfoViewModel.addUser(auth.uid.toString(), email)
+                        if(auth.currentUser?.email == null) {
 
-                        personalInfoViewModel.getUser(auth.uid.toString())
+                            auth.createUserWithEmailAndPassword(email, pw)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
 
-                        personalInfoViewModel.setNameInfo(binding.nameEditText.text.toString())
-                        personalInfoViewModel.setAgeInfo(binding.ageEditText.text.toString().toInt())
-                        personalInfoViewModel.setHeightInfo(binding.heightEditText.text.toString().toFloat())
-                        personalInfoViewModel.setWeightInfo(binding.weightEditText.text.toString().toFloat())
-                        personalInfoViewModel.setTargetWeightInfo(binding.weightEditText.text.toString().toFloat())
+                                        personalInfoViewModel.addUser(auth.uid.toString(), email)
 
-                        personalInfoViewModel.addUserInfo(userId)*/
+                                        personalInfoViewModel.getUser(auth.uid.toString())
 
-                        auth.createUserWithEmailAndPassword(email, pw)
-                            .addOnCompleteListener { task ->
-                                if(task.isSuccessful) {
+                                        personalInfoViewModel.setNameInfo(binding.nameEditText.text.toString())
 
-                                    personalInfoViewModel.addUser(auth.uid.toString(), email)
+                                        personalInfoViewModel.setAgeInfo(
+                                            binding.ageEditText.text.toString().toInt()
+                                        )
+                                        personalInfoViewModel.setHeightInfo(
+                                            binding.heightEditText.text.toString().toFloat()
+                                        )
+                                        personalInfoViewModel.setWeightInfo(
+                                            binding.weightEditText.text.toString().toFloat()
+                                        )
+                                        personalInfoViewModel.setTargetWeightInfo(
+                                            binding.weightEditText.text.toString().toFloat()
+                                        )
 
-                                    personalInfoViewModel.getUser(auth.uid.toString())
+                                        personalInfoViewModel.addUserInfo(auth.uid.toString())
 
-                                    personalInfoViewModel.setNameInfo(binding.nameEditText.text.toString())
-                                    personalInfoViewModel.setAgeInfo(binding.ageEditText.text.toString().toInt())
-                                    personalInfoViewModel.setHeightInfo(binding.heightEditText.text.toString().toFloat())
-                                    personalInfoViewModel.setWeightInfo(binding.weightEditText.text.toString().toFloat())
-                                    personalInfoViewModel.setTargetWeightInfo(binding.weightEditText.text.toString().toFloat())
+                                        moveHomeFragment(auth.uid.toString())
 
-                                    personalInfoViewModel.addUserInfo(auth.uid.toString())
-
-                                    moveHomeFragment(auth.uid.toString())
-
-                                } else if (task.exception?.message.isNullOrEmpty()) {
-                                    Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
+                                    } else if (task.exception?.message.isNullOrEmpty()) {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            task.exception?.message,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
-                            }
 
+                        } else {
 
+                            personalInfoViewModel.setNameInfo(
+                                binding.nameEditText.text.toString()
+                            )
+
+                            personalInfoViewModel.setAgeInfo(
+                                binding.ageEditText.text.toString().toInt()
+                            )
+                            personalInfoViewModel.setHeightInfo(
+                                binding.heightEditText.text.toString().toFloat()
+                            )
+                            personalInfoViewModel.setWeightInfo(
+                                binding.weightEditText.text.toString().toFloat()
+                            )
+                            personalInfoViewModel.setTargetWeightInfo(
+                                binding.weightEditText.text.toString().toFloat()
+                            )
+
+                            personalInfoViewModel.addUserInfo(auth.uid.toString())
+
+                            moveHomeFragment(auth.uid.toString())
+
+                        }
                     }
                 }
             }
