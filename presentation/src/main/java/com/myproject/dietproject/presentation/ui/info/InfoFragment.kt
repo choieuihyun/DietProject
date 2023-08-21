@@ -74,7 +74,7 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
             auth.currentUser!!.uid,
             "profileImages",
              binding.profileImage,
-             R.drawable.profile_nothing
+             R.color.grey_500
         )
 
         binding.settingButton.setOnClickListener {

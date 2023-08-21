@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         val gsa = GoogleSignIn.getLastSignedInAccount(this@MainActivity)
 
-        if (auth.currentUser != null) {
+        if (auth.currentUser?.uid != null) {
             goToHome()
         } else {
             Toast.makeText(this@MainActivity, "로그인 안되어있음", Toast.LENGTH_SHORT).show()
