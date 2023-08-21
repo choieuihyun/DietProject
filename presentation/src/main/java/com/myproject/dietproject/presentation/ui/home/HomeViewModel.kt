@@ -296,23 +296,30 @@ class HomeViewModel @Inject constructor(
 
     fun imageSetting() { // 파라미터로 받아서 처리하는 것은 순서가 꼬이나?
 
-        if (_recommendKcal.value!! * 0.8 > _todayKcal.value?.toInt()!!) { // 권장 섭취 칼로리 * 0.6 > 오늘 섭취 칼로리
+        try {
+            if (_recommendKcal.value!! * 0.8 > _todayKcal.value?.toInt()!!) { // 권장 섭취 칼로리 * 0.6 > 오늘 섭취 칼로리
 
-            _kcalAlert.postValue("더 먹어야 해요 !")
+                _kcalAlert.postValue("더 먹어야 해요 !")
+                _imageResultLiveData.value = 1// 배고픈 이미지
+
+            } else if (_recommendKcal.value!! * 0.8 < _todayKcal.value?.toInt()!! && _todayKcal.value?.toInt()!! <= recommendKcal.value!!
+
+            ) {
+
+                _kcalAlert.postValue("슬슬 배가 불러요 !")
+                _imageResultLiveData.value = 2 // 배부른 이미지
+
+            } else {
+
+                _kcalAlert.postValue("그만 먹어라")
+                _imageResultLiveData.value = 3 // 배부른 이미지는 같은데 초과
+
+            }
+        } catch (e : NullPointerException) {
+            _kcalAlert.value = "더 먹어야 해요 !"
             _imageResultLiveData.value = 1// 배고픈 이미지
 
-        } else if (_recommendKcal.value!! * 0.8 < _todayKcal.value?.toInt()!! && _todayKcal.value?.toInt()!! <= recommendKcal.value!!
-
-        ) {
-
-            _kcalAlert.postValue("슬슬 배가 불러요 !")
-            _imageResultLiveData.value = 2 // 배부른 이미지
-
-        } else {
-
-            _kcalAlert.postValue("그만 먹어라")
-            _imageResultLiveData.value = 3 // 배부른 이미지는 같은데 초과
-
+            Log.d("HomeViewModel", e.message.toString())
         }
 
     }
