@@ -28,6 +28,7 @@ import com.myproject.dietproject.domain.usecase.GetUserWeekKcalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.NumberFormatException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,9 +38,9 @@ class InfoViewModel @Inject constructor(
     private val getUserRecommendKcalUseCase: GetUserRecommendKcalUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val getUserTargetWeightUseCase: GetUserTargetWeightUseCase,
+    private val getUserProfileImage: GetUserProfileImage,
     private val getUserNumerousKcalByFoodUseCase: GetUserWeekKcalUseCase,
     private val getUserNumerousKcalByDateUseCase: GetUserWeekKcalUseCase,
-    private val getUserProfileImage: GetUserProfileImage,
     private val addUserProfileImage: AddUserProfileImage, // 이거 쓰면 이상해짐
     private val getFirebaseStorageRef: GetFirebaseStorageRef
 
@@ -57,6 +58,10 @@ class InfoViewModel @Inject constructor(
     val recommendKcal: LiveData<String>
         get() = _recommendKcal
 
+    private var _targetWeight: MutableLiveData<Int?> = MutableLiveData()
+    val targetWeight: LiveData<Int?>
+        get() = _targetWeight
+
     private var _mostNumerousFood: MutableLiveData<Int> = MutableLiveData()
     val mostNumerousFood: LiveData<Int>
         get() = _mostNumerousFood
@@ -69,14 +74,9 @@ class InfoViewModel @Inject constructor(
     val dayKcal: LiveData<Int?>
         get() = _dayKcal
 
-    private var _targetWeight: MutableLiveData<Int?> = MutableLiveData()
-    val targetWeight: LiveData<Int?>
-        get() = _targetWeight
-
     private var _overKcal: MutableLiveData<Int?> = MutableLiveData()
     val overKcal: LiveData<Int?>
         get() = _overKcal
-
 
     fun getUserEmail(userId: String) {
 
@@ -118,40 +118,6 @@ class InfoViewModel @Inject constructor(
 
     }
 
-    fun getUserMaxKcal(userId: String) { // 원래 이런곳에서 다 해도 되는데 그러면 유지보수할 때 머리가 띵할듯.
-
-        viewModelScope.launch {
-
-            getUserNumerousKcalByFoodUseCase(userId).addListenerForSingleValueEvent(object : ValueEventListener {
-
-                    override fun onDataChange(snapshot: DataSnapshot) {
-
-                        val iterator = snapshot.children.iterator() // NumerousDate 처럼 구현해도 되고 Iterator를 사용해서 구현해도 된다. 좀 더 명시적일뿐? 차이 없어보임.
-
-                        var max = 0
-
-                        while(iterator.hasNext()) {
-
-                            val childSnapshot = iterator.next()
-
-                            val childValue = childSnapshot.child("kcal").value.toString().toInt()
-
-                            if(childValue > max)
-                                max = childValue
-
-                        }
-
-                        _mostNumerousFood.postValue(max)
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
-        }
-    }
-
     fun getUserName(userId: String) {
 
         viewModelScope.launch {
@@ -181,7 +147,11 @@ class InfoViewModel @Inject constructor(
 
                 override fun onDataChange(snapshot: DataSnapshot) {
 
-                    _targetWeight.postValue(snapshot.value.toString().toInt())
+                    try {
+                        _targetWeight.postValue(snapshot.value.toString().toInt())
+                    } catch (e : NumberFormatException) {
+
+                    }
 
                 }
 
@@ -196,6 +166,42 @@ class InfoViewModel @Inject constructor(
         }
 
     }
+
+    fun getUserMaxKcal(userId: String) { // 원래 이런곳에서 다 해도 되는데 그러면 유지보수할 때 머리가 띵할듯.
+
+        viewModelScope.launch {
+
+            getUserNumerousKcalByFoodUseCase(userId).addListenerForSingleValueEvent(object :
+                ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    val iterator = snapshot.children.iterator() // NumerousDate 처럼 구현해도 되고 Iterator를 사용해서 구현해도 된다. 좀 더 명시적일뿐? 차이 없어보임.
+
+                    var max = 0
+
+                    while(iterator.hasNext()) {
+
+                        val childSnapshot = iterator.next()
+
+                        val childValue = childSnapshot.child("kcal").value.toString().toInt()
+
+                        if(childValue > max)
+                            max = childValue
+
+                    }
+
+                    _mostNumerousFood.postValue(max)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+        }
+    }
+
 
     fun getMostNumerousDate(userId: String) {
 
@@ -216,7 +222,6 @@ class InfoViewModel @Inject constructor(
                         dateTotalMap.put(dateSubstring, kcal)
 
                     }
-
 
                     val mergedMap = mutableMapOf<String, Int?>()
 
@@ -254,7 +259,7 @@ class InfoViewModel @Inject constructor(
                     if(maxDate != null)
                         _mostNumerousDate.postValue(maxDate)
                     else
-                        _mostNumerousDate.postValue("")
+                        _mostNumerousDate.postValue("데이터를 입력해주세요")
 
                     if(sumKcal != 0)
                         _dayKcal.postValue(sumKcal / mergedMap.size)
@@ -271,6 +276,7 @@ class InfoViewModel @Inject constructor(
         }
 
     }
+
 
     fun getUserProfileImage(c: Context,
                             userId: String,
@@ -291,7 +297,7 @@ class InfoViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             val uploadRef = getFirebaseStorageRef().child(userId).child(path)
-            val imageName = uri.toString().substring(38,43)
+            //val imageName = uri.toString().substring(38,43)
             val imageRef = uploadRef.putFile(uri)
             imageRef.addOnCompleteListener { task ->
 
@@ -309,33 +315,5 @@ class InfoViewModel @Inject constructor(
 
         }
     }
-
-    /*            uploadRef.parent.let { parentRef ->
-
-                parentRef?.listAll()?.addOnSuccessListener { listResult ->
-
-                    val pathExists = listResult.items.any { item ->
-                        item.name == uploadRef.name
-                    }
-
-                    if (!pathExists) {
-
-                        uploadRef.parent?.child(uploadRef.name)?.putFile(uri)?.addOnSuccessListener { task ->
-
-                            if(task.task.isSuccessful)
-                                Log.d("ImageSuccess", "success")
-                            else
-                                Log.d("ImageFailure", "failure")
-
-                        }
-
-                    } else {
-
-
-
-                    }
-                }
-
-            }*/
 }
 
