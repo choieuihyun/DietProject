@@ -2,6 +2,7 @@ package com.myproject.dietproject.presentation.ui.calendar
 
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -65,6 +66,10 @@ class CalenderDetailFragment : BaseFragment<CalendarDetailFragmentBinding>(R.lay
         }
 
         kakaoTest()
+
+        binding.messageButton.setOnClickListener {
+            messageShared()
+        }
     }
 
     override fun onPause() {
@@ -94,6 +99,23 @@ class CalenderDetailFragment : BaseFragment<CalendarDetailFragmentBinding>(R.lay
 
             binding.calendarDetailImageView.setImageResource(R.drawable.calendar_detail_good)
 
+    }
+
+    private fun messageShared() {
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, data)
+        }
+        startActivity(Intent.createChooser(intent, "data"))
+
+        when(intent.action) {
+            Intent.ACTION_SEND -> {
+                if(intent.type == "text/plain") {
+                    ""
+                }
+            }
+        }
     }
 
     private fun kakaoTest() {
