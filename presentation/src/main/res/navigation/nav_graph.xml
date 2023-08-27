@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.myproject.dietproject.presentation.ui.home.HomeFragment"
-        android:label="HomeFragment" >
+        android:label="HomeFragment">
         <argument
             android:name="userId"
             app:argType="string" />
@@ -48,13 +48,8 @@
         android:name="com.myproject.dietproject.presentation.ui.info.InfoFragment"
         android:label="InfoFragment" >
         <action
-            android:id="@+id/action_myInfoFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_InfoFragment_to_infoFragmentDetail"
-            app:destination="@id/infoFragmentDetail" />
+            android:id="@+id/action_InfoFragment_to_OptionFragment"
+            app:destination="@id/OptionFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -75,7 +70,10 @@
             android:id="@+id/action_personalInfoFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
         <argument
-            android:name="userId"
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="pw"
             app:argType="string" />
     </fragment>
     <fragment
@@ -118,7 +116,14 @@
             app:nullable="true" />
     </fragment>
     <fragment
-        android:id="@+id/infoFragmentDetail"
-        android:name="com.myproject.dietproject.presentation.ui.info.InfoFragmentDetail"
-        android:label="InfoFragmentDetail" />
+        android:id="@+id/OptionFragment"
+        android:name="com.myproject.dietproject.presentation.ui.info.OptionFragment"
+        android:label="OptionFragment">
+        <action
+            android:id="@+id/action_infoFragmentDetail_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_OptionFragment_to_personalInfoFragment"
+            app:destination="@id/personalInfoFragment" />
+    </fragment>
 </navigation>
