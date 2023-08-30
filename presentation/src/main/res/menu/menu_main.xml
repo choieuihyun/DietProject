@@ -6,26 +6,26 @@
     <item android:id="@+id/homeFragment"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/bn_home_unclicked"
         android:title="@string/home"/>
 
     <!-- <a href="https://www.flaticon.com/kr/free-icons/-" title="학사 학위 아이콘">학사 학위 아이콘  제작자: Freepik - Flaticon</a> -->
     <item android:id="@+id/calendarFragment"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/bn_calendar_unclicked"
         android:title="@string/calendar"/>
 
     <item android:id="@+id/weightChartFragment"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/bn_chart_unclicked"
         android:title="@string/weight_change"/>
 
     <item android:id="@+id/InfoFragment"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/bn_info_unclicked"
         android:title="@string/myinfo"/>
 
     <!-- <a href="https://www.flaticon.com/kr/free-icons/-" title="취업 기회 아이콘">취업 기회 아이콘  제작자: Freepik - Flaticon</a> -->

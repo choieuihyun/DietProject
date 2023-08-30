@@ -21,6 +21,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import javax.inject.Inject
@@ -47,8 +48,8 @@ class HomeViewModel @Inject constructor(
     private val _isError: MutableLiveData<Boolean> = MutableLiveData()
     val isError: LiveData<Boolean> = _isError
 
-    private var _todayKcal: MutableLiveData<Float> = MutableLiveData() // 오늘 섭취한 총 칼로리
-    val todayKcal: LiveData<Float> = _todayKcal
+    private var _todayKcal: MutableLiveData<Int> = MutableLiveData() // 오늘 섭취한 총 칼로리
+    val todayKcal: LiveData<Int> = _todayKcal
 
     private var _recommendKcal: MutableLiveData<Int> = MutableLiveData() // 일일 권장 칼로리
     val recommendKcal: LiveData<Int> = _recommendKcal
@@ -72,7 +73,7 @@ class HomeViewModel @Inject constructor(
     val kcalAlert: LiveData<String>
         get() = _kcalAlert
 
-    private var calculTodayKcal: Float = 0.0F // 연산용도 오늘 섭취한 칼로리
+    private var calculTodayKcal = 0 // 연산용도 오늘 섭취한 칼로리
     private var calculRecommendKcal = 0 // 연산용도 권장 칼로리
 
     private val calendar = Calendar.getInstance()
@@ -94,7 +95,7 @@ class HomeViewModel @Inject constructor(
         var dateText = today.substring(5, 10) // 6-28로 자르기
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
-        var sum = 0.0F
+        var sum = 0
 
         when (dayOfWeek) {
 
@@ -114,8 +115,6 @@ class HomeViewModel @Inject constructor(
 
         }
 
-        Log.d("sdfsdf", dateText.toString())
-
         viewModelScope.launch(Dispatchers.IO) {
 
             getUserTodayKcalUseCase(userId, today).addValueEventListener(object :
@@ -127,9 +126,15 @@ class HomeViewModel @Inject constructor(
 
                         if (dataDate == today) {
                             val kcal = data.child("kcal").value
-                            sum += kcal.toString().toFloat()
+                            sum += kcal.toString().toInt()
                         }
                     }
+
+                    _todayKcal.value = sum
+                    calculTodayKcal = sum // 위에꺼랑 같은데?
+                    _homeDateText.value = dateText
+                    imageSetting()
+
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -137,15 +142,6 @@ class HomeViewModel @Inject constructor(
                 }
             })
 
-            withContext(Dispatchers.Main) {
-
-                _todayKcal.value = sum
-
-                calculTodayKcal = sum // 위에꺼랑 같은데?
-
-                _homeDateText.value = dateText
-
-            }
         }
     }
 
@@ -156,10 +152,14 @@ class HomeViewModel @Inject constructor(
             getUserRecommendKcalUseCase(userId).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
-                    _recommendKcal.value = snapshot.value.toString().toInt()
-                    calculRecommendKcal = _recommendKcal.value.toString().toInt()
+                    try {
+                        _recommendKcal.value = snapshot.value.toString().toInt()
+                        calculRecommendKcal = _recommendKcal.value.toString().toInt()
 
-                    _scarceKcal.value = calculRecommendKcal - calculTodayKcal.toInt()
+                        _scarceKcal.value = calculRecommendKcal - calculTodayKcal.toInt()
+                    } catch (e : NumberFormatException) {
+
+                    }
 
                 }
 
@@ -181,12 +181,9 @@ class HomeViewModel @Inject constructor(
         var previousDateText = dateFormat.format(calendar.time).substring(5, 10)
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
-        Log.d("sdfsdf4", previousDateText)
-        Log.d("sdfsdf5", previousDataByDate)
-
         viewModelScope.launch {
 
-            var sum = 0.0F
+            var sum = 0
 
             getUserTodayKcalUseCase(userId, previousDataByDate).addValueEventListener(object :
                 ValueEventListener {
@@ -197,7 +194,7 @@ class HomeViewModel @Inject constructor(
 
                         if (dataDate == previousDataByDate) {
                             val kcal = data.child("kcal").value
-                            sum += kcal.toString().toFloat()
+                            sum += kcal.toString().toInt()
                         }
                     }
                     _todayKcal.value = sum
@@ -205,7 +202,6 @@ class HomeViewModel @Inject constructor(
                     _scarceKcal.value = calculRecommendKcal - calculTodayKcal.toInt()
 
                     imageSetting()
-                    Log.d("sdeeee3", calculTodayKcal.toString())
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -248,7 +244,7 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            var sum = 0.0F
+            var sum = 0
 
             getUserTodayKcalUseCase(userId, nextDataByDate).addValueEventListener(object :
                 ValueEventListener {
@@ -259,7 +255,7 @@ class HomeViewModel @Inject constructor(
 
                         if (dataDate == nextDataByDate) {
                             val kcal = data.child("kcal").value
-                            sum += kcal.toString().toFloat()
+                            sum += kcal.toString().toInt()
                         }
                     }
                     _todayKcal.value = sum
@@ -300,23 +296,30 @@ class HomeViewModel @Inject constructor(
 
     fun imageSetting() { // 파라미터로 받아서 처리하는 것은 순서가 꼬이나?
 
-        if (_recommendKcal.value!! * 0.8 > _todayKcal.value?.toInt()!!) { // 권장 섭취 칼로리 * 0.6 > 오늘 섭취 칼로리
+        try {
+            if (_recommendKcal.value!! * 0.8 > _todayKcal.value?.toInt()!!) { // 권장 섭취 칼로리 * 0.6 > 오늘 섭취 칼로리
 
-            _kcalAlert.postValue("더 먹어야 해요 !")
+                _kcalAlert.postValue("더 먹어야 해요 !")
+                _imageResultLiveData.value = 1// 배고픈 이미지
+
+            } else if (_recommendKcal.value!! * 0.8 < _todayKcal.value?.toInt()!! && _todayKcal.value?.toInt()!! <= recommendKcal.value!!
+
+            ) {
+
+                _kcalAlert.postValue("슬슬 배가 불러요 !")
+                _imageResultLiveData.value = 2 // 배부른 이미지
+
+            } else {
+
+                _kcalAlert.postValue("그만 먹어라")
+                _imageResultLiveData.value = 3 // 배부른 이미지는 같은데 초과
+
+            }
+        } catch (e : NullPointerException) {
+            _kcalAlert.value = "더 먹어야 해요 !"
             _imageResultLiveData.value = 1// 배고픈 이미지
 
-        } else if (_recommendKcal.value!! * 0.8 < _todayKcal.value?.toInt()!! && _todayKcal.value?.toInt()!! <= recommendKcal.value!!
-
-        ) {
-
-            _kcalAlert.postValue("슬슬 배가 불러요 !")
-            _imageResultLiveData.value = 2 // 배부른 이미지
-
-        } else {
-
-            _kcalAlert.postValue("그만 먹어라")
-            _imageResultLiveData.value = 3 // 배부른 이미지는 같은데 초과
-
+            Log.d("HomeViewModel", e.message.toString())
         }
 
     }

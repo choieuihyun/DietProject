@@ -4,11 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.myproject.dietproject.domain.error.NetworkError
 import com.myproject.dietproject.domain.error.NetworkResult
 import com.myproject.dietproject.domain.model.Kcal
 import com.myproject.dietproject.domain.usecase.GetKcalUseCase
-import com.myproject.dietproject.presentation.ui.util.toErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,11 +33,13 @@ class KcalViewModel @Inject constructor(
             when (val result = useCase.invoke(dESCKOR)) {
                 is NetworkResult.Success -> {
                     _kcalData.value = result.data
-                    _isLoading.postValue(true)
-                    _isError.postValue(true)
+                    _isLoading.postValue(false)
+                    _isError.postValue(false)
                 }
                 is NetworkResult.Error -> {
-
+                    //val msg = result.errorType.toErrorMessage(Contexts.getApplication(application).applicationContext)
+                    _isLoading.postValue(false)
+                    _isError.postValue(true)
                 }
             }
         }

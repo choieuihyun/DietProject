@@ -1,5 +1,6 @@
 package com.myproject.dietproject.presentation.ui.userkcal
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.KcalFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
+import com.myproject.dietproject.presentation.ui.LoadingProgress
 import com.myproject.dietproject.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,6 +26,7 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
     private lateinit var kcalListAdapter : KcalAdapter
     private val viewModel: KcalViewModel by viewModels()
     private lateinit var mainActivity: MainActivity
+    private lateinit var dialog: Dialog
     private val args by navArgs<KcalFragmentArgs>()
 
     override fun onAttach(context: Context) {
@@ -37,6 +40,8 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
         super.onCreate(savedInstanceState)
 
         mainActivity.getBinding.bottomNavigationView.isVisible = false
+
+        dialog = LoadingProgress(requireContext())
 
     }
 
@@ -70,6 +75,11 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
                 } else {
                     binding.addUserKcalRecyclerView.visibility = View.GONE
                 }
+            }
+
+            viewModel.isLoading.observe(viewLifecycleOwner) {
+                if (it) dialog.show()
+                else dialog.dismiss()
             }
         }
 
