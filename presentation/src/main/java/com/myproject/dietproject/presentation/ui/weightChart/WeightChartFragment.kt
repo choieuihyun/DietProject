@@ -7,9 +7,11 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.room.Index
 import com.bumptech.glide.disklrucache.DiskLruCache.Value
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -34,7 +36,8 @@ import java.util.Locale
 
 
 @AndroidEntryPoint
-class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.weight_chart_fragment) {
+class WeightChartFragment :
+    BaseFragment<WeightChartFragmentBinding>(R.layout.weight_chart_fragment) {
 
 //    private lateinit var lineChart: LineChart
 
@@ -77,7 +80,6 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
-
 
 
     }
@@ -172,7 +174,6 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
                             setupChartUI(weightChart, weightChart.data, viewModel.entries)
                             chartMarkerSetting(weightChart)
 
-
                         }
                     }
                 }
@@ -201,7 +202,7 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
                         setupChartData(viewModel.entries).let {
 
                                 chartData ->
-                            Log.d("sdfsssnext", viewModel.nextWeekDateArray.value?.peekContent().toString())
+                            weightChart.data = chartData
                             setupChartUI(weightChart, weightChart.data, viewModel.entries)
                             chartMarkerSetting(weightChart)
 
@@ -213,18 +214,24 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
     }
 
     // DataSet line custom
+    // DataSet line custom
     private fun setupChartData(data: List<BarEntry>): BarData {
 
         xVals.clear()
 
-        data.map { it.x.toString() }
-
         val barDataSet = BarDataSet(data, "Kcal")
-        for(i in data.indices) {
+
+        /*        for(i in data.indices) {
+                    xVals.add(data[i].x.toString())
+                }*/
+
+        Log.d("bardata", barDataSet.values[0].toString())
+
+        for (i in data.indices) {
             xVals.add(data[i].x.toString())
         }
 
-        Log.d("sdfsdf222222",xVals.toString())
+        Log.d("sdfsdf222222", xVals.toString())
 
         // 아 아까 데이터 여러개 붙였을때도 안됐던 이유가 x를 마구잡이로해서(역순) 그랬던 것이구나. x는 오름차순이 되어야함.
         // 그렇다고 정렬할 수는 없다? 는 아닌거같은데 흠 x기준으로 정렬하는게 맞지 사실. 근데 애초에 날짜 순으로 입력되는데 굳이 정렬을?
@@ -271,11 +278,13 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
             textSize = 16f
             textColor = Color.WHITE
 
-            for (i in data.indices) {
-                val days = data[i].x.toInt().toString()
-                dayArray.add(days)
-                Log.d("sibal", days)
-            }
+
+            /*            for (i in data.indices) {
+                            val days = data[i].x.toInt().toString()
+                            dayArray.add(days)
+                            Log.d("sibal", days)
+                        }*/
+
 
 /*            valueFormatter = object : ValueFormatter() {
 
@@ -293,8 +302,9 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
             textColor = Color.BLACK
             axisMinimum = 0f
 
-            if(barData.yMax > 0)
-                axisMaximum = barData.yMax * 1.2F// yMax하면 안됨 + 그냥 yMax로하면 차트 볼때 맨날 최대치 채워져있잖아 많이 먹은거마냥..
+            if (barData.yMax > 0)
+                axisMaximum =
+                    barData.yMax * 1.2F// yMax하면 안됨 + 그냥 yMax로하면 차트 볼때 맨날 최대치 채워져있잖아 많이 먹은거마냥..
 
             axisLineWidth = 2f // 축의 굵기
             textSize = 16f
@@ -312,8 +322,6 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
 
         val description = Description()
         description.text = ""
-
-
         barChart.isDoubleTapToZoomEnabled = false
         barChart.setDrawGridBackground(false)
         barChart.description = description
@@ -329,7 +337,6 @@ class WeightChartFragment: BaseFragment<WeightChartFragmentBinding>(R.layout.wei
         barChart.marker = marker
 
     }
-
 
 
 }
