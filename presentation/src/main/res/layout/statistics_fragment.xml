@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.myproject.dietproject.presentation.ui.info.InfoViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/most_numerous_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/kangwon_bold"
+            android:text='@{viewModel.mostNumerousDate.toString()}'
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="가장 많이 먹은 날 : 2023-06-09" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+
+<!--
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.myproject.dietproject.presentation.ui.info.StatisticsViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/tabLayout_constraint"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="tab 1입니당"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/most_numerous_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kangwon_bold"
+                android:text='@{"가장 많이 먹은 날(Kcal) : " + viewModel.mostNumerousDate.toString()}'
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                app:layout_constraintBottom_toTopOf="@+id/most_numerous_food"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_weight="1"
+                tools:text="가장 많이 먹은 날 : 2023-06-09" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/most_numerous_food"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kangwon_bold"
+                android:text='@{"한 번에 가장 많이 섭취한 칼로리(Kcal) : " + viewModel.mostNumerousFood.toString() + " Kcal"}'
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                app:layout_constraintBottom_toTopOf="@+id/most_numerous_kcal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/most_numerous_date"
+                app:layout_constraintVertical_weight="1"
+                tools:text="한번에 제일 많이 먹은 양 (kcal) : 초콜릿 (2000 kcal)" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/most_numerous_kcal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kangwon_bold"
+                android:text='@{"하루 평균 섭취한 칼로리(Kcal) : " + viewModel.dayKcal + " Kcal"}'
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                app:layout_constraintBottom_toTopOf="@+id/over_recommendKcal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/most_numerous_food"
+                app:layout_constraintVertical_weight="1"
+                tools:text='하루 평균 먹은 칼로리 : 1200 kcal' />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/over_recommendKcal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/most_numerous_kcal"
+                tools:text="권장 칼로리 초과한 날 : 3일" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>-->
