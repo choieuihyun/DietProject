@@ -14,6 +14,8 @@ class FirebaseDataSource @Inject constructor(
     private val firebaseStorage: FirebaseStorage
 ) {
 
+    // datasource랑 repositoryImpl이랑 뭔가 이상한 구조의 느낌.
+    // 제대로 이해 못한듯한 구조는 뭐지 이거
     val getFirebaseStorageReference = firebaseStorage.reference
 
     fun dbTest(): DatabaseReference {
