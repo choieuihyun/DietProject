@@ -20,7 +20,7 @@
             app:layout_constraintVertical_bias="0.05">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/info_button"
+                android:id="@+id/modifyInfoButton"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"

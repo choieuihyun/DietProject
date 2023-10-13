@@ -52,6 +52,10 @@ class FirebaseRepositoryImpl @Inject constructor(
         return firebaseDataSource.getUser().child(userId).child("targetWeight")
     }
 
+    override suspend fun getUserWeight(userId: String): DatabaseReference {
+        return firebaseDataSource.getUser().child(userId).child("weight")
+    }
+
     override suspend fun getUserOverKcal(userId: String): DatabaseReference {
         return firebaseDataSource.getUser().child(userId).child("overKcal")
     }

@@ -27,6 +27,8 @@ interface FirebaseRepository {
 
     suspend fun getUserTargetWeight(userId: String) : DatabaseReference
 
+    suspend fun getUserWeight(userId: String) : DatabaseReference
+
     suspend fun getUserOverKcal(userId: String) : DatabaseReference
 
     suspend fun getUserActivity(userId: String) : DatabaseReference
