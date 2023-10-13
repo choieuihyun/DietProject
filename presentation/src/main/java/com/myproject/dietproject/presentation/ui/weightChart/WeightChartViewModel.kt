@@ -15,9 +15,11 @@ import com.google.firebase.database.ValueEventListener
 import com.myproject.dietproject.domain.model.TodayKcal
 import com.myproject.dietproject.domain.usecase.GetUserTodayKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserWeekKcalUseCase
+import com.myproject.dietproject.domain.usecase.GetUserWeightUseCase
 import com.myproject.dietproject.presentation.ui.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.apache.commons.lang3.ObjectUtils.Null
 import java.lang.Exception
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -30,7 +32,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeightChartViewModel @Inject constructor(
-    private val getUserWeekKcalUseCase: GetUserWeekKcalUseCase
+    private val getUserWeekKcalUseCase: GetUserWeekKcalUseCase,
+    private val getUserWeightUseCase: GetUserWeightUseCase
 ) : ViewModel() {
 
     // 이번 주 시작 날짜, 마지막 날짜
@@ -101,15 +104,47 @@ class WeightChartViewModel @Inject constructor(
     val nextWeekKcalArray: LiveData<Event<MutableList<Int>>>
         get() = _nextWeekKcalArray
 
+    // 달리기 칼로리 소모량
 
+    private var _howMuchRunning: MutableLiveData<Float> = MutableLiveData()
+    val howMuchRunning: LiveData<Float>
+        get() = _howMuchRunning
+
+    // 유저의 몸무게
+
+    private var _weight: MutableLiveData<Int> = MutableLiveData()
+    val weight: LiveData<Int>
+        get() = _weight
 
     private val _isNextButtonEnabled: MutableLiveData<Boolean> = MutableLiveData(true)
     val isNextButtonEnabled: LiveData<Boolean>
         get() = _isNextButtonEnabled
 
-    private val _entries: MutableList<BarEntry> = mutableListOf()
-    val entries: MutableList<BarEntry>
+    private val _entries: MutableList<Entry> = mutableListOf()
+    val entries: MutableList<Entry>
         get() = _entries
+
+    fun getUserWeight(userId: String) {
+
+        viewModelScope.launch {
+
+            getUserWeightUseCase(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    _weight.value = snapshot.value.toString().toInt()
+
+                    updateChartData() // 이렇게 비동기 순서 맞추는게 맞냐?
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+
+        }
+
+    }
 
 
     fun getChartWeekData(userId: String) {
@@ -166,7 +201,6 @@ class WeightChartViewModel @Inject constructor(
                     }
                     _weekKcalArray.value = Event(weekKcalArray)
                     _weekDateArray.value = Event(weekDateArray)
-                    Log.d("weekDateArray", weekDateArray.toString())
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -200,11 +234,9 @@ class WeightChartViewModel @Inject constructor(
 
                     calendar.time = dateFormat.parse(previousStartOfWeek) as Date
 
-
                     while (calendar.time <= dateFormat.parse(previousEndOfWeek)) {
 
                         val previousDate = dateFormat.format(calendar.time) // 2023-06-12 ~ 2023-06-18 이런식으로 1주일 단위
-                        Log.d("newPreviousDate", previousDate)
                         calendar.add(Calendar.DAY_OF_WEEK, 1)
 
                         var dayKcal = 0
@@ -225,7 +257,7 @@ class WeightChartViewModel @Inject constructor(
                     }
                     _previousWeekKcalArray.value = Event(previousWeekKcalArray)
                     _previousWeekDateArray.value = Event(previousWeekDateArray)
-                    Log.d("previousWeekDateArray", previousWeekDateArray.toString())
+
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -295,30 +327,41 @@ class WeightChartViewModel @Inject constructor(
     fun updateChartData(){
 
         var sumKcal = 0
+
         _entries.clear()
 
         try {
             viewModelScope.launch {
                 for (i in 0..6) {
                     _entries.add(
-                        BarEntry(
-                            _weekDateArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F,
+                        Entry(
+                            i.toFloat(),
                             _weekKcalArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F
                         )
                     )
                     sumKcal += _weekKcalArray.value!!.peekContent()[i]
 
                 }
-//                Collections.sort(
-//                    _entries,
-//                    EntryXComparator()
-//                ) // 이거 안쓰면 다른화면 갔다가 차트올때 음수 배열 에러 뜸. 공식 깃허브 피셜 해결방법. 근데 이제 안해도 되네? 왜지?
+
+
             }
         } catch (e: Exception) {
             Log.e("currentError", e.message.toString())
         }
 
         _weekKcalSum.value = sumKcal
+        Log.d("weight1", _weight.value.toString())
+        try {
+            _howMuchRunning.value =
+                roundToFirstDecimalPlace(sumKcal / (((4.0 * (3.5 * _weight.value!! * 60)) / 1000) * 5).toFloat()) // 이런것도 메서드로 다 일치시켜야함 알아보기 힘들다.
+        } catch (e: NullPointerException) {
+            Log.e("runningNull", "아휴 또 난리야?")
+        }
+
+
+
+//
+
     }
 
     fun updateChartPreviousData(){
@@ -329,8 +372,8 @@ class WeightChartViewModel @Inject constructor(
         try {
             for (i in 0..6) {
                 _entries.add(
-                    BarEntry(
-                        _previousWeekDateArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F,
+                    Entry(
+                        i.toFloat(),
                         _previousWeekKcalArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F
                     )
                 )
@@ -341,7 +384,14 @@ class WeightChartViewModel @Inject constructor(
         }
 
         _weekKcalSum.value = sumKcal
-        Log.d("sumKcalViewModel", weekKcalSum.value.toString())
+        Log.d("weight2", _weight.value.toString())
+        try {
+            _howMuchRunning.value =
+                roundToFirstDecimalPlace(sumKcal / (((4.0 * (3.5 * _weight.value!! * 60)) / 1000) * 5).toFloat())
+        } catch (e: NullPointerException) {
+            Log.e("runningNull", "아휴 또 난리야?")
+        }
+
     }
 
     fun updateChartNextData(){
@@ -352,8 +402,8 @@ class WeightChartViewModel @Inject constructor(
         try {
             for (i in 0..6) {
                 _entries.add(
-                    BarEntry(
-                        _nextWeekDateArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F,
+                    Entry(
+                        i.toFloat(),
                         _nextWeekKcalArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F
                     )
                 )
@@ -364,6 +414,15 @@ class WeightChartViewModel @Inject constructor(
         }
 
         _weekKcalSum.value = sumKcal
+        Log.d("weight3", _weight.value.toString())
+        try {
+            _howMuchRunning.value =
+                roundToFirstDecimalPlace(sumKcal / (((4.0 * (3.5 * _weight.value!! * 60)) / 1000) * 5).toFloat())
+            Log.d("runningValue", _howMuchRunning.value.toString())
+        } catch (e: NullPointerException) {
+            Log.e("runningNull", "아휴 또 난리야?")
+        }
+
     }
 
     fun movePreviousWeek() {
@@ -413,5 +472,10 @@ class WeightChartViewModel @Inject constructor(
 
 
     }
+
+    fun roundToFirstDecimalPlace(number: Float): Float {
+        return ((number * 10.0).toInt() / 10.0).toFloat()
+    }
+
 
 }
