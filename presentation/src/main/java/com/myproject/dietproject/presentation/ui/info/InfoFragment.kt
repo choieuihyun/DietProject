@@ -18,6 +18,7 @@ import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.InfoFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
 import com.myproject.dietproject.presentation.ui.MainActivity
+import com.myproject.dietproject.presentation.ui.util.BackPressedHandler
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -60,6 +61,8 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        BackPressedHandler.handleBackPress(this)
 
         binding.viewModel = viewModel
 

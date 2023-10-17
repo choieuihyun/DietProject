@@ -62,6 +62,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        BackPressedHandler.handleBackPress(this)
+
         binding.homeFragmentViewModel = viewModel
 
         viewModel.getRecommendKcalData(auth.currentUser!!.uid)

@@ -62,6 +62,8 @@ class WeightChartFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        BackPressedHandler.handleBackPress(this)
+
         binding.weightChartViewModel = viewModel
 
         viewModel.getUserWeight(auth.currentUser!!.uid)
