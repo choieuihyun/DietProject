@@ -118,15 +118,20 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
     private fun progressBarSetting(sumKcal: Float, max: Float) {
 
-        val circleProgressBar = binding.circularProgressBar
+        circleProgressBar = binding.circularProgressBar
 
-        circleProgressBar.apply {
-            progress = 0.0F
+        circleProgressBar.max = max.toInt()
 
-            progressMax = max
-            // Set Progress
-            progress = sumKcal
+        val animator = ValueAnimator.ofInt(0, sumKcal.toInt())
+        animator.duration = 2000
+
+        animator.addUpdateListener {
+            circleProgressBar.setProgressCompat(sumKcal.toInt(), true)
         }
+
+        animator.start()
+        circleProgressBar.show()
+
     }
 
     private fun imageViewSetting() {
