@@ -1,35 +1,28 @@
 package com.myproject.dietproject.presentation.ui.home
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.myproject.dietproject.domain.model.Kcal
-import com.myproject.dietproject.domain.usecase.GetKcalUseCase
+import com.myproject.dietproject.domain.usecase.GetUserNextDateKcalUseCase
+import com.myproject.dietproject.domain.usecase.GetUserPreviousDateKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserRecommendKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserTodayKcalUseCase
-import com.myproject.dietproject.domain.usecase.GetUserUseCase
 import com.myproject.dietproject.presentation.ui.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.lang.NumberFormatException
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getUserTodayKcalUseCase: GetUserTodayKcalUseCase,
-    private val getUserRecommendKcalUseCase: GetUserRecommendKcalUseCase
+    private val getUserPreviousDateKcalUseCase: GetUserPreviousDateKcalUseCase,
+    private val getUserNextDateKcalUseCase: GetUserNextDateKcalUseCase,
+    private val getUserRecommendKcalUseCase: GetUserRecommendKcalUseCase,
+
 ) : ViewModel() {
 
     private val _kcalData = MutableLiveData<List<Kcal>?>()
@@ -48,8 +41,8 @@ class HomeViewModel @Inject constructor(
     private val _isError: MutableLiveData<Boolean> = MutableLiveData()
     val isError: LiveData<Boolean> = _isError
 
-    private var _todayKcal: MutableLiveData<Int> = MutableLiveData() // 오늘 섭취한 총 칼로리
-    val todayKcal: LiveData<Int> = _todayKcal
+    private var _todayKcal: MutableLiveData<Int?> = MutableLiveData() // 오늘 섭취한 총 칼로리
+    val todayKcal: LiveData<Int?> = _todayKcal
 
     private var _recommendKcal: MutableLiveData<Int> = MutableLiveData() // 일일 권장 칼로리
     val recommendKcal: LiveData<Int> = _recommendKcal
@@ -57,8 +50,8 @@ class HomeViewModel @Inject constructor(
     private var _scarceKcal: MutableLiveData<Int> = MutableLiveData() // 부족한 섭취량 (Kcal)
     val scarceKcal: LiveData<Int> = _scarceKcal
 
-    private var _homeDateText: MutableLiveData<String> = MutableLiveData() // 날짜 text
-    val homeDateText: LiveData<String>
+    private var _homeDateText: MutableLiveData<String?> = MutableLiveData() // 날짜 text
+    val homeDateText: LiveData<String?>
         get() = _homeDateText
 
     private var _homeDataByDate: MutableLiveData<String> = MutableLiveData() // 날짜 기준 데이터
@@ -76,253 +69,120 @@ class HomeViewModel @Inject constructor(
     private var calculTodayKcal = 0 // 연산용도 오늘 섭취한 칼로리
     private var calculRecommendKcal = 0 // 연산용도 권장 칼로리
 
-    private val calendar = Calendar.getInstance()
-
-    init {
-        Log.d("HomeViewModelCreated", "ViewModel created")
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("HomeViewModelCleared", "ViewModel cleared")
-    }
 
     fun getUserTodayKcalData(userId: String) {
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        val today = dateFormat.format(calendar.time)
+        viewModelScope.launch {
 
-        var dateText = today.substring(5, 10) // 6-28로 자르기
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+            getUserTodayKcalUseCase(userId)
 
-        var sum = 0
+            getUserTodayKcalUseCase.getTodayKcal().observeForever {
+                _todayKcal.value = it
+            }
 
-        when (dayOfWeek) {
+            getUserTodayKcalUseCase.getHomeDateText().observeForever {
+                _homeDateText.value = it
+            }
 
-            Calendar.MONDAY -> dateText = "$dateText (월)"
+            calculTodayKcal = getUserTodayKcalUseCase.getCalCulTodayKcal()
 
-            Calendar.TUESDAY -> dateText = "$dateText (화)"
-
-            Calendar.WEDNESDAY -> dateText = "$dateText (수)"
-
-            Calendar.THURSDAY -> dateText = "$dateText (목)"
-
-            Calendar.FRIDAY -> dateText = "$dateText (금)"
-
-            Calendar.SATURDAY -> dateText = "$dateText (토)"
-
-            Calendar.SUNDAY -> dateText = "$dateText (일)"
+            imageSetting(_recommendKcal.value ?: 0, _todayKcal.value ?: 0)
 
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
-
-            getUserTodayKcalUseCase(userId, today).addValueEventListener(object :
-                ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-
-                    for (data in snapshot.children) {
-                        val dataDate = data.key?.substring(0, 10)
-
-                        if (dataDate == today) {
-                            val kcal = data.child("kcal").value
-                            sum += kcal.toString().toInt()
-                        }
-                    }
-
-                    _todayKcal.value = sum
-                    calculTodayKcal = sum // 위에꺼랑 같은데?
-                    _homeDateText.value = dateText
-                    imageSetting()
-
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
-
-        }
     }
 
-    fun getRecommendKcalData(userId: String) {
+    fun getUserRecommendKcalData(userId: String) {
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
 
-            getUserRecommendKcalUseCase(userId).addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+            getUserRecommendKcalUseCase(userId)
 
-                    try {
-                        _recommendKcal.value = snapshot.value.toString().toInt()
-                        calculRecommendKcal = _recommendKcal.value.toString().toInt()
+            getUserRecommendKcalUseCase.getRecommendKcal().observeForever {
+                _recommendKcal.value = it
+            }
 
-                        _scarceKcal.value = calculRecommendKcal - calculTodayKcal.toInt()
-                    } catch (e : NumberFormatException) {
+            getUserRecommendKcalUseCase.getScarceKcal().observeForever {
+                _scarceKcal.value = it
+            }
 
-                    }
+            _recommendKcal.value = getUserRecommendKcalUseCase.getRecommendKcal().value
+            calculRecommendKcal = getUserRecommendKcalUseCase.getCalCulRecommendKcal()
+            _scarceKcal.value = getUserRecommendKcalUseCase.getScarceKcal().value
 
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
         }
+
     }
 
 
     fun movePreviousDate(userId: String) {
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-        calendar.add(Calendar.DAY_OF_MONTH, -1)
-
-        val previousDataByDate = dateFormat.format(calendar.time)
-        var previousDateText = dateFormat.format(calendar.time).substring(5, 10)
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-
         viewModelScope.launch {
 
-            var sum = 0
+            getUserPreviousDateKcalUseCase(userId)
 
-            getUserTodayKcalUseCase(userId, previousDataByDate).addValueEventListener(object :
-                ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+            getUserPreviousDateKcalUseCase.getPreviousDateKcal()
 
-                    for (data in snapshot.children) {
-                        val dataDate = data.key?.substring(0, 10)
+            getUserPreviousDateKcalUseCase.getHomePreviousDateText()
 
-                        if (dataDate == previousDataByDate) {
-                            val kcal = data.child("kcal").value
-                            sum += kcal.toString().toInt()
-                        }
-                    }
-                    _todayKcal.value = sum
-                    calculTodayKcal = sum
-                    _scarceKcal.value = calculRecommendKcal - calculTodayKcal.toInt()
+            calculTodayKcal = getUserPreviousDateKcalUseCase.getCalCulPreviousDateKcal()
 
-                    imageSetting()
-                }
+            imageSetting(recommendKcal.value ?: 0, todayKcal.value ?: 0)
 
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
-
-            when (dayOfWeek) {
-
-                Calendar.MONDAY -> previousDateText = "$previousDateText (월)"
-
-                Calendar.TUESDAY -> previousDateText = "$previousDateText (화)"
-
-                Calendar.WEDNESDAY -> previousDateText = "$previousDateText (수)"
-
-                Calendar.THURSDAY -> previousDateText = "$previousDateText (목)"
-
-                Calendar.FRIDAY -> previousDateText = "$previousDateText (금)"
-
-                Calendar.SATURDAY -> previousDateText = "$previousDateText (토)"
-
-                Calendar.SUNDAY -> previousDateText = "$previousDateText (일)"
-
-            }
-
-            _homeDateText.postValue(previousDateText)
-            _homeDataByDate.postValue(previousDataByDate)
         }
 
     }
 
     fun moveNextDate(userId: String) {
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        calendar.add(Calendar.DAY_OF_MONTH, 1)
-
-        val nextDataByDate = dateFormat.format(calendar.time)
-        var nextDate = dateFormat.format(calendar.time).substring(5, 10)
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-
         viewModelScope.launch {
 
-            var sum = 0
+            getUserNextDateKcalUseCase(userId)
 
-            getUserTodayKcalUseCase(userId, nextDataByDate).addValueEventListener(object :
-                ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+            getUserNextDateKcalUseCase.getNextDateKcal()
 
-                    for (data in snapshot.children) {
-                        val dataDate = data.key?.substring(0, 10)
+            getUserNextDateKcalUseCase.getHomeNextDateText()
 
-                        if (dataDate == nextDataByDate) {
-                            val kcal = data.child("kcal").value
-                            sum += kcal.toString().toInt()
-                        }
-                    }
-                    _todayKcal.value = sum
-                    calculTodayKcal = sum
-                    _scarceKcal.value = calculRecommendKcal - calculTodayKcal.toInt()
+            getUserNextDateKcalUseCase.getCalCulNextDateKcal()
 
-                    imageSetting()
-                }
+            imageSetting(recommendKcal.value ?: 0, todayKcal.value ?: 0)
 
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
-
-            when (dayOfWeek) {
-
-                Calendar.MONDAY -> nextDate = "$nextDate (월)"
-
-                Calendar.TUESDAY -> nextDate = "$nextDate (화)"
-
-                Calendar.WEDNESDAY -> nextDate = "$nextDate (수)"
-
-                Calendar.THURSDAY -> nextDate = "$nextDate (목)"
-
-                Calendar.FRIDAY -> nextDate = "$nextDate (금)"
-
-                Calendar.SATURDAY -> nextDate = "$nextDate (토)"
-
-                Calendar.SUNDAY -> nextDate = "$nextDate (일)"
-
-            }
-
-            _homeDateText.postValue(nextDate)
-            _homeDataByDate.postValue(nextDataByDate)
         }
 
     }
 
-    fun imageSetting() { // 파라미터로 받아서 처리하는 것은 순서가 꼬이나?
+    private fun imageSetting(recommendKcal: Int, todayKcal: Int) { // 파라미터로 받아서 처리하는 것은 순서가 꼬이나?
 
         try {
-            if (_recommendKcal.value!! * 0.8 > _todayKcal.value?.toInt()!!) { // 권장 섭취 칼로리 * 0.6 > 오늘 섭취 칼로리
+            if (recommendKcal * 0.7 >= todayKcal) { // 권장 섭취 칼로리 * 0.7 > 오늘 섭취 칼로리
 
-                _kcalAlert.postValue("더 먹어야 해요 !")
-                _imageResultLiveData.value = 1// 배고픈 이미지
+                _kcalAlert.value = ("더 먹어야 해요 !")
+                _imageResultLiveData.value = 1// 배고픈 이미지_
+                Log.d("recommendKcal5", recommendKcal.toString())
+                Log.d("todayKcal5", todayKcal.toString())
 
-            } else if (_recommendKcal.value!! * 0.8 < _todayKcal.value?.toInt()!! && _todayKcal.value?.toInt()!! <= recommendKcal.value!!
+            } else if (recommendKcal * 0.7 < todayKcal && todayKcal <= recommendKcal) {
 
-            ) {
-
-                _kcalAlert.postValue("슬슬 배가 불러요 !")
+                _kcalAlert.value = ("슬슬 배가 불러요 !")
                 _imageResultLiveData.value = 2 // 배부른 이미지
 
             } else {
 
-                _kcalAlert.postValue("그만 먹어라")
+                _kcalAlert.value = ("그만 먹어라")
                 _imageResultLiveData.value = 3 // 배부른 이미지는 같은데 초과
 
             }
-        } catch (e : NullPointerException) {
-            _kcalAlert.value = "더 먹어야 해요 !"
+        } catch (e: NullPointerException) {
+            _kcalAlert.value = "null"
             _imageResultLiveData.value = 1// 배고픈 이미지
 
             Log.d("HomeViewModel", e.message.toString())
         }
 
+
     }
+
+
 
 
 }
