@@ -1,27 +1,26 @@
 package com.myproject.dietproject.domain.usecase
 
 import androidx.lifecycle.LiveData
-import com.google.firebase.database.DatabaseReference
 import com.myproject.dietproject.domain.repository.FirebaseRepository
 import javax.inject.Inject
 
-class GetUserTodayKcalUseCase @Inject constructor(
+class GetUserNextDateKcalUseCase @Inject constructor(
     private val repository: FirebaseRepository
 ) {
 
     suspend operator fun invoke(userId: String) {
-        return repository.getUserTodayKcal(userId)
+        repository.getUserNextDateKcal(userId)
     }
 
-    fun getTodayKcal(): LiveData<Int> { // 이거 그냥 일반데이터로 해야될 것 같은데? value로 받아와서
+    fun getNextDateKcal(): LiveData<Int> {
         return repository.todayKcal
     }
 
-    fun getHomeDateText(): LiveData<String> {
+    fun getHomeNextDateText(): LiveData<String> {
         return repository.homeDateText
     }
 
-    fun getCalCulTodayKcal() : Int {
+    fun getCalCulNextDateKcal(): Int {
         return repository.calculTodayKcal
     }
 
