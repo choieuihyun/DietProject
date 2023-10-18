@@ -4,14 +4,11 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import java.util.Date
-
 import javax.inject.Inject
 
 class FirebaseDataSource @Inject constructor(
     private val firebase: FirebaseDatabase,
-    private val firebaseStorage: FirebaseStorage
+    private val firebaseStorage: FirebaseStorage,
 ) {
 
     // datasource랑 repositoryImpl이랑 뭔가 이상한 구조의 느낌.
@@ -32,6 +29,14 @@ class FirebaseDataSource @Inject constructor(
     // 이걸 왜하냐면 로그인(구글,이메일)에서 personType이 비어있으면 personalInfo로 넘어가게 하려고 해놨음.
     fun getUser(): DatabaseReference { // 여기서 userId는 구글기준으론 account.id, 이메일 기준으론 uid
         return firebase.getReference("user")
+    }
+
+    fun getUserTodayKcal(userId: String): DatabaseReference {
+        return firebase.getReference("user").child(userId).child("todayKcal")
+    }
+
+    fun getUserRecommendKcal(userId: String): DatabaseReference {
+        return firebase.getReference("user").child(userId).child("recommendKcal")
     }
 
     fun getUserActivity(userId: String): DatabaseReference {
