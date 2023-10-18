@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.myproject.dietproject.domain.model.TodayKcal
-import com.myproject.dietproject.domain.model.TodayKcalForCalendar
+import com.myproject.dietproject.domain.model.KcalDataForCalendar
+
 import com.myproject.dietproject.presentation.databinding.CalendarDetailListItemBinding
 import com.myproject.dietproject.presentation.databinding.CalendarDetailListItemTypeTwoBinding
 
-class CalendarDetailAdapter : ListAdapter<TodayKcalForCalendar, ViewHolder>(kcalDataDiffCallback) {
+class CalendarDetailAdapter : ListAdapter<KcalDataForCalendar, ViewHolder>(kcalDataDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -55,13 +55,13 @@ class CalendarDetailAdapter : ListAdapter<TodayKcalForCalendar, ViewHolder>(kcal
         const val type_one = 1
         const val type_two = 2
 
-        private val kcalDataDiffCallback = object : DiffUtil.ItemCallback<TodayKcalForCalendar>() {
+        private val kcalDataDiffCallback = object : DiffUtil.ItemCallback<KcalDataForCalendar>() {
 
-            override fun areItemsTheSame(oldItem: TodayKcalForCalendar, newItem: TodayKcalForCalendar): Boolean {
+            override fun areItemsTheSame(oldItem: KcalDataForCalendar, newItem: KcalDataForCalendar): Boolean {
                 return oldItem.hashCode() == newItem.hashCode()
             }
 
-            override fun areContentsTheSame(oldItem: TodayKcalForCalendar, newItem: TodayKcalForCalendar): Boolean {
+            override fun areContentsTheSame(oldItem: KcalDataForCalendar, newItem: KcalDataForCalendar): Boolean {
                 return oldItem == newItem
             }
 
