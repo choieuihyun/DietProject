@@ -1,10 +1,8 @@
 package com.myproject.dietproject.presentation.ui.home
 
+import android.animation.ValueAnimator
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,15 +11,17 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.kakao.sdk.common.util.Utility
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.HomeFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
 import com.myproject.dietproject.presentation.ui.MainActivity
+import com.myproject.dietproject.presentation.ui.util.BackPressedHandler
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
@@ -29,6 +29,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var mainActivity: MainActivity
     private lateinit var auth: FirebaseAuth
+    private lateinit var circleProgressBar: CircularProgressIndicator
 
     private val args by navArgs<HomeFragmentArgs>() // 아 이거 home
 
@@ -43,10 +44,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
-
-        var keyHash = Utility.getKeyHash(requireContext())
-        Log.i("asdfasdf", "$keyHash")
-
 
     }
 
@@ -66,21 +63,19 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
 
         binding.homeFragmentViewModel = viewModel
 
-        viewModel.getRecommendKcalData(auth.currentUser!!.uid)
+        viewModel.getUserRecommendKcalData(auth.currentUser!!.uid)
         viewModel.getUserTodayKcalData(auth.currentUser!!.uid)
 
         viewModel.todayKcal.observe(viewLifecycleOwner) { todayKcal ->
-            viewModel.recommendKcal.observe(viewLifecycleOwner) { recommendKcal -> // recommendKcal가 변화가 없어서 지속적으로 관찰할 수 없음.
-                // 그래서 todayKcal 안에 두면 될 것 같았는데 안그래도 되긴 함. 어차피 변동 없는 값이라.
-                Log.d("homeFragmentTodayKcal", todayKcal.toString())
-                progressBarSetting(todayKcal.toFloat(), recommendKcal.toFloat())
-                Log.d(
-                    "homeFragmentRecommendKcal",
-                    viewModel.recommendKcal.value?.toFloat().toString()
-                )
-
+            if (todayKcal != null) {
+                viewModel.recommendKcal.observe(viewLifecycleOwner) { recommendKcal ->
+                    if (recommendKcal != null) {
+                        progressBarSetting(todayKcal.toFloat(), recommendKcal.toFloat())
+                    }
+                }
             }
         }
+
 
         viewModel.scarceKcal.observe(viewLifecycleOwner) {
 
@@ -112,7 +107,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
             viewModel.moveNextDate(auth.currentUser!!.uid)
 
         }
-
     }
 
     override fun onResume() {
