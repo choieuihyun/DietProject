@@ -52,7 +52,7 @@ class CalendarDetailViewModel @Inject constructor(
 
             getUserRecommendKcalUseCase(userId)
 
-            _recommendKcal.value = getUserRecommendKcalUseCase.getRecommendKcal().value
+            _recommendKcal.value = getUserRecommendKcalUseCase.getRecommendKcal()
 
             imageSetting()
 
