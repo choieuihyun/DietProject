@@ -70,12 +70,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>(R.layout.home_fragment) {
             if (todayKcal != null) {
                 viewModel.recommendKcal.observe(viewLifecycleOwner) { recommendKcal ->
                     if (recommendKcal != null) {
+                        viewModel.getUserScarceKcalData(todayKcal)
                         progressBarSetting(todayKcal.toFloat(), recommendKcal.toFloat())
                     }
                 }
             }
         }
-
 
         viewModel.scarceKcal.observe(viewLifecycleOwner) {
 
