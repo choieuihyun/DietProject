@@ -76,13 +76,9 @@ class HomeViewModel @Inject constructor(
 
             getUserTodayKcalUseCase(userId)
 
-            getUserTodayKcalUseCase.getTodayKcal().observeForever {
-                _todayKcal.value = it
-            }
+           _todayKcal.value = getUserTodayKcalUseCase.getTodayKcal()
 
-            getUserTodayKcalUseCase.getHomeDateText().observeForever {
-                _homeDateText.value = it
-            }
+            _homeDateText.value = getUserTodayKcalUseCase.getHomeDateText()
 
             calculTodayKcal = getUserTodayKcalUseCase.getCalCulTodayKcal()
 
@@ -98,19 +94,17 @@ class HomeViewModel @Inject constructor(
 
             getUserRecommendKcalUseCase(userId)
 
-            getUserRecommendKcalUseCase.getRecommendKcal().observeForever {
-                _recommendKcal.value = it
-            }
-
-            getUserRecommendKcalUseCase.getScarceKcal().observeForever {
-                _scarceKcal.value = it
-            }
-
-            _recommendKcal.value = getUserRecommendKcalUseCase.getRecommendKcal().value
+            _recommendKcal.value = getUserRecommendKcalUseCase.getRecommendKcal()
             calculRecommendKcal = getUserRecommendKcalUseCase.getCalCulRecommendKcal()
-            _scarceKcal.value = getUserRecommendKcalUseCase.getScarceKcal().value
+            //_scarceKcal.value = getUserRecommendKcalUseCase.getScarceKcal()
 
         }
+
+    }
+
+    fun getUserScarceKcalData(todayKcal: Int) {
+
+        _scarceKcal.value = recommendKcal.value?.minus(todayKcal)
 
     }
 
@@ -121,9 +115,9 @@ class HomeViewModel @Inject constructor(
 
             getUserPreviousDateKcalUseCase(userId)
 
-            getUserPreviousDateKcalUseCase.getPreviousDateKcal()
+            _todayKcal.value = getUserPreviousDateKcalUseCase.getPreviousDateKcal()
 
-            getUserPreviousDateKcalUseCase.getHomePreviousDateText()
+            _homeDateText.value = getUserPreviousDateKcalUseCase.getHomePreviousDateText()
 
             calculTodayKcal = getUserPreviousDateKcalUseCase.getCalCulPreviousDateKcal()
 
@@ -139,11 +133,11 @@ class HomeViewModel @Inject constructor(
 
             getUserNextDateKcalUseCase(userId)
 
-            getUserNextDateKcalUseCase.getNextDateKcal()
+            _todayKcal.value = getUserNextDateKcalUseCase.getNextDateKcal()
 
-            getUserNextDateKcalUseCase.getHomeNextDateText()
+            _homeDateText.value = getUserNextDateKcalUseCase.getHomeNextDateText()
 
-            getUserNextDateKcalUseCase.getCalCulNextDateKcal()
+            calculTodayKcal = getUserNextDateKcalUseCase.getCalCulNextDateKcal()
 
             imageSetting(recommendKcal.value ?: 0, todayKcal.value ?: 0)
 
@@ -158,8 +152,6 @@ class HomeViewModel @Inject constructor(
 
                 _kcalAlert.value = ("더 먹어야 해요 !")
                 _imageResultLiveData.value = 1// 배고픈 이미지_
-                Log.d("recommendKcal5", recommendKcal.toString())
-                Log.d("todayKcal5", todayKcal.toString())
 
             } else if (recommendKcal * 0.7 < todayKcal && todayKcal <= recommendKcal) {
 
@@ -176,7 +168,6 @@ class HomeViewModel @Inject constructor(
             _kcalAlert.value = "null"
             _imageResultLiveData.value = 1// 배고픈 이미지
 
-            Log.d("HomeViewModel", e.message.toString())
         }
 
 
