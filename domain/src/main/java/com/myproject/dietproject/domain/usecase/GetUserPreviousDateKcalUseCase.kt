@@ -1,6 +1,5 @@
 package com.myproject.dietproject.domain.usecase
 
-import androidx.lifecycle.LiveData
 import com.myproject.dietproject.domain.repository.FirebaseRepository
 import javax.inject.Inject
 
@@ -12,12 +11,12 @@ class GetUserPreviousDateKcalUseCase @Inject constructor(
         repository.getUserPreviousDateKcal(userId)
     }
 
-    fun getPreviousDateKcal(): LiveData<Int> {
-        return repository.todayKcal
+    fun getPreviousDateKcal(): Int? {
+        return repository.todayKcal.value
     }
 
-    fun getHomePreviousDateText(): LiveData<String> {
-        return repository.homeDateText
+    fun getHomePreviousDateText(): String? {
+        return repository.homeDateText.value
     }
 
     fun getCalCulPreviousDateKcal(): Int {

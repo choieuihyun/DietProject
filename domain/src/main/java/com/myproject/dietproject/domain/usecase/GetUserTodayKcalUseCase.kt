@@ -13,12 +13,12 @@ class GetUserTodayKcalUseCase @Inject constructor(
         return repository.getUserTodayKcal(userId)
     }
 
-    fun getTodayKcal(): LiveData<Int> { // 이거 그냥 일반데이터로 해야될 것 같은데? value로 받아와서
-        return repository.todayKcal
+    fun getTodayKcal(): Int? { // 이거 그냥 일반데이터로 해야될 것 같은데? value로 받아와서
+        return repository.todayKcal.value
     }
 
-    fun getHomeDateText(): LiveData<String> {
-        return repository.homeDateText
+    fun getHomeDateText(): String? {
+        return repository.homeDateText.value
     }
 
     fun getCalCulTodayKcal() : Int {

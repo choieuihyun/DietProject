@@ -12,16 +12,12 @@ class GetUserRecommendKcalUseCase @Inject constructor(
         return repository.getUserRecommendKcal(userId)
     }
 
-    fun getRecommendKcal(): LiveData<Int> {
-        return repository.recommendKcal
+    fun getRecommendKcal(): Int? {
+        return repository.recommendKcal.value
     }
 
     fun getCalCulRecommendKcal(): Int {
         return repository.calculRecommendKcal
-    }
-
-    fun getScarceKcal(): LiveData<Int> {
-        return repository.scarceKcal
     }
 
 }
