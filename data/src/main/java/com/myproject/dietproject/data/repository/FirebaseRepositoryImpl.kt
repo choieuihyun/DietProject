@@ -75,7 +75,7 @@ class FirebaseRepositoryImpl @Inject constructor(
         return firebaseDataSource.getUser().child(userId)
     }
 
-    override suspend fun getUserTodayKcal(userId: String) = suspendCancellableCoroutine<Unit> { continuation ->
+    override suspend fun getUserTodayKcal(userId: String) = suspendCancellableCoroutine { continuation ->
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd")
             val today = dateFormat.format(calendar.time)
@@ -145,7 +145,7 @@ class FirebaseRepositoryImpl @Inject constructor(
 
         val userReference = firebaseDataSource.getUserRecommendKcal(userId)
 
-        userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+        userReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 try {
                     _recommendKcal.value = snapshot.value.toString().toInt()
@@ -200,6 +200,7 @@ class FirebaseRepositoryImpl @Inject constructor(
 
                         isResumed = true
                         continuation.resume(Unit)
+                        userReference.removeEventListener(this)
 
                     }
                 }
@@ -265,6 +266,7 @@ class FirebaseRepositoryImpl @Inject constructor(
 
                     isResumed = true
                     continuation.resume(Unit)
+                    userReference.removeEventListener(this)
 
                 }
 
