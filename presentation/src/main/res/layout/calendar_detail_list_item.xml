@@ -8,7 +8,7 @@
 
         <variable
             name="todayKcal"
-            type="com.myproject.dietproject.domain.model.TodayKcalForCalendar" />
+            type="com.myproject.dietproject.domain.model.KcalDataForCalendar" />
 
     </data>
 

@@ -31,7 +31,7 @@ data class TodayKcal ( // 하루에 먹은 칼로리
 
 )
 
-data class TodayKcalForCalendar ( // 하루에 먹은 칼로리 근데 이걸로 지금 calendardetail에서 사용중인데 todaykcal로 해도 되는거 아닌교?
+data class KcalDataForCalendar ( // 하루에 먹은 칼로리 근데 이걸로 지금 calendardetail에서 사용중인데 todaykcal로 해도 되는거 아닌교?
 
     val kcal: Int,
     val foodName: String,

@@ -77,6 +77,8 @@ class KcalDetailViewModel @Inject constructor(
 
     fun getDate() {
 
+        val calendar: Calendar = Calendar.getInstance()
+
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val dataByDate = dateFormat.format(calendar.time)
         var dateText = dateFormat.format(calendar.time).substring(5,10)
@@ -108,6 +110,8 @@ class KcalDetailViewModel @Inject constructor(
     }
 
     fun movePreviousDate() {
+
+        val calendar: Calendar = Calendar.getInstance()
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         calendar.add(Calendar.DAY_OF_MONTH, -1)
@@ -141,6 +145,8 @@ class KcalDetailViewModel @Inject constructor(
     }
 
     fun moveNextDate() {
+
+        val calendar: Calendar = Calendar.getInstance()
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         calendar.add(Calendar.DAY_OF_MONTH, 1)

@@ -29,13 +29,12 @@ import com.myproject.dietproject.presentation.databinding.CalendarDayLayoutBindi
 import com.myproject.dietproject.presentation.databinding.CalendarFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
 import com.myproject.dietproject.presentation.ui.MainActivity
+import com.myproject.dietproject.presentation.ui.util.BackPressedHandler
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
-
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.temporal.WeekFields
-import java.util.*
+
 
 @AndroidEntryPoint
 class CalendarFragment : BaseFragment<CalendarFragmentBinding>(R.layout.calendar_fragment) {
@@ -63,6 +62,8 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(R.layout.calendar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        BackPressedHandler.handleBackPress(this)
 
         viewModel.getCalendarDate()
 
@@ -98,7 +99,6 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(R.layout.calendar
             val firstMonth = currentMonth.minusMonths(120)
             val lastMonth = currentMonth.plusMonths(120)
 
-//            val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek // 이걸로 하면 일요일 시작임.
             setup(firstMonth, lastMonth, DayOfWeek.MONDAY) // 여기에 넣으면 일요일 시작
             scrollToMonth(currentMonth)
 
@@ -173,16 +173,6 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(R.layout.calendar
                                 )
                             )
 
-
-                            /*                            if (day.date.isAfter(LocalDate.now())) {
-
-                                                            container.date.setTextColor(
-                                                                ContextCompat.getColor(
-                                                                    context,
-                                                                    R.color.invisible20
-                                                                )
-                                                            )
-                                                        }*/
                         }
                     }
 
@@ -231,8 +221,7 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(R.layout.calendar
                                 R.drawable.calendar_day_background_today
                             )
 
-                            //container.today.visibility = View.VISIBLE
-                        } else {
+                  } else {
                             container.date.typeface = resources.getFont(R.font.kangwon_light)
                             container.date.background = ContextCompat.getDrawable(
                                 context,
@@ -274,18 +263,9 @@ class CalendarFragment : BaseFragment<CalendarFragmentBinding>(R.layout.calendar
                 }
             }
 
-            binding.tvCalendarIndicator.text =
-                currentMonth.toString() // 해당 년-월 (2023-05) 달력 위에 띄워주는 부분인데 이거 LiveData로 바꿔서 ViewModel에서 계속 갱신하면서 받아오도록하면 될듯?
-            // 이거 지금 못하는 이유가 이걸 저기 button에 넣어버리면 계속 뷰가 갱신되는데 그거보단 그냥 viewModel에서 데이터 변경해서 받아와서 LiveData로 바꿔주는게 맞다 이건.
+            binding.tvCalendarIndicator.text = currentMonth.toString()
         }
 
     }
 
-
-//    private fun onMonthScroll(currentMonth: YearMonth) {
-//        val visibleMonth = binding.calendarView.findFirstVisibleMonth() ?: return
-//        if(currentMonth != visibleMonth.yearMonth) {
-//            binding.calendarView.smoothScrollToMonth(currentMonth)
-//        }
-//    }
 }
