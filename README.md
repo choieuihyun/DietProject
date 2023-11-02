@@ -151,7 +151,7 @@ Clean Arcitecture에 맞춰 MVVM 아키텍처 패턴을 사용하였습니다.
 
 💡 싱글톤으로 만들어지는 Repository에 왜 굳이 데이터가 들어갈 변수들을 선언했나.
 
-        - 앱의 수정을 하다가 RepositoryImpl에서 데이터를 처리하는 로직을 활용해 받아온 데이터와 로직이 따로 존재해야한다고 생각했음
+        - 앱의 수정을 하다가 RepositoryImpl에서 데이터를 처리하는 로직과 처리된 데이터가 담길 변수가 따로 존재해야 한다고 판단하였음
         - RepositoryImpl에서 데이터를 받아오는 로직 내에서 리턴해야하는 값이 세 개였기 때문에 위처럼 판단하였음
 
 💡 UseCase에서 RepositoryImpl에서 반환한 LiveData를 그대로 사용하지 않고 내부의 value값을 리턴했나.
