@@ -21,6 +21,10 @@ class GetUserTodayKcalUseCase @Inject constructor(
         return repository.homeDateText.value
     }
 
+    fun getDateTextByDate(): String? {
+        return repository.homeDateTextByDate.value
+    }
+
     fun getCalCulTodayKcal() : Int {
         return repository.calculTodayKcal
     }

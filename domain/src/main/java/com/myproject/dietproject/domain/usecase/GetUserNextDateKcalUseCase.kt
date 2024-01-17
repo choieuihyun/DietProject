@@ -16,8 +16,12 @@ class GetUserNextDateKcalUseCase @Inject constructor(
         return repository.todayKcal.value
     }
 
-    fun getHomeNextDateText(): String? {
+    fun getNextDateText(): String? {
         return repository.homeDateText.value
+    }
+
+    fun getNextDateTextByDate(): String? {
+        return repository.homeDateTextByDate.value
     }
 
     fun getCalCulNextDateKcal(): Int {
