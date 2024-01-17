@@ -1,6 +1,5 @@
 package com.myproject.dietproject.presentation.ui.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,6 @@ import com.myproject.dietproject.domain.usecase.GetUserTodayKcalUseCase
 import com.myproject.dietproject.presentation.ui.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -117,7 +115,7 @@ class HomeViewModel @Inject constructor(
 
             _todayKcal.value = getUserPreviousDateKcalUseCase.getPreviousDateKcal()
 
-            _homeDateText.value = getUserPreviousDateKcalUseCase.getHomePreviousDateText()
+            _homeDateText.value = getUserPreviousDateKcalUseCase.getPreviousDateText()
 
             calculTodayKcal = getUserPreviousDateKcalUseCase.getCalCulPreviousDateKcal()
 
@@ -135,7 +133,7 @@ class HomeViewModel @Inject constructor(
 
             _todayKcal.value = getUserNextDateKcalUseCase.getNextDateKcal()
 
-            _homeDateText.value = getUserNextDateKcalUseCase.getHomeNextDateText()
+            _homeDateText.value = getUserNextDateKcalUseCase.getNextDateText()
 
             calculTodayKcal = getUserNextDateKcalUseCase.getCalCulNextDateKcal()
 
