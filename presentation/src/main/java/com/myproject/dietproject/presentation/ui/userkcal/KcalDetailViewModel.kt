@@ -1,35 +1,44 @@
 package com.myproject.dietproject.presentation.ui.userkcal
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myproject.dietproject.domain.usecase.AddUserTodayKcalUseCase
+import com.myproject.dietproject.domain.usecase.GetUserNextDateKcalUseCase
+import com.myproject.dietproject.domain.usecase.GetUserPreviousDateKcalUseCase
+import com.myproject.dietproject.domain.usecase.GetUserTodayKcalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Calendar
 import javax.inject.Inject
 import kotlin.math.floor
 
 @HiltViewModel
 class KcalDetailViewModel @Inject constructor(
-    private val addUserTodayKcalUseCase : AddUserTodayKcalUseCase
+    private val addUserTodayKcalUseCase : AddUserTodayKcalUseCase,
+    private val getTodayDateText: GetUserTodayKcalUseCase,
+    private val getPreviousDateText: GetUserPreviousDateKcalUseCase,
+    private val getNextDateText: GetUserNextDateKcalUseCase
 ) : ViewModel() {
 
-    private var _kcalDetailDateText: MutableLiveData<String> = MutableLiveData()
+    private var _kcalDetailDateText: MutableLiveData<String> = MutableLiveData() // detail 화면 상단의 06-28 (금)과 같은 방식으로 표시하기 위한 변수
     val kcalDetailDateText: LiveData<String>
         get() = _kcalDetailDateText
 
-    private var _kcalDetailDataByDate: MutableLiveData<String> = MutableLiveData()
+    private var _kcalDetailDataByDate: MutableLiveData<String> = MutableLiveData() // detail 화면 상단의 06-28 (금)과 같은 방식으로 표시하기 위한 변수
     val kcalDetailDataByDate: LiveData<String>
         get() = _kcalDetailDataByDate
 
+    private var _dayDateText: MutableLiveData<String> = MutableLiveData()
+    val dayDateText: LiveData<String>
+        get() = _dayDateText
 
-    private val calendar = Calendar.getInstance() // 같은 Calendar 객체를 사용하지만, 각자의 dateFormat은 따로 해야한다.
+    private var _dayByDateText: MutableLiveData<String> = MutableLiveData() // 데이터를 추가할 때 2023-06-28와 같은 방식으로 추가하기 위한 변수
+    val dateByDateText: LiveData<String>
+        get() = _dayByDateText
 
-    fun plusServingCalculator(serving: Float) : Float {
+
+    fun plusServingCalculator(serving: Float) : Float { // 인분 +
 
         var result = 0.0F
 
@@ -39,7 +48,7 @@ class KcalDetailViewModel @Inject constructor(
 
     }
 
-    fun minusServingCalculator(serving: Float) : Float {
+    fun minusServingCalculator(serving: Float) : Float { // 인분 -
 
         var result = serving - 0.5F
 
@@ -75,106 +84,50 @@ class KcalDetailViewModel @Inject constructor(
 
     }
 
-    fun getDate() {
-
-        val calendar: Calendar = Calendar.getInstance()
-
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val dataByDate = dateFormat.format(calendar.time)
-        var dateText = dateFormat.format(calendar.time).substring(5,10)
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-
-        when(dayOfWeek) {
-
-            Calendar.MONDAY -> dateText = "$dateText (월)"
-
-            Calendar.TUESDAY -> dateText = "$dateText (화)"
-
-            Calendar.WEDNESDAY -> dateText = "$dateText (수)"
-
-            Calendar.THURSDAY -> dateText = "$dateText (목)"
-
-            Calendar.FRIDAY -> dateText = "$dateText (금)"
-
-            Calendar.SATURDAY -> dateText = "$dateText(토)"
-
-            Calendar.SUNDAY -> dateText = "$dateText(일)"
-
-        }
+    fun getDate(userId: String) {
 
         viewModelScope.launch {
-            _kcalDetailDateText.postValue(dateText)
-            _kcalDetailDataByDate.postValue(dataByDate)
+
+            getTodayDateText(userId)
+
+            _dayDateText.value = getTodayDateText.getHomeDateText()
+            _dayByDateText.value = getTodayDateText.getDateTextByDate()
+
+            _kcalDetailDateText.postValue(_dayDateText.value)
+            _kcalDetailDataByDate.postValue(_dayByDateText.value)
+
         }
 
     }
 
-    fun movePreviousDate() {
-
-        val calendar: Calendar = Calendar.getInstance()
-
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        calendar.add(Calendar.DAY_OF_MONTH, -1)
-        val previousDataByDate = dateFormat.format(calendar.time)
-        var previousDateText = dateFormat.format(calendar.time).substring(5,10)
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-
-        when(dayOfWeek) {
-
-            Calendar.MONDAY -> previousDateText = "$previousDateText (월)"
-
-            Calendar.TUESDAY -> previousDateText = "$previousDateText (화)"
-
-            Calendar.WEDNESDAY -> previousDateText = "$previousDateText (수)"
-
-            Calendar.THURSDAY -> previousDateText = "$previousDateText (목)"
-
-            Calendar.FRIDAY -> previousDateText = "$previousDateText (금)"
-
-            Calendar.SATURDAY -> previousDateText = "$previousDateText (토)"
-
-            Calendar.SUNDAY -> previousDateText = "$previousDateText (일)"
-
-        }
+    fun movePreviousDate(userId: String) {
 
         viewModelScope.launch {
-            _kcalDetailDateText.postValue(previousDateText)
-            _kcalDetailDataByDate.postValue(previousDataByDate)
-        }
 
+            getPreviousDateText(userId)
+
+            _dayDateText.value = getPreviousDateText.getPreviousDateText()
+            _dayByDateText.value = getPreviousDateText.getPreviousDateTextByDate()
+
+            _kcalDetailDateText.postValue(_dayDateText.value)
+            _kcalDetailDataByDate.postValue(_dayByDateText.value)
+
+        }
     }
+    
 
-    fun moveNextDate() {
-
-        val calendar: Calendar = Calendar.getInstance()
-
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        calendar.add(Calendar.DAY_OF_MONTH, 1)
-        val nextDataByDate = dateFormat.format(calendar.time)
-        var nextDate = dateFormat.format(calendar.time).substring(5,10)
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-
-        when(dayOfWeek) {
-
-            Calendar.MONDAY -> nextDate = "$nextDate (월)"
-
-            Calendar.TUESDAY -> nextDate = "$nextDate (화)"
-
-            Calendar.WEDNESDAY -> nextDate = "$nextDate (수)"
-
-            Calendar.THURSDAY -> nextDate = "$nextDate (목)"
-
-            Calendar.FRIDAY -> nextDate = "$nextDate (금)"
-
-            Calendar.SATURDAY -> nextDate = "$nextDate (토)"
-
-            Calendar.SUNDAY -> nextDate = "$nextDate (일)"
-
-        }
+    fun moveNextDate(userId: String) {
 
         viewModelScope.launch {
-            _kcalDetailDateText.postValue(nextDate)
-            _kcalDetailDataByDate.postValue(nextDataByDate)
+
+            getNextDateText(userId)
+
+            _dayDateText.value = getNextDateText.getNextDateText()
+            _dayByDateText.value = getNextDateText.getNextDateTextByDate()
+
+            _kcalDetailDateText.postValue(_dayDateText.value)
+            _kcalDetailDataByDate.postValue(_dayByDateText.value)
+
         }
 
     }
