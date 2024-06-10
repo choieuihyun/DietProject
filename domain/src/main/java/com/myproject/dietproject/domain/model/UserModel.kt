@@ -6,6 +6,7 @@ import java.io.Serializable
 
 data class UserModel (
 
+    // 이거 모델에 키가 왜 있는거냐?
     @PrimaryKey val uid: String = "", // firebase uid
     @PrimaryKey val email: String = "", // 이메일
     val name: String = "", // 이름 or 닉네임 뭐 아무거나
