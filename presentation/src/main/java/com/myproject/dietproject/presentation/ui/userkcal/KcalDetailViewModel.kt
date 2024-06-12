@@ -1,5 +1,7 @@
 package com.myproject.dietproject.presentation.ui.userkcal
 
+import android.icu.util.Calendar
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +12,11 @@ import com.myproject.dietproject.domain.usecase.GetUserPreviousDateKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserTodayKcalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import kotlin.math.floor
 
@@ -38,6 +45,9 @@ class KcalDetailViewModel @Inject constructor(
         get() = _dayByDateText
 
 
+    /**
+     * 먹는 양(인분) 계산기(+)
+     */
     fun plusServingCalculator(serving: Float) : Float { // 인분 +
 
         var result = 0.0F
@@ -48,6 +58,9 @@ class KcalDetailViewModel @Inject constructor(
 
     }
 
+    /**
+     * 먹는 양(인분) 계산기(-)
+     */
     fun minusServingCalculator(serving: Float) : Float { // 인분 -
 
         var result = serving - 0.5F
@@ -59,12 +72,18 @@ class KcalDetailViewModel @Inject constructor(
 
     }
 
+    /**
+     * 먹는 양 칼로리 계산기(+)
+     */
     fun plusCalculator(data: Float, number: Float): Float {
 
         return data * number
 
     }
 
+    /**
+     * 먹는 양 칼로리 계산기(-)
+     */
     fun minusCalculator(data: Float, data2: Float): Float {
 
         val result = data - (data2 * 0.5F)
@@ -76,10 +95,23 @@ class KcalDetailViewModel @Inject constructor(
 
     }
 
-    fun addUserTodayKcal(userId: String, kcal: Float, foodName: String, makerName: String, date: String) {
+    /**
+     * DB에 먹은 음식 추가하는 메서드.
+     * 시간 파싱하는 구조는 "2024-06-05" 와 같은 "연-월-일" 문자열에 앱을 사용하는 현재 "시-분-초" 추가
+     * @param 유저 아이디, 칼로리, 음식 이름, 제조사 명, 칼로리 등록 날짜
+     */
+    fun addUserTodayKcal(userId: String, kcal: Float, foodName: String, makerName: String, dateText: String) {
+
+        val currentTime = LocalTime.now()
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val date = LocalDate.parse(dateText, dateFormatter)
+
+        val dateTime = LocalDateTime.of(date, currentTime)
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val formattedDateTime = dateTime.format(dateTimeFormatter)
 
         viewModelScope.launch {
-            addUserTodayKcalUseCase(userId, floor(kcal), foodName, makerName, date)
+            addUserTodayKcalUseCase(userId, floor(kcal), foodName, makerName, formattedDateTime.toString())
         }
 
     }
@@ -92,7 +124,6 @@ class KcalDetailViewModel @Inject constructor(
 
             _dayDateText.value = getTodayDateText.getHomeDateText()
             _dayByDateText.value = getTodayDateText.getDateTextByDate()
-
             _kcalDetailDateText.postValue(_dayDateText.value)
             _kcalDetailDataByDate.postValue(_dayByDateText.value)
 
@@ -100,6 +131,9 @@ class KcalDetailViewModel @Inject constructor(
 
     }
 
+    /**
+     * 전 날짜로 이동하는 메서드
+     */
     fun movePreviousDate(userId: String) {
 
         viewModelScope.launch {
@@ -114,8 +148,10 @@ class KcalDetailViewModel @Inject constructor(
 
         }
     }
-    
 
+    /**
+     * 다음 날짜로 이동하는 메서드
+     */
     fun moveNextDate(userId: String) {
 
         viewModelScope.launch {

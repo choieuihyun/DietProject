@@ -31,11 +31,11 @@ class FirebaseRepositoryImpl @Inject constructor(
     override val todayKcal: LiveData<Int>
         get() = _todayKcal
 
-    private var _homeDateText: MutableLiveData<String> = MutableLiveData()// 날짜 text
+    private var _homeDateText: MutableLiveData<String> = MutableLiveData() // 날짜 text -> 12-09 (금)
     override val homeDateText: LiveData<String>
         get() = _homeDateText
 
-    private var _homeDateTextByDate: MutableLiveData<String> = MutableLiveData() // 날짜 기준 데이터
+    private var _homeDateTextByDate: MutableLiveData<String> = MutableLiveData() // 날짜 기준 데이터 -> 2023-12-09
     override val homeDateTextByDate: LiveData<String>
         get() = _homeDateTextByDate
 
@@ -75,9 +75,10 @@ class FirebaseRepositoryImpl @Inject constructor(
         return firebaseDataSource.getUser().child(userId)
     }
 
-    override suspend fun getUserTodayKcal(userId: String) = suspendCancellableCoroutine { continuation ->
+    override suspend fun getUserTodayKcal(userId: String) =
+        suspendCancellableCoroutine { continuation ->
 
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val today = dateFormat.format(calendar.time)
 
             var dateText = today.substring(5, 10) // 6-28로 자르기
@@ -110,21 +111,15 @@ class FirebaseRepositoryImpl @Inject constructor(
                     if (!isResumed) {
                         for (data in snapshot.children) {
                             val dataDate = data.key?.substring(0, 10)
-
-                            if (dataDate == today) {
+                            if (dataDate == today.substring(0, 10)) {
                                 val kcal = data.child("kcal").value
                                 sum += kcal.toString().toInt()
                             }
                         }
-
                         _todayKcal.value = sum
                         _calculTodayKcal = sum
                         _homeDateText.value = dateText
-
-                        Log.d("todayKcalImpl", _todayKcal.value.toString())
-                        Log.d("recommendKcalImpl", _recommendKcal.value.toString())
-                        Log.d("calculTodayKcalImpl", _calculTodayKcal.toString())
-
+                        _homeDateTextByDate.value = today // 이게 없어가지고 혼났네
 
                         isResumed = true
                         continuation.resume(Unit)
@@ -166,9 +161,10 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun getUserPreviousDateKcal(userId: String) = suspendCancellableCoroutine { continuation ->
+    override suspend fun getUserPreviousDateKcal(userId: String) =
+        suspendCancellableCoroutine { continuation ->
 
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
             calendar.add(Calendar.DAY_OF_MONTH, -1)
 
@@ -189,7 +185,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                         for (data in snapshot.children) {
                             val dataDate = data.key?.substring(0, 10)
 
-                            if (dataDate == previousDataByDate) {
+                            if (dataDate == previousDataByDate.substring(0, 10)) {
                                 val kcal = data.child("kcal").value
                                 sum += kcal.toString().toInt()
                             }
@@ -233,9 +229,10 @@ class FirebaseRepositoryImpl @Inject constructor(
             _homeDateTextByDate.value = (previousDataByDate)
         }
 
-    override suspend fun getUserNextDateKcal(userId: String) = suspendCancellableCoroutine { continuation ->
+    override suspend fun getUserNextDateKcal(userId: String) =
+        suspendCancellableCoroutine { continuation ->
 
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             calendar.add(Calendar.DAY_OF_MONTH, 1)
 
             val nextDataByDate = dateFormat.format(calendar.time)
@@ -255,7 +252,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                         for (data in snapshot.children) {
                             val dataDate = data.key?.substring(0, 10)
 
-                            if (dataDate == nextDataByDate) {
+                            if (dataDate == nextDataByDate.substring(0, 10)) {
                                 val kcal = data.child("kcal").value
                                 sum += kcal.toString().toInt()
                             }
