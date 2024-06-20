@@ -1,0 +1,29 @@
+package com.myproject.dietproject.presentation.ui.userkcal
+
+import androidx.recyclerview.widget.RecyclerView
+import com.myproject.dietproject.domain.model.FoodDiaryModel
+import com.myproject.dietproject.domain.model.Kcal
+import com.myproject.dietproject.presentation.R
+import com.myproject.dietproject.presentation.databinding.KcalFavoriteListItemBinding
+import com.myproject.dietproject.presentation.databinding.KcalListItemBinding
+
+class KcalFavoriteViewHolder(
+    private val binding: KcalFavoriteListItemBinding
+) : RecyclerView.ViewHolder(binding.root) {
+
+    val imageButton = binding.favoriteButton
+
+    fun bind(foodDiaryModel: FoodDiaryModel) {
+
+        binding.foodDiaryModel = foodDiaryModel
+        if(foodDiaryModel.favoriteButtonState) {
+            imageButton.isSelected = true
+            imageButton.setBackgroundResource(R.drawable.star_filled)
+        } else {
+            imageButton.isSelected = false
+            imageButton.setBackgroundResource(R.drawable.star_border)
+        }
+
+    }
+
+}
