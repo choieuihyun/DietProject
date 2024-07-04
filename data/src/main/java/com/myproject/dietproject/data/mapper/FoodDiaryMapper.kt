@@ -11,7 +11,7 @@ fun FoodDiaryEntity.toModel() = FoodDiaryModel(
     kcal = kcal,
     foodName = foodName,
     makerName = makerName,
-    favoriteButtonState = false
+    favoriteButtonState = favoriteButtonState
 
 )
 
