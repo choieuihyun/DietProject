@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.myproject.dietproject.domain.error.NetworkResult
 import com.myproject.dietproject.domain.model.FoodDiaryModel
@@ -47,6 +48,8 @@ class KcalViewModel @Inject constructor(
 
     // flow로 교체하면서 데이터가 실시간으로 첨삭은 되는데 버튼 상태에 대한 데이터가 갱신이 안된다.
     val flowTest = getFavoriteListUseCase().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val flowTestLiveData: LiveData<List<FoodDiaryModel>?> = flowTest.asLiveData()
 
     private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(true)
     val isLoading: LiveData<Boolean> = _isLoading
@@ -99,6 +102,21 @@ class KcalViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun updateKcalListFavoriteState() {
+        viewModelScope.launch {
+            val currentList = _kcalData.value ?: return@launch
+            val updatedList = currentList.map { item ->
+                // 이렇게 해야 리턴타입이 List<Unit> -> List<Kcal>이 되는구나. 신기하다.
+                item.copy(
+                    favoriteButtonState = item.dESCKOR == getSharedPreferenceFavoriteStateUseCase(item.dESCKOR!!)
+                )
+            }
+            Log.d("currentList", currentList.toString())
+            Log.d("updateList", updatedList.toString())
+            _kcalData.value = updatedList
+        }
     }
 
 //    fun getFavoriteList() {
