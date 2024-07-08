@@ -55,18 +55,6 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
 
         viewModel.getEmptyKcalData()
 
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("onStartKcalList", "onStartKcalList")
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.updateKcalListFavoriteState()
-
         viewModel.kcalData.observe(viewLifecycleOwner) {
 
             if (it != null) {
@@ -117,6 +105,18 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
 
         }
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("onStartKcalList", "onStartKcalList")
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.updateKcalListFavoriteState()
+
         Log.d("onResumeKcalList", "onResumeKcalList")
     }
 
@@ -144,6 +144,8 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
         }
 
     }
+
+
 
 
 }
