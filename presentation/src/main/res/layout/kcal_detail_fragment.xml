@@ -6,6 +6,7 @@
 
     <data>
 
+        <!-- 애초에 이렇게 고정으로 박아버리는게 진짜 안좋은 구조네 -->
         <variable
             name="kcalDetailData"
             type="com.myproject.dietproject.domain.model.Kcal" />
@@ -89,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gmarket_ttf_medium"
-                android:text='@{kcalDetailData.MAKERNAME}'
+                android:text='@{kcalDetailViewModel.kcalData.MAKERNAME ?? kcalDetailViewModel.foodDiaryData.makerName}'
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -108,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/gmarket_ttf_medium"
-                android:text='@{kcalDetailData.DESCKOR}'
+                android:text='@{kcalDetailViewModel.kcalData.DESCKOR ?? kcalDetailViewModel.foodDiaryData.foodName}'
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toTopOf="@+id/nutrientLayout"
