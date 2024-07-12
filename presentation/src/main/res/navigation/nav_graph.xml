@@ -102,6 +102,10 @@
         <argument
             android:name="userId"
             app:argType="string" />
+        <argument
+            android:name="fooddiary"
+            app:argType="com.myproject.dietproject.domain.model.FoodDiaryModel"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/calenderDetailFragment"
@@ -125,5 +129,21 @@
         <action
             android:id="@+id/action_OptionFragment_to_personalInfoFragment"
             app:destination="@id/personalInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/kcalFragmentList"
+        android:name="com.myproject.dietproject.presentation.ui.userkcal.KcalFragmentList"
+        android:label="KcalFragmentList" >
+        <action
+            android:id="@+id/action_kcalFragmentList_to_kcalDetailFragment"
+            app:destination="@id/kcalDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/kcalFragmentFavoriteList"
+        android:name="com.myproject.dietproject.presentation.ui.userkcal.KcalFragmentFavoriteList"
+        android:label="KcalFragmentFavoriteList" >
+        <action
+            android:id="@+id/action_kcalFragmentFavoriteList_to_kcalDetailFragment"
+            app:destination="@id/kcalDetailFragment" />
     </fragment>
 </navigation>
