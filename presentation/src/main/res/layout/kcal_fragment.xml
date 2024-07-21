@@ -23,11 +23,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/kcal_fragment_edittext_border"
                 android:drawableStart="@drawable/search"
                 android:drawablePadding="10dp"
                 android:hint="먹은 음식을 검색해주세요"
                 android:maxLines="1"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
                 android:paddingStart="16dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
@@ -39,24 +42,23 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.181" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/searchButton"
-                style="@style/Widget.Material3.Button.ElevatedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:background="#00ff0000"
+                android:backgroundTint="@color/grey_400"
                 android:text="검색"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/tabLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toEndOf="@id/appCompatEditText"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.186">
+                app:layout_constraintVertical_bias="0.615">
 
-            </Button>
+            </com.google.android.material.button.MaterialButton>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
