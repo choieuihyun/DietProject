@@ -9,7 +9,7 @@ import com.myproject.dietproject.domain.repository.KcalRepository
 import javax.inject.Inject
 
 class KcalRepositoryImpl @Inject constructor(
-    private val dataSource: KcalDataSource
+    private val dataSource: KcalDataSource,
 ) : KcalRepository {
 
     override suspend fun getKcalData(descKor: String): NetworkResult<List<Kcal>?> {
@@ -20,4 +20,6 @@ class KcalRepositoryImpl @Inject constructor(
             }
         }
     }
+
+
 }
