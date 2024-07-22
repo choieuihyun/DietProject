@@ -1,6 +1,5 @@
 package com.myproject.dietproject.data.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.DataSnapshot
@@ -25,6 +24,10 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override val firebaseStorageReference = firebaseDataSource.getFirebaseStorageReference
 
+    // 이걸 사용하는 클래스에서 굳이 또 인스턴스를 생성하는 구조인데 이럴꺼면 왜 전역으로 만들었나?
+    // repositoryImpl에서 작업하는게 맞다고 생각해 Calendar객체를 이렇게 만들었음.
+    // 너가 23:59 분에 켜서 등록하려는데 24:01에 등록을 완료한다면 23:59 기준을 되는게 맞으니까 앱이 켜지는 시점에서.
+    // 근데 이렇게 안하면 앱의 뷰모델에서 계속 오늘날짜로 받고 인스턴스 생성하는 식으로 해야하는데, 나는 홈에서 전 날로 옮기면 그 화면에서 이동 시 같은 날짜로 뜨게하고 싶다.
     private val calendar: Calendar = Calendar.getInstance()
 
     private var _todayKcal: MutableLiveData<Int> = MutableLiveData() // 오늘 섭취한 총 칼로리
@@ -49,7 +52,7 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     private var _scarceKcal: MutableLiveData<Int> = MutableLiveData() // 부족한 섭취량 (Kcal)
     override val scarceKcal: LiveData<Int>
-        get () = _scarceKcal
+        get() = _scarceKcal
 
     private var _calculRecommendKcal = 0 // 연산용도 권장 칼로리
     override val calculRecommendKcal: Int
@@ -63,8 +66,12 @@ class FirebaseRepositoryImpl @Inject constructor(
     override val dayKcalList: LiveData<ArrayList<KcalDataForCalendar?>>
         get() = _dayKcalList
 
+    fun getCurrentCalendar(): Calendar {
+        return Calendar.getInstance()
+    }
+
     override suspend fun test(value: String) {
-        firebaseDataSource.dbTest().setValue(value)
+        //firebaseDataSource.dbTest().setValue(value)
     }
 
     override suspend fun addUser(userId: String, userEmail: String) {
@@ -80,7 +87,6 @@ class FirebaseRepositoryImpl @Inject constructor(
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val today = dateFormat.format(calendar.time)
-
             var dateText = today.substring(5, 10) // 6-28로 자르기
             val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
@@ -136,30 +142,31 @@ class FirebaseRepositoryImpl @Inject constructor(
 
         }
 
-    override suspend fun getUserRecommendKcal(userId: String) = suspendCancellableCoroutine { continuation ->
+    override suspend fun getUserRecommendKcal(userId: String) =
+        suspendCancellableCoroutine { continuation ->
 
-        val userReference = firebaseDataSource.getUserRecommendKcal(userId)
+            val userReference = firebaseDataSource.getUserRecommendKcal(userId)
 
-        userReference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                try {
-                    _recommendKcal.value = snapshot.value.toString().toInt()
-                    _calculRecommendKcal = _recommendKcal.value.toString().toInt()
-                    _scarceKcal.value = calculRecommendKcal - calculTodayKcal
-                } catch (e: NumberFormatException) {
+            userReference.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        _recommendKcal.value = snapshot.value.toString().toInt()
+                        _calculRecommendKcal = _recommendKcal.value.toString().toInt()
+                        _scarceKcal.value = calculRecommendKcal - calculTodayKcal
+                    } catch (e: NumberFormatException) {
 
+                    }
+
+                    continuation.resume(Unit)
                 }
 
-                continuation.resume(Unit)
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+            })
 
-        })
-
-    }
+        }
 
     override suspend fun getUserPreviousDateKcal(userId: String) =
         suspendCancellableCoroutine { continuation ->
@@ -248,7 +255,7 @@ class FirebaseRepositoryImpl @Inject constructor(
 
                 override fun onDataChange(snapshot: DataSnapshot) {
 
-                    if(!isResumed)
+                    if (!isResumed)
                         for (data in snapshot.children) {
                             val dataDate = data.key?.substring(0, 10)
 
@@ -257,9 +264,9 @@ class FirebaseRepositoryImpl @Inject constructor(
                                 sum += kcal.toString().toInt()
                             }
                         }
-                        _todayKcal.value = sum
-                        _calculTodayKcal = sum
-                        _scarceKcal.value = calculRecommendKcal - calculTodayKcal
+                    _todayKcal.value = sum
+                    _calculTodayKcal = sum
+                    _scarceKcal.value = calculRecommendKcal - calculTodayKcal
 
                     isResumed = true
                     continuation.resume(Unit)
@@ -298,50 +305,51 @@ class FirebaseRepositoryImpl @Inject constructor(
 
         }
 
-    override suspend fun getCalendarDetailData(userId: String, date: String) = suspendCancellableCoroutine { continuation ->
+    override suspend fun getCalendarDetailData(userId: String, date: String) =
+        suspendCancellableCoroutine { continuation ->
 
-        val userReference = firebaseDataSource.getUserTodayKcal(userId)
-        var sum = 0
-        val kcalArrayList = ArrayList<KcalDataForCalendar?>()
+            val userReference = firebaseDataSource.getUserTodayKcal(userId)
+            var sum = 0
+            val kcalArrayList = ArrayList<KcalDataForCalendar?>()
 
-        userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            userReference.addListenerForSingleValueEvent(object : ValueEventListener {
 
-            override fun onDataChange(snapshot: DataSnapshot) {
+                override fun onDataChange(snapshot: DataSnapshot) {
 
-                for (data in snapshot.children) {
+                    for (data in snapshot.children) {
 
-                    val dateData = data.key?.substring(0, 10)
+                        val dateData = data.key?.substring(0, 10)
 
-                    if (dateData == date) {
+                        if (dateData == date) {
 
-                        val kcal = data.child("kcal").value
+                            val kcal = data.child("kcal").value
 
-                        sum += kcal.toString().toInt()
+                            sum += kcal.toString().toInt()
 
-                        val kcalDataForCalendar =
-                            KcalDataForCalendar(
-                                kcal = kcal.toString().toFloat().roundToInt(),
-                                foodName = data.child("foodName").value.toString(),
-                                makerName = data.child("makerName").value.toString()
-                            )
-                        kcalArrayList.add(kcalDataForCalendar)
+                            val kcalDataForCalendar =
+                                KcalDataForCalendar(
+                                    kcal = kcal.toString().toFloat().roundToInt(),
+                                    foodName = data.child("foodName").value.toString(),
+                                    makerName = data.child("makerName").value.toString()
+                                )
+                            kcalArrayList.add(kcalDataForCalendar)
+                        }
                     }
+
+                    _dayKcalList.value = kcalArrayList
+                    _dayKcal.value = sum
+
+                    continuation.resume(Unit)
+
                 }
 
-                _dayKcalList.value = kcalArrayList
-                _dayKcal.value = sum
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-                continuation.resume(Unit)
+            })
 
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-
-    }
+        }
 
     override suspend fun getDayKcalList(): ArrayList<KcalDataForCalendar?>? {
         return dayKcalList.value

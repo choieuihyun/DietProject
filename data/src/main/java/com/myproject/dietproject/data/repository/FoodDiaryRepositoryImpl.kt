@@ -2,13 +2,15 @@ package com.myproject.dietproject.data.repository
 
 import android.util.Log
 import com.myproject.dietproject.data.datasource.localdatasource.FoodDiaryDataSource
-import com.myproject.dietproject.data.db.local.db.FoodDiaryDatabase
-import com.myproject.dietproject.data.db.local.entity.FoodDiaryEntity
 import com.myproject.dietproject.data.mapper.toEntity
 import com.myproject.dietproject.data.mapper.toModel
 import com.myproject.dietproject.domain.model.FoodDiaryModel
 import com.myproject.dietproject.domain.repository.FoodDiaryRepository
-import java.lang.Exception
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 
@@ -16,14 +18,16 @@ class FoodDiaryRepositoryImpl @Inject constructor(
     private val dataSource: FoodDiaryDataSource
 ): FoodDiaryRepository{
 
-    override fun getAllFood(): List<FoodDiaryModel> {
-        return try {
-            dataSource.getAllFoodDiary().map {
-                it.toModel()
+    override fun getAllFood(): Flow<List<FoodDiaryModel>?> {
+        return flow {
+            dataSource.getAllFoodDiary().collect() { entities ->
+                val modelList = entities?.map { entity ->
+                    entity.toModel()
+                } ?: emptyList()
+                emit(modelList)
             }
-        } catch (e: Exception) {
-            Log.e("RoomDBError", "RoomDBSelectError")
-            emptyList<FoodDiaryModel>()
+        }.flowOn(Dispatchers.IO).catch { e ->
+            emit(emptyList())
         }
     }
 
@@ -31,8 +35,8 @@ class FoodDiaryRepositoryImpl @Inject constructor(
         dataSource.insertFoodDiary(foodDiaryModel.toEntity())
     }
 
-    override suspend fun deleteFood(foodDiaryModel: FoodDiaryModel) {
-        dataSource.deleteFoodDiary(foodDiaryModel.toEntity())
+    override suspend fun deleteFood(foodName: String) {
+        dataSource.deleteFoodDiary(foodName)
     }
 
 
