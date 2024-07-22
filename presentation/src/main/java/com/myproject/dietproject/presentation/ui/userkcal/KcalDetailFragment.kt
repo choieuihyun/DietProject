@@ -2,6 +2,7 @@ package com.myproject.dietproject.presentation.ui.userkcal
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -37,21 +38,33 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
         super.onViewCreated(view, savedInstanceState)
 
         val kcal = args.kcal // KcalFragment에서 현지 직송해온 데이터로 바로 넣음.
+        val kcalByFoodDiary = args.fooddiary
+
+        when {
+            args.kcal != null -> {
+                viewModel.setKcalData(kcal)
+            }
+            args.fooddiary != null -> {
+                viewModel.setFoodDiaryData(kcalByFoodDiary)
+            }
+
+        }
+
 
         binding.kcalDetailData = args.kcal
         binding.kcalDetailViewModel = viewModel
 
-        viewModel.getDate()
+        viewModel.getDate(args.userId)
 
         binding.previousButton.setOnClickListener {
 
-            viewModel.movePreviousDate()
+            viewModel.movePreviousDate(args.userId)
 
         }
 
         binding.nextButton.setOnClickListener {
 
-            viewModel.moveNextDate()
+            viewModel.moveNextDate(args.userId)
 
         }
 
@@ -97,6 +110,8 @@ class KcalDetailFragment : BaseFragment<KcalDetailFragmentBinding>(R.layout.kcal
                 binding.makerName.text.toString(),
                 viewModel.kcalDetailDataByDate.value.toString()
             )
+
+            Log.d("inputDate", viewModel.kcalDetailDataByDate.value.toString())
 
             Navigation.findNavController(binding.root).navigate(R.id.action_kcalDetailFragment_to_homeFragment)
 

@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.myproject.dietproject.domain.model.FoodDiaryModel
+import com.myproject.dietproject.domain.model.Kcal
 import com.myproject.dietproject.domain.usecase.AddUserTodayKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserNextDateKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserPreviousDateKcalUseCase
@@ -43,6 +45,20 @@ class KcalDetailViewModel @Inject constructor(
     private var _dayByDateText: MutableLiveData<String> = MutableLiveData() // 데이터를 추가할 때 2023-06-28와 같은 방식으로 추가하기 위한 변수
     val dateByDateText: LiveData<String>
         get() = _dayByDateText
+
+    private var _kcalData = MutableLiveData<Kcal?>()
+    val kcalData: LiveData<Kcal?> = _kcalData
+
+    private var _foodDiaryData = MutableLiveData<FoodDiaryModel?>()
+    val foodDiaryData: LiveData<FoodDiaryModel?> = _foodDiaryData
+
+    fun setKcalData(kcal: Kcal?) {
+        _kcalData.value = kcal
+    }
+
+    fun setFoodDiaryData(foodDiaryModel: FoodDiaryModel?) {
+        _foodDiaryData.value = foodDiaryModel
+    }
 
 
     /**
