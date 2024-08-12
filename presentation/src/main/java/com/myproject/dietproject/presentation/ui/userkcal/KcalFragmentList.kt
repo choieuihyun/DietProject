@@ -83,6 +83,9 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
                     kcal = kcal.nUTRCONT1?.toFloat(),
                     foodName = kcal.dESCKOR,
                     makerName = kcal.mAKERNAME,
+                    carbonHydrate = kcal.nUTRCONT2,
+                    protein = kcal.nUTRCONT3,
+                    fat = kcal.nUTRCONT4,
                     favoriteButtonState = true
                 )
                 viewModel.addFoodDiary(foodDiary)
@@ -95,6 +98,9 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
                     kcal = kcal.nUTRCONT1?.toFloat(),
                     foodName = kcal.dESCKOR,
                     makerName = kcal.mAKERNAME,
+                    carbonHydrate = kcal.nUTRCONT2,
+                    protein = kcal.nUTRCONT3,
+                    fat = kcal.nUTRCONT4,
                     favoriteButtonState = false
                 )
                 viewModel.deleteSharedPreferenceFavoriteState(foodName!!)
