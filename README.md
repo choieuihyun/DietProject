@@ -55,7 +55,6 @@
 
 #### data layer
 
-    ```
     📦 data
     ├─ 📂dataSource
     │  ├─ 📂remoteDatasource
@@ -99,7 +98,6 @@
        ├─ 📜FoodDiaryReposiroyImpl
        ├─ 📜SharedPreferenceRepositoryImpl
        └─ 📜KcalRepositoryImpl
-    ``
 
 #### domain layer
 
