@@ -57,44 +57,68 @@
 
     ```
     📦 data
-    ├─ dataSource
-    │  ├─ remoteDatasource
-    │  │  ├─ FirebaseDatasource
-    │  │  └─ KcalDatasource
-    │  └─ localDatasource
-    ├─ db
-    │  ├─ local
-    │  └─ remote
-    │     ├─ api
-    │     ├─ userEntity
-    │     ├─ response
-    │     └─ interactor
-    ├─ di
-    │  ├─ apiModule
-    │  ├─ NetworkModule
-    │  └─ RepositoryModule
-    ├─ mapper
-    │  └─ KcalMapper
-    └─ repository
-       ├─ FirebaseRepositoryImpl
-       └─ KcalRepositoryImpl
+    ├─ 📂dataSource
+    │  ├─ 📂remoteDatasource
+    │  │  ├─ 📜FirebaseDatasource
+    │  │  └─ 📜SharedPreferenceDatasource
+    │  └─ 📂localDatasource
+    │  │  ├─ 📜FoodDiaryDatasource
+    │  │  └─ 📜KcalDatasource
+    ├─ 📂db
+    │  ├─📂 local
+    │  │    ├─📂 dao
+    │  │    │  └─ 📜FoodDiaryDao
+    │  │    ├─📂 db
+    │  │    │  └─ 📜FoodDiaryDatabase
+    │  │    └─📂 entity            
+    │  │       └─ 📜FoodDiaryEntity
+    │  ├─📂 local
+    │  │      ├─ 📜FirebaseDatasource
+    │  │      └─ 📜KcalDatasource
+    │  └─📂 remote
+    │     ├─📂 api
+    │     │  └─ 📜KcalApi
+    │     ├─📂 userEntity
+    │     │  └─ 📜UserEntity
+    │     ├─📂 interactor
+    │     │  ├─ 📜NetworkErrorHandlerImpl
+    │     │  └─ 📜CustomInterceptor
+    │     └─📂 response
+    │        └─ 📜KcalResponse
+    ├─ 📂di
+    │  ├─ 📜ApiModule
+    │  ├─ 📜LocalModule
+    │  ├─ 📜NetworkModule
+    │  └─ 📜RepositoryModule
+    ├─ 📂mapper
+    │  ├─ 📜FirebaseMapper
+    │  ├─ 📜FoodDiaryMapper
+    │  └─ 📜KcalDataMapper
+    └─ 📂repository
+       ├─ 📜FirebaseRepositoryImpl
+       ├─ 📜FoodDiaryReposiroyImpl
+       ├─ 📜SharedPreferenceRepositoryImpl
+       └─ 📜KcalRepositoryImpl
     ``
 
 #### domain layer
 
 ```
 📦 domain
-├─ error
-│  ├─ NetworkError
-│  ├─ NetworkErrorHandler
-│  └─ NetworkResult
-├─ model
-│  ├─ KcalModel
-│  └─ UserModel
-├─ repository
-│  ├─ FirebaseRepository
-│  └─ KcalRepository
-└─ usecase
+├─ 📂error
+│  ├─ 📜NetworkError
+│  ├─ 📜NetworkErrorHandler
+│  └─ 📜NetworkResult
+├─ 📂model
+│  ├─ 📜KcalModel
+│  ├─ 📜FoodDiaryModel
+│  └─ 📜UserModel
+├─ 📂repository
+│  ├─ 📜FirebaseRepository
+│  ├─ 📜FoodDiaryRepository
+│  ├─ 📜SharedPreferenceRepository
+│  └─ 📜KcalRepository
+└─ 📂usecase
    └─ so many UseCase
 
 ```
@@ -104,29 +128,29 @@
 ```
 
 📦 presentation
-├─ calendar
-│  └─ Adapter, ViewHolder, ViewModel, Fragment
-├─ home
-│  └─ Fragment, ViewModel
-├─ info
-│  └─ Fragment, ViewModel
-├─ login
-│  └─ Fragment, ViewModel
-├─ personal_info
-│  └─ Fragment, ViewModel
-├─ signup
-│  └─ Fragment
-├─ userkcal
-│  └─ Adapter, ViewHolder, ViewModel, Fragment
-├─ util
-│  ├─ BackPressedHandler
-│  ├─ Event
-│  └─ Extends(Network)
-├─ weightchart
-│  └─ MarkerView, Fragment, viewModel
-├─ BaseFragment
-├─ LoadingProgress
-└─ MainActivity
+├─ 📂calendar
+│  └─ 📜Adapter, ViewHolder, ViewModel, Fragment
+├─ 📂home
+│  └─ 📜Fragment, ViewModel
+├─ 📂info
+│  └─ 📜Fragment, ViewModel
+├─ 📂login
+│  └─ 📜Fragment, ViewModel
+├─ 📂personal_info
+│  └─ 📜Fragment, ViewModel
+├─ 📂signup
+│  └─ 📜Fragment
+├─ 📂userkcal
+│  └─ 📜Adapter, ViewHolder, ViewModel, Fragment
+├─ 📂util
+│  ├─ 📜BackPressedHandler
+│  ├─ 📜Event
+│  └─ 📜Extends(Network)
+├─ 📂weightchart
+│  └─ 📜MarkerView, Fragment, viewModel
+├─ 📜BaseFragment
+├─ 📜LoadingProgress
+└─ 📜MainActivity
 
 ```
 
