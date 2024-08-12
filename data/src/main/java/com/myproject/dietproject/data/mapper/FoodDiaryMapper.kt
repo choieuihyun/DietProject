@@ -11,6 +11,9 @@ fun FoodDiaryEntity.toModel() = FoodDiaryModel(
     kcal = kcal,
     foodName = foodName,
     makerName = makerName,
+    carbonHydrate = carbonHydrate,
+    protein = protein,
+    fat = fat,
     favoriteButtonState = favoriteButtonState
 
 )
@@ -23,6 +26,9 @@ fun FoodDiaryModel.toEntity() = FoodDiaryEntity(
     kcal = kcal,
     foodName = foodName,
     makerName = makerName,
+    carbonHydrate = carbonHydrate,
+    protein = protein,
+    fat = fat,
     favoriteButtonState = favoriteButtonState
 
 )
