@@ -3,11 +3,10 @@
 ## 목차
 [1. 프로젝트 개요](#1-프로젝트-개요)  
 [2. Git Convention](#2-git-convention)  
-[3. 개발 환경](#3-개발-환경)
-[4. 프로젝트 구조와 개발 일정](#4-프로젝트-구조와-개발-일정)  
+[3. 개발 환경](#3-개발-환경)    
+[4. 프로젝트 구조](#4-프로젝트-구조)    
 [5. 요구사항과 기능 명세](#5-요구사항과-기능-명세)  
 [6. 와이어프레임 / UI](#6-와이어프레임--ui)  
-[7. 데이터베이스 모델링(ERD)](#7-데이터베이스-모델링erd)  
 [8. 주요 기능](#8-주요-기능)  
 [9. 개발 이슈](#9-개발-이슈)  
 [10. 프로젝트를 진행하며 느낀점](#10-프로젝트를-진행하며-느낀점)
@@ -51,58 +50,85 @@
 
 
 
-## 4. 프로젝트 구조와 개발 일정
-
-### 4.1 개발 일정
-<img src="https://github.com/user-attachments/assets/9e3166cc-19ae-41ac-a422-3ae828b70259" width=95%>
+## 4. 프로젝트 구조
 
 
+#### data layer
 
-### 4.2 프로젝트 구조
+    ```
+    📦 data
+    ├─ dataSource
+    │  ├─ remoteDatasource
+    │  │  ├─ FirebaseDatasource
+    │  │  └─ KcalDatasource
+    │  └─ localDatasource
+    ├─ db
+    │  ├─ local
+    │  └─ remote
+    │     ├─ api
+    │     ├─ userEntity
+    │     ├─ response
+    │     └─ interactor
+    ├─ di
+    │  ├─ apiModule
+    │  ├─ NetworkModule
+    │  └─ RepositoryModule
+    ├─ mapper
+    │  └─ KcalMapper
+    └─ repository
+       ├─ FirebaseRepositoryImpl
+       └─ KcalRepositoryImpl
+    ``
 
-도메인 주도 설계 원칙을 따르는 아키텍처 패턴으로 구현하였습니다.
+#### domain layer
 
-📦Spring_Project   
-┣ 📂application    
-┃ ┣ 📂dto    
-┃ ┃   ┣ 📜BoardDTO  
-┃ ┃   ┣ 📜CategoryDTO    
-┃ ┃   ┣ 📜CommentDTO   
-┃ ┃   ┣ 📜NoticeDTO    
-┃ ┃   ┣ 📜PostDTO    
-┃ ┃   ┗ 📜UserDTO    
-┃ ┣ 📜BoardService    
-┃ ┣ 📜CategoryService   
-┃ ┣ 📜CommentService   
-┃ ┣ 📜NoticeService    
-┃ ┣ 📜PostService    
-┃ ┗ 📜UserService       
-┣ 📂config   
-┃ ┣ 📜PasswordEncoderConfig    
-┃ ┣ 📜SecurityConfig   
-┃ ┗ 📜UserStatusCheckFilter    
-┣ 📂domain   
-┃ ┣ 📜Authority    
-┃ ┣ 📜Category   
-┃ ┣ 📜Comment    
-┃ ┣ 📜Notice   
-┃ ┣ 📜Post   
-┃ ┗ 📜User   
-┣ 📂infrastructure   
-┃ ┣ 📂config   
-┃ ┃ ┣ 📜QueryDslConfig   
-┃ ┃ ┣ 📜Category   
-┃ ┃ ┣ 📜Comment    
-┃ ┗ 📂persistence    
-┃   ┣ 📜CategoryRepository   
-┃   ┣ 📜CommentRepository   
-┃   ┣ 📜NoticeRepository   
-┃   ┣ 📜PostRepository   
-┃   ┗ 📜UserRepository   
-┗ 📂presentation   
-  ┣ 📜BoardController    
-  ┣ 📜CommentController    
-  ┗ 📜UserController   
+```
+📦 domain
+├─ error
+│  ├─ NetworkError
+│  ├─ NetworkErrorHandler
+│  └─ NetworkResult
+├─ model
+│  ├─ KcalModel
+│  └─ UserModel
+├─ repository
+│  ├─ FirebaseRepository
+│  └─ KcalRepository
+└─ usecase
+   └─ so many UseCase
+
+```
+
+#### presentation layer
+
+```
+
+📦 presentation
+├─ calendar
+│  └─ Adapter, ViewHolder, ViewModel, Fragment
+├─ home
+│  └─ Fragment, ViewModel
+├─ info
+│  └─ Fragment, ViewModel
+├─ login
+│  └─ Fragment, ViewModel
+├─ personal_info
+│  └─ Fragment, ViewModel
+├─ signup
+│  └─ Fragment
+├─ userkcal
+│  └─ Adapter, ViewHolder, ViewModel, Fragment
+├─ util
+│  ├─ BackPressedHandler
+│  ├─ Event
+│  └─ Extends(Network)
+├─ weightchart
+│  └─ MarkerView, Fragment, viewModel
+├─ BaseFragment
+├─ LoadingProgress
+└─ MainActivity
+
+```
 
 ## 5. 요구사항과 기능 명세
 
@@ -116,11 +142,7 @@
 
 ## 6. 와이어프레임 / UI
 
-### 6.1 와이어프레임
-
-<img width=70% src="https://github.com/user-attachments/assets/22b085e8-f57c-4e3c-bd75-416081fc74f9">
-
-### 6.2 화면 설계
+### 6.1 화면 설계
 
 <table>
     <tbody>
@@ -132,114 +154,95 @@
         <tr>
             <td>
                 <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/main.png" target="_blank">
-                <img src="https://github.com/user-attachments/assets/cb701758-1717-46cc-ae5e-a10aa81a0c84" width="250" height="350" alt="main">
+                <img src="https://github.com/user-attachments/assets/c7a96d68-b48d-4e37-929e-14b5671a5909" width="250" height="350" alt="main">
                 </a>
             </td>
             <td>
                 <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/login.png" target="_blank">
-                <img src="https://github.com/user-attachments/assets/b5b88f3c-5aa3-4b9d-956d-2c2800d30b61" width="250" height="350" alt="signin">
+                <img src="https://github.com/user-attachments/assets/da7cb3e0-fadc-4a8f-b5b1-98a17d6b079e" width="250" height="350" alt="signin">
 </a>
             </td>
             <td>
                 <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/signup.png" target="_blank">
-                <img src="https://github.com/user-attachments/assets/627c940c-61a7-4bcb-bb85-80aa53f64f6e" width="250" height="350" alt="signup">
+                <img src="https://github.com/user-attachments/assets/b37d15ff-9085-4277-93ee-0280db6ee6e5" width="250" height="350" alt="signup">
 </a>
             </td>
         </tr>
         <tr>
-            <td>정보수정</td>
-            <td>관리자 페이지</td>
-            <td>게시글 리스트</td>
+            <td>내 정보</td>
+            <td>정보 입력</td>
+            <td>검색 리스트</td>
         </tr>
         <tr>
             <td>
                 <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/modify.png" target="_blank">
-                <img src="https://github.com/user-attachments/assets/3d72c248-8e2f-4c83-a3b6-cdfb156624bc" width="250" height="350" alt="userInfoEdit">
+                <img src="https://github.com/user-attachments/assets/6eea49e1-b747-492d-a6fb-1aa1d2e52075" width="250" height="350" alt="myPage">
 </a>
             </td>
             <td>
                 <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/adminpage.png" target="_blank">
-                <img src="https://github.com/user-attachments/assets/af2a96a9-cb7f-4e51-97f1-26373cd81087" width="250" height="350" alt="adminPage">
+                <img src="https://github.com/user-attachments/assets/d407367b-4524-4a48-9e15-0ade439ed692" width="250" height="350" alt="adminPage">
 </a>
             </td>
             <td>
                 <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/postList.png" target="_blank">
-                <img src="https://github.com/user-attachments/assets/7d1cbb21-0bb1-40bf-a6c4-2b8c42b47061" width="250" height="350" alt="postList">
+                <img src="https://github.com/user-attachments/assets/f3255f66-f31e-4275-b877-1d9007fbb98a" width="250" height="350" alt="postList">
 </a>
             </td>
         </tr>
         <tr>
-            <td>게시글 상세보기</td>
-            <td>게시글 수정 / 삭제</td>
-            <td>글쓰기</td>
+            <td>즐겨찾기 리스트</td>
+            <td>음식 정보</td>
+            <td>달력</td>
         </tr>
         <tr>
             <td>
                 <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/postDetail.png" target="_blank">
-                <img src="https://github.com/user-attachments/assets/8c7e3abf-0e35-41d5-bf73-f791411a05ef" width="250" height="350" alt="postDetail">
+                <img src="https://github.com/user-attachments/assets/92c5559c-d5d7-4f04-af30-9586f76f3d26" width="250" height="350" alt="postDetail">
 </a>
             </td>
             <td>
                 <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/postModify.png" target="_blank">
-                <img src="https://github.com/user-attachments/assets/40a38f3b-a941-42be-ba33-f831532e9105" width="250" height="350" alt="postEdit">
+                <img src="https://github.com/user-attachments/assets/b8905d91-545a-4a6f-913f-d6602e80d524" width="250" height="350" alt="postEdit">
 </a>
             </td>
             <td>
                 <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/postWrite.png" target="_blank">
-                <img src="https://github.com/user-attachments/assets/f1e0452c-0945-4f61-ba0b-1179fc531269" width="250" height="350" alt="postWrite">
+                <img src="https://github.com/user-attachments/assets/84e7d24b-af0f-48a4-a4b5-ba177fe39357" width="250" height="350" alt="postWrite">
 </a>
             </td>
         </tr>
-    </tbody>
+        <tr>
+            <td>달력 상세보기</td>
+            <td>차트</td>
+            <td>달력</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/postDetail.png" target="_blank">
+                <img src="https://github.com/user-attachments/assets/5999f54a-6302-47e9-9e81-ca309190241e" width="250" height="350" alt="postDetail">
+</a>
+            </td>
+            <td>
+                <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/postModify.png" target="_blank">
+                <img src="https://github.com/user-attachments/assets/3493ca32-894e-432c-9605-1368aeb92a2f" width="250" height="350" alt="postEdit">
+</a>
+            </td>
+            <td>
+                <a href="https://github.com/Ormi-Spring-Project/YAMA/blob/develop/Spring-Project/src/main/resources/static/images/postWrite.png" target="_blank">
+                <img src="https://github.com/user-attachments/assets/84e7d24b-af0f-48a4-a4b5-ba177fe39357" width="250" height="350" alt="postWrite">
+</a>
+            </td>
+        </tr>
 </table>
 
 
-## 7. 데이터베이스 모델링(ERD)
-
-<img src="https://github.com/user-attachments/assets/06f8b0ad-c13a-46a2-85c7-b32ae5207471" width=90%>
 
 ## 8. 주요 기능
-### 8.1 게시글 작성
-
-<img src="https://github.com/user-attachments/assets/c82f300c-2cfb-4afb-86af-2ce656e88c2a" width=60%>
-
-- 작성자가 사용했던 앱에 대한 후기를 작성하는 기능입니다.
-- 앱 분야별 카테고리를 설정할 수 있습니다.
-- 앱 대표 이미지를 설정할 수 있습니다.
-- URL을 통한 직관적인 연결 기능을 제공합니다.
-
-### 8.2 게시글 수정
-
-<img src="https://github.com/user-attachments/assets/35a49741-ac8a-4e67-a102-ca3bd38bdc80" width=60%>
-
-- 기존에 작성한 게시글을 수정하는 기능입니다.
-- 작성 시 설정하였던 아이콘, 제목, 카테고리, URL 및 본문을 수정할 수 있습니다.
-
-### 8.3 게시글 검색
-
-<img src="https://github.com/user-attachments/assets/e0c14b87-a0c0-4ff4-8b33-c5fd48a46538" width=60%>
-
-- 게시글을 검색하는 기능입니다.
-- 본인이 원하는 카테고리를 설정 후 제목 또는 작성자 닉네임의 일부분을 이용하여 검색할 수 있습니다.
-
-### 8.4 댓글 및 별점 작성
-
-<img src="https://github.com/user-attachments/assets/3ee1cfdf-2e39-40fd-8973-e65b1db31aa3" width=60%>
-
-- 댓글 및 별점을 작성하는 기능입니다.
-- 댓글 작성 시 별점 부여가 가능합니다.
-- 댓글마다 부여된 별점은 평균 별점으로 게시글 본문 아래에 집계됩니다.
-- 댓글 수정 및 삭제 시에도 즉각적으로 수정된 별점이 반영됩니다.
-
-### 8.5 관리자 기능
-
-<img src="https://github.com/user-attachments/assets/b8273fed-cc86-4709-83f3-a7fef59346ae" width=60%>
-
-- 관리자 페이지로 유저별 권한을 설정하는 기능입니다.
-- 회원가입 시 게시글, 댓글 조회 및 작성이 가능한 일반 USER로 권한이 설정됩니다.
-- BAN으로 권한을 설정 시에는 공지사항만 조회할 수 있는 기능을 제공합니다.
 
 
+
+## 9. 개발 이슈
 
 
 
