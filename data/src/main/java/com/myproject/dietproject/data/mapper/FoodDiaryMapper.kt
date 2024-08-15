@@ -8,7 +8,7 @@ import com.myproject.dietproject.domain.model.Kcal
 fun FoodDiaryEntity.toModel() = FoodDiaryModel(
 
     id = id,
-    kcal = kcal,
+    kcal = kcal?.toInt().toString(),
     foodName = foodName,
     makerName = makerName,
     carbonHydrate = carbonHydrate,
@@ -23,7 +23,7 @@ fun FoodDiaryEntity.toModel() = FoodDiaryModel(
 fun FoodDiaryModel.toEntity() = FoodDiaryEntity(
 
     id = id,
-    kcal = kcal,
+    kcal = kcal?.toFloat(),
     foodName = foodName,
     makerName = makerName,
     carbonHydrate = carbonHydrate,
