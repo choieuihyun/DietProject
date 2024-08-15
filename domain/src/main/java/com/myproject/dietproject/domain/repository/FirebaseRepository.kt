@@ -25,8 +25,6 @@ interface FirebaseRepository {
 
     val calculRecommendKcal: Int // 연산용도 권장 칼로리
 
-    val homeDateTextByDate: LiveData<String> // 전, 후 날짜 변경
-
     val dayKcal: LiveData<Int>
 
     val dayKcalList: LiveData<ArrayList<KcalDataForCalendar?>>
