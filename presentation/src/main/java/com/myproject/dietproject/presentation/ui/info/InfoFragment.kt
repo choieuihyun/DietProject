@@ -28,16 +28,12 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
     private val viewModel: InfoViewModel by viewModels()
     private lateinit var mainActivity: MainActivity
 
-    private val PICK_IMAGE_REQUEST = 1
-
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         result -> if (result.resultCode == Activity.RESULT_OK) {
 
             val data = result.data
             val imageUri = data?.data
             binding.profileImage.setImageURI(imageUri)
-            Log.d("URIstring", imageUri.toString())
-
             if (imageUri != null) {
                 viewModel.addUserProfileImage(auth.currentUser!!.uid, "profileImages", imageUri)
             }
@@ -116,11 +112,6 @@ class InfoFragment : BaseFragment<InfoFragmentBinding>(R.layout.info_fragment) {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         galleryLauncher.launch(intent)
     }
-
-
-
-
-
 
 }
 

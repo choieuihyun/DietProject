@@ -1,11 +1,9 @@
 package com.myproject.dietproject.presentation.ui.info
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +14,6 @@ import com.google.common.collect.Multimap
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
 import com.myproject.dietproject.domain.usecase.AddUserProfileImage
 import com.myproject.dietproject.domain.usecase.GetFirebaseStorageRef
 import com.myproject.dietproject.domain.usecase.GetUserEmailUseCase

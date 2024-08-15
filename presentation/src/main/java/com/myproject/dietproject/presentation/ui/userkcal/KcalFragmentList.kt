@@ -7,11 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.myproject.dietproject.domain.model.FoodDiaryModel
-import com.myproject.dietproject.domain.model.Kcal
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.KcalFragmentListBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
@@ -105,8 +103,6 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
                 )
                 viewModel.deleteSharedPreferenceFavoriteState(foodName!!)
                 viewModel.deleteFoodDiary(foodDiary.foodName!!)
-                //viewModel.resetFavoriteList()
-
             }
 
         }
@@ -135,7 +131,6 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d("onDestroyViewKcalList", "onDestroyViewKcalList")
-        //recyclerViewAdapter.submitList(emptyList())
     }
 
     private fun setupRecyclerView() {

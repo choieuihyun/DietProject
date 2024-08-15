@@ -15,10 +15,6 @@ class FirebaseDataSource @Inject constructor(
     // 제대로 이해 못한듯한 구조는 뭐지 이거
     val getFirebaseStorageReference = firebaseStorage.reference
 
-    fun dbTest(): DatabaseReference {
-        return firebase.getReference("test")
-    }
-
     fun addUser(userId: String, userEmail: String): Task<Void> {
         return firebase.getReference("user").child(userId).let {
             it.child("email").setValue(userEmail)

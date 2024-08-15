@@ -1,6 +1,5 @@
 package com.myproject.dietproject.domain.usecase
 
-import androidx.lifecycle.LiveData
 import com.myproject.dietproject.domain.repository.FirebaseRepository
 import javax.inject.Inject
 

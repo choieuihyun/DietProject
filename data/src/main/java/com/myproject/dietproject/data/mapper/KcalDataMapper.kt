@@ -1,13 +1,11 @@
 package com.myproject.dietproject.data.mapper
 
-import android.util.Log
 import com.myproject.dietproject.data.db.remote.response.kcalresponse.KcalData
 import com.myproject.dietproject.domain.error.NetworkResult
 
 import com.myproject.dietproject.domain.model.Kcal
 import java.lang.NumberFormatException
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 fun KcalData.toModel() = Kcal(
 
