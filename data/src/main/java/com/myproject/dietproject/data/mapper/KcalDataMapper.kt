@@ -15,7 +15,8 @@ fun KcalData.toModel() = Kcal(
         nUTRCONT2 = convertStringToInt(nUTRCONT2.toString()),
         nUTRCONT3 = convertStringToInt(nUTRCONT3.toString()),
         nUTRCONT4 = convertStringToInt(nUTRCONT4.toString()),
-        sERVINGSIZE = sERVINGSIZE
+        sERVINGSIZE = sERVINGSIZE,
+        favoriteButtonState = favoriteButtonState
 
     )
 
