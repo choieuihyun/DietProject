@@ -11,10 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.KcalFragmentBinding
@@ -55,7 +52,7 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
 
         Log.d("onCreateViewKcal", "onCreateViewKcal")
@@ -73,7 +70,7 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
         binding.viewPager.adapter = viewPagerAdapter
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            when(position) {
+            when (position) {
                 0 -> tab.text = "검색"
                 1 -> tab.text = "즐겨찾기"
             }
@@ -107,43 +104,21 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
         Log.d("onDestroyViewKcal", "onDestroyViewKcal")
     }
 
-    private fun setupTabLayout() {
-
-
-
-    }
 
     private fun setupUI() {
 
         binding.searchButton.setOnClickListener {
 
             val searchText = binding.appCompatEditText.text.toString()
-
             viewModel.getKcalData(searchText)
 
             viewModel.isLoading.observe(viewLifecycleOwner) {
-                if (it) dialog.show()
-                else dialog.dismiss()
+                if (it)
+                    dialog.show()
+                else
+                    dialog.dismiss()
             }
         }
-
-    }
-
-    private fun setupRecyclerView() {
-
-//        kcalListAdapter = KcalAdapter()
-//
-//        binding.addUserKcalRecyclerView.apply {
-//            setHasFixedSize(true)
-//            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-//            adapter = kcalListAdapter
-//        }
-//
-//        kcalListAdapter.setOnItemClickListener {
-//            kcal ->
-//            val action = KcalFragmentDirections.actionKcalFragmentToKcalDetailFragment(args.userId, kcal)
-//            findNavController().navigate(action)
-//        }
 
     }
 
@@ -165,8 +140,6 @@ class KcalFragment : BaseFragment<KcalFragmentBinding>(R.layout.kcal_fragment) {
 
         })
 
-
     }
-
 
 }

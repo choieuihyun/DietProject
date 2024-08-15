@@ -107,7 +107,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline">
 
-            <com.github.mikephil.charting.charts.BarChart
+            <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/weightChart"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
@@ -175,10 +175,11 @@
                 tools:text="2000kcal"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/how_much_to_run"
+                android:id="@+id/how_much_running"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                android:text='@{weightChartViewModel.howMuchRunning.toString() + " 시간"}'
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.508"

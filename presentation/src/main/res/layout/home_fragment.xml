@@ -94,6 +94,7 @@
             app:layout_constraintVertical_bias="1.0">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/appCompatTextView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/kangwon_bold"
@@ -121,23 +122,6 @@
                 app:layout_constraintStart_toStartOf="@+id/progressbar_layout"
                 app:layout_constraintTop_toTopOf="@+id/progressbar_layout"
                 app:layout_constraintVertical_bias="0.082" />
-
-<!--            <com.mikhaellopez.circularprogressbar.CircularProgressBar
-                android:id="@+id/circularProgressBar"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                app:cpb_background_progressbar_color="@color/grey_500"
-                app:cpb_background_progressbar_width="30dp"
-                app:cpb_progress_direction="to_right"
-                app:cpb_progressbar_color="@color/yellow_200"
-                app:cpb_progressbar_width="30dp"
-                app:cpb_round_border="false"
-                app:layout_constraintBottom_toBottomOf="@+id/progressbar_layout"
-                app:layout_constraintEnd_toEndOf="@+id/progressbar_layout"
-                app:layout_constraintHorizontal_bias="0.496"
-                app:layout_constraintStart_toStartOf="@+id/progressbar_layout"
-                app:layout_constraintTop_toTopOf="@+id/progressbar_layout"
-                app:layout_constraintVertical_bias="0.72" />-->
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/circularProgressBar"

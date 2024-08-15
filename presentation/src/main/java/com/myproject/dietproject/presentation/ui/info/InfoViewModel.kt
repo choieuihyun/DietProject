@@ -1,11 +1,9 @@
 package com.myproject.dietproject.presentation.ui.info
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +14,6 @@ import com.google.common.collect.Multimap
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
 import com.myproject.dietproject.domain.usecase.AddUserProfileImage
 import com.myproject.dietproject.domain.usecase.GetFirebaseStorageRef
 import com.myproject.dietproject.domain.usecase.GetUserEmailUseCase
@@ -102,17 +99,9 @@ class InfoViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            getUserRecommendKcalUseCase(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            getUserRecommendKcalUseCase(userId)
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    _recommendKcal.postValue(snapshot.value.toString())
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-            })
+            _recommendKcal.value = getUserRecommendKcalUseCase.getRecommendKcal().toString()
 
         }
 
@@ -249,11 +238,6 @@ class InfoViewModel @Inject constructor(
                             sumKcal += kcal
                         }
 
-//                        if (kcal != null) { // 하루 권장 칼로리 초과한 횟수
-//                            if(kcal > _recommendKcal.value!!.toInt()) {
-//
-//                            }
-//                        }
                     }
 
                     if(maxDate != null)

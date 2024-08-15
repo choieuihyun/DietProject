@@ -12,5 +12,6 @@ data class Kcal (
     val nUTRCONT3: String?, // 단백질
     val nUTRCONT4: String?, // 지방
     val sERVINGSIZE: String?, // 총 내용량
+    var favoriteButtonState: Boolean
 
     ) : Serializable

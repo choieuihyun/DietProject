@@ -7,11 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.myproject.dietproject.domain.model.FoodDiaryModel
-import com.myproject.dietproject.domain.model.Kcal
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.KcalFragmentListBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
@@ -80,9 +78,12 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
             if(imageButton.isSelected) {
                 // 개인적으로 이런 구조도 view에 Model에 관한 코드가 있어서 올바른건가 싶긴 하다.
                 val foodDiary = FoodDiaryModel(
-                    kcal = kcal.nUTRCONT1?.toFloat(),
+                    kcal = kcal.nUTRCONT1,
                     foodName = kcal.dESCKOR,
                     makerName = kcal.mAKERNAME,
+                    carbonHydrate = kcal.nUTRCONT2,
+                    protein = kcal.nUTRCONT3,
+                    fat = kcal.nUTRCONT4,
                     favoriteButtonState = true
                 )
                 viewModel.addFoodDiary(foodDiary)
@@ -92,15 +93,16 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
 
                 // 이것도 이름으로 해도 될거같은데?
                 val foodDiary = FoodDiaryModel(
-                    kcal = kcal.nUTRCONT1?.toFloat(),
+                    kcal = kcal.nUTRCONT1,
                     foodName = kcal.dESCKOR,
                     makerName = kcal.mAKERNAME,
+                    carbonHydrate = kcal.nUTRCONT2,
+                    protein = kcal.nUTRCONT3,
+                    fat = kcal.nUTRCONT4,
                     favoriteButtonState = false
                 )
                 viewModel.deleteSharedPreferenceFavoriteState(foodName!!)
                 viewModel.deleteFoodDiary(foodDiary.foodName!!)
-                //viewModel.resetFavoriteList()
-
             }
 
         }
@@ -122,6 +124,7 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
 
     override fun onPause() {
         super.onPause()
+        viewModel.updateKcalListFavoriteState()
         Log.d("onPauseKcalList", "onPauseKcalList")
 
     }
@@ -129,7 +132,6 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
     override fun onDestroyView() {
         super.onDestroyView()
         Log.d("onDestroyViewKcalList", "onDestroyViewKcalList")
-        //recyclerViewAdapter.submitList(emptyList())
     }
 
     private fun setupRecyclerView() {

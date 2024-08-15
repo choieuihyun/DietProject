@@ -1,13 +1,11 @@
 package com.myproject.dietproject.data.mapper
 
-import android.util.Log
 import com.myproject.dietproject.data.db.remote.response.kcalresponse.KcalData
 import com.myproject.dietproject.domain.error.NetworkResult
 
 import com.myproject.dietproject.domain.model.Kcal
 import java.lang.NumberFormatException
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 fun KcalData.toModel() = Kcal(
 
@@ -17,7 +15,8 @@ fun KcalData.toModel() = Kcal(
         nUTRCONT2 = convertStringToInt(nUTRCONT2.toString()),
         nUTRCONT3 = convertStringToInt(nUTRCONT3.toString()),
         nUTRCONT4 = convertStringToInt(nUTRCONT4.toString()),
-        sERVINGSIZE = sERVINGSIZE
+        sERVINGSIZE = sERVINGSIZE,
+        favoriteButtonState = favoriteButtonState
 
     )
 

@@ -4,15 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.myproject.dietproject.domain.model.Kcal
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.myproject.dietproject.domain.model.FoodDiaryModel
 import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.KcalFavoriteListItemBinding
 import com.myproject.dietproject.presentation.databinding.KcalFavoriteListItemTypeTwoBinding
-import com.myproject.dietproject.presentation.databinding.KcalListItemBinding
-import com.myproject.dietproject.presentation.databinding.KcalListItemTypeTwoBinding
 
 
 class KcalFragmentFavoriteListAdapter : ListAdapter<FoodDiaryModel, ViewHolder>(kcalDataDiffCallback) {

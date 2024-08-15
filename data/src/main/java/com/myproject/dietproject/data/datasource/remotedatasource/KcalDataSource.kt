@@ -9,18 +9,18 @@ import javax.inject.Inject
 
 class KcalDataSource @Inject constructor(
     private val api: KcalApi,
-    private val networkErrorHandler: NetworkErrorHandler
+    private val networkErrorHandler: NetworkErrorHandler,
 ) {
 
-    suspend fun getKcalData(descKor: String) : NetworkResult<List<KcalData>?> {
-
-        val response = api.getKcalData(
-            BuildConfig.KCAL_API_KEY, "I2790", "json","1","100",
-            "DESC_KOR=$descKor")
+    suspend fun getKcalData(descKor: String): NetworkResult<List<KcalData>?> {
 
         return try {
+            val response = api.getKcalData(
+                BuildConfig.KCAL_API_KEY, "I2790", "json", "1", "100",
+                "DESC_KOR=$descKor"
+            )
             NetworkResult.Success(response.body()?.i2790?.row)
-        } catch (exception : Exception) {
+        } catch (exception: Exception) {
             val errorType = networkErrorHandler.getError(exception)
             NetworkResult.Error(errorType)
         }

@@ -12,8 +12,10 @@ data class FoodDiaryEntity(
     val kcal: Float?,
     val foodName: String?,
     val makerName: String?,
+    val carbonHydrate: String?,
+    val protein: String?,
+    val fat: String?,
     val favoriteButtonState: Boolean
-
 ) {
 
 //    // 여기서는 필요없는거 아녀?

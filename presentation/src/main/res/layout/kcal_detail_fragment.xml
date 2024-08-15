@@ -199,7 +199,7 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text='@{kcalDetailData.NUTRCONT2 + " g"}'
+                    android:text='@{kcalDetailViewModel.kcalData.nUTRCONT2 != null ? kcalDetailViewModel.kcalData.nUTRCONT2 + " g" : kcalDetailViewModel.foodDiaryData.carbonHydrate + " g"}'
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:fontFamily="@font/gmarket_ttf_medium"
@@ -218,7 +218,7 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text='@{kcalDetailData.NUTRCONT3 + " g"}'
+                    android:text='@{kcalDetailViewModel.kcalData.nUTRCONT3 != null ? kcalDetailViewModel.kcalData.nUTRCONT3 + " g" : kcalDetailViewModel.foodDiaryData.protein + " g"}'
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:fontFamily="@font/gmarket_ttf_medium"
@@ -237,7 +237,7 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text='@{kcalDetailData.NUTRCONT4 + " g"}'
+                    android:text='@{kcalDetailViewModel.kcalData.nUTRCONT4 != null ? kcalDetailViewModel.kcalData.nUTRCONT4 + " g" : kcalDetailViewModel.foodDiaryData.fat + " g"}'
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:fontFamily="@font/gmarket_ttf_medium"
@@ -259,7 +259,7 @@
                     android:layout_marginBottom="24dp"
                     android:fontFamily="@font/gmarket_ttf_medium"
                     android:gravity="center"
-                    android:text='@{kcalDetailData.NUTRCONT1}'
+                    android:text='@{kcalDetailViewModel.kcalData.nUTRCONT1 != null ? kcalDetailViewModel.kcalData.nUTRCONT1 + " g" : kcalDetailViewModel.foodDiaryData.kcal + " g"}'
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -8,16 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.myproject.dietproject.domain.model.UserModel
 import com.myproject.dietproject.domain.usecase.AddUserInfoUseCase
 import com.myproject.dietproject.domain.usecase.AddUserUseCase
 import com.myproject.dietproject.domain.usecase.GetUserActivityUseCase
 import com.myproject.dietproject.domain.usecase.GetUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
-import kotlin.math.floor
 
 
 @HiltViewModel
@@ -47,13 +44,6 @@ class LoginViewModel @Inject constructor(
     private var _userActivity: String = ""
     val userActivity: String
         get() = _userActivity
-
-
-/*
-    private var _loginUserActivity: Any? = "" // LoginFragment -> Home, PersonalInfo 분기점 기준 변수
-    val loginUserActivity: Any?
-        get() = _loginUserActivity
-*/
 
     private val _loginUserActivity = MutableLiveData<Any>()
     val loginUserActivity: LiveData<Any>
@@ -97,10 +87,9 @@ class LoginViewModel @Inject constructor(
 
                     //_loginUserActivity = it.value
                     _loginUserActivity.postValue(it.value)
-                    Log.d("viewModel_4", _loginUserActivity.value.toString())
 
                 }.addOnFailureListener {
-                    Log.i("sdfsdfsdfFailed", it.message.toString())
+                    // 실패 처리
                 }
 
 
@@ -108,51 +97,5 @@ class LoginViewModel @Inject constructor(
 
     }
 
-//        fun setGenderInfo(gender: String) {
-//            _userGender = gender
-//        }
-//
-//        fun setAgeInfo(age: Int) {
-//            _userAge = age
-//        }
-//
-//        fun setHeightInfo(height: Float) {
-//            _userHeight = height
-//        }
-//
-//        fun setWeightInfo(weight: Float) {
-//            _userWeight = weight
-//        }
-//
-//        fun setActivityInfo(activity: String) {
-//            _userActivity = activity
-//        }
-
-/*        fun addUserInfo(
-            userId: String,
-            gender: String,
-            age: Int,
-            height: Float,
-            weight: Float,
-            activity: String
-        ) {
-
-            viewModelScope.launch {
-
-                val roundToHeight = floor(_userHeight) // 소수점 버리기
-                val roundToWeight = floor(_userWeight)
-
-                addUserInfoUseCase.invoke(
-                    userId,
-                    _userGender,
-                    _userAge,
-                    roundToHeight,
-                    roundToWeight,
-                    _userActivity
-                )
-
-            }
-
-        }*/
     }
 

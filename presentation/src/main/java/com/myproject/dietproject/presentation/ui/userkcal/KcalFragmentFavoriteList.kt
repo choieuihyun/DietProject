@@ -64,8 +64,8 @@ class KcalFragmentFavoriteList: BaseFragment<KcalFragmentFavoriteListBinding>(R.
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.flowTest.collect { favoriteList ->
+                    Log.d("favoriteList", favoriteList.toString())
                     recyclerViewAdapter.submitList(favoriteList)
-                    Log.d("sdfsdf23",favoriteList.toString())
                 }
             }
         }
@@ -120,6 +120,9 @@ class KcalFragmentFavoriteList: BaseFragment<KcalFragmentFavoriteListBinding>(R.
                     kcal = foodDiaryModel.kcal,
                     foodName = foodDiaryModel.foodName,
                     makerName = foodDiaryModel.makerName,
+                    carbonHydrate = foodDiaryModel.carbonHydrate,
+                    protein = foodDiaryModel.protein,
+                    fat = foodDiaryModel.fat,
                     favoriteButtonState = true
                 )
                 viewModel.addFoodDiary(foodDiary)
@@ -133,6 +136,9 @@ class KcalFragmentFavoriteList: BaseFragment<KcalFragmentFavoriteListBinding>(R.
                     kcal = foodDiaryModel.kcal,
                     foodName = foodDiaryModel.foodName,
                     makerName = foodDiaryModel.makerName,
+                    carbonHydrate = foodDiaryModel.carbonHydrate,
+                    protein = foodDiaryModel.protein,
+                    fat = foodDiaryModel.fat,
                     favoriteButtonState = false
                 )
                 Log.d("foodDiary", foodDiary.toString())

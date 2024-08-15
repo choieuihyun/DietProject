@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -56,8 +55,6 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController)
 
         binding.bottomNavigationView.isVisible = true
-
-        val gsa = GoogleSignIn.getLastSignedInAccount(this@MainActivity)
 
         if (auth.currentUser?.uid != null) {
             goToHome()

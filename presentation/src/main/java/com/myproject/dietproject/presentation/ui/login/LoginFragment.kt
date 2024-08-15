@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isInvisible
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -70,11 +69,6 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
         super.onCreate(savedInstanceState)
 
         auth = Firebase.auth
-
-
-        //googleLogin() // 처음에 이걸로 로그인 되어있는지 안되어있는지 확인
-
-        Log.d("LoginViewModel", "Login")
 
     }
 
@@ -231,8 +225,6 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
                     }
 
                 } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
                     Toast.makeText(requireContext(), "구글 로그인 실패", Toast.LENGTH_SHORT)
                         .show()
                     // updateUI(null);
@@ -246,8 +238,6 @@ class LoginFragment : BaseFragment<LoginFragmentBinding>(R.layout.login_fragment
         userId = auth.currentUser!!.uid
         val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment(userId)
         findNavController().navigate(action)
-        //Navigation.findNavController(binding.root).navigate(R.id.action_loginFragment_to_homeFragment)
-
     }
 
     private fun moveSignUpPage() {

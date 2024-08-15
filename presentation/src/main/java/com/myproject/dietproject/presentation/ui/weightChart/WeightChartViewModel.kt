@@ -1,33 +1,24 @@
 package com.myproject.dietproject.presentation.ui.weightChart
 
-import android.graphics.Color
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.utils.EntryXComparator
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.myproject.dietproject.domain.model.TodayKcal
-import com.myproject.dietproject.domain.usecase.GetUserTodayKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserWeekKcalUseCase
 import com.myproject.dietproject.domain.usecase.GetUserWeightUseCase
 import com.myproject.dietproject.presentation.ui.util.Event
+import com.myproject.dietproject.presentation.ui.util.EventObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.apache.commons.lang3.ObjectUtils.Null
 import java.lang.Exception
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.ArrayList
 import java.util.Calendar
-import java.util.Collections
 import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -339,7 +330,7 @@ class WeightChartViewModel @Inject constructor(
                             _weekKcalArray.value?.peekContent()?.get(i)?.toFloat() ?: 0.0F
                         )
                     )
-                    sumKcal += _weekKcalArray.value!!.peekContent()[i]
+                    sumKcal += _weekKcalArray.value?.peekContent()?.get(i) ?: 0
 
                 }
 
@@ -350,7 +341,6 @@ class WeightChartViewModel @Inject constructor(
         }
 
         _weekKcalSum.value = sumKcal
-        Log.d("weight1", _weight.value.toString())
         try {
             _howMuchRunning.value =
                 roundToFirstDecimalPlace(sumKcal / (((4.0 * (3.5 * _weight.value!! * 60)) / 1000) * 5).toFloat()) // 이런것도 메서드로 다 일치시켜야함 알아보기 힘들다.
@@ -380,16 +370,15 @@ class WeightChartViewModel @Inject constructor(
                 sumKcal += _previousWeekKcalArray.value!!.peekContent()[i]
             }
         } catch (e: Exception) {
-            Log.e("previousError", e.message.toString())
+            // 에러 처리
         }
 
         _weekKcalSum.value = sumKcal
-        Log.d("weight2", _weight.value.toString())
         try {
             _howMuchRunning.value =
                 roundToFirstDecimalPlace(sumKcal / (((4.0 * (3.5 * _weight.value!! * 60)) / 1000) * 5).toFloat())
         } catch (e: NullPointerException) {
-            Log.e("runningNull", "아휴 또 난리야?")
+            // 에러 처리
         }
 
     }
@@ -410,17 +399,16 @@ class WeightChartViewModel @Inject constructor(
                 sumKcal += _nextWeekKcalArray.value!!.peekContent()[i]
             }
         } catch (e: Exception) {
-            Log.e("nextError", e.message.toString())
+            // 에러 처리
         }
 
         _weekKcalSum.value = sumKcal
-        Log.d("weight3", _weight.value.toString())
+
         try {
             _howMuchRunning.value =
                 roundToFirstDecimalPlace(sumKcal / (((4.0 * (3.5 * _weight.value!! * 60)) / 1000) * 5).toFloat())
-            Log.d("runningValue", _howMuchRunning.value.toString())
         } catch (e: NullPointerException) {
-            Log.e("runningNull", "아휴 또 난리야?")
+            // 에러 처리
         }
 
     }

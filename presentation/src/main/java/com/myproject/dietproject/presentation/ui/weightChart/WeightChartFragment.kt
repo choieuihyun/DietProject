@@ -7,10 +7,8 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import com.bumptech.glide.disklrucache.DiskLruCache.Value
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -18,7 +16,6 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -27,10 +24,10 @@ import com.myproject.dietproject.presentation.R
 import com.myproject.dietproject.presentation.databinding.WeightChartFragmentBinding
 import com.myproject.dietproject.presentation.ui.BaseFragment
 import com.myproject.dietproject.presentation.ui.MainActivity
+import com.myproject.dietproject.presentation.ui.util.BackPressedHandler
+import com.myproject.dietproject.presentation.ui.util.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -71,8 +68,8 @@ class WeightChartFragment :
 
         weightChart = binding.weightChart
 
-        viewModel.weekDateArray.observe(viewLifecycleOwner) { weekData ->
-            viewModel.weekKcalArray.observe(viewLifecycleOwner) {
+        viewModel.weekDateArray.observe(viewLifecycleOwner, EventObserver {
+            viewModel.weekKcalArray.observe(viewLifecycleOwner, EventObserver {
 
                 viewModel.updateChartData()
 
@@ -84,8 +81,8 @@ class WeightChartFragment :
                     chartMarkerSetting(weightChart)
 
                 }
-            }
-        }
+            })
+        })
 
         viewModel.isNextButtonEnabled.observe(viewLifecycleOwner) {
             binding.chartBtnWeekNext.isEnabled = it
@@ -122,10 +119,8 @@ class WeightChartFragment :
 
         viewModel.getPreviousWeekData(userId, currentStartOfWeek, currentEndOfWeek)
 
-        viewModel.previousWeekDateArray.observe(viewLifecycleOwner) { weekEvent ->
-            weekEvent.getContentIfNotHandled()?.let { weekData ->
-                viewModel.previousWeekKcalArray.observe(viewLifecycleOwner) { kcalEvent ->
-                    kcalEvent.getContentIfNotHandled()?.let {
+        viewModel.previousWeekDateArray.observe(viewLifecycleOwner, EventObserver {
+            viewModel.previousWeekKcalArray.observe(viewLifecycleOwner, EventObserver {
 
                         viewModel.updateChartPreviousData()
 
@@ -133,14 +128,18 @@ class WeightChartFragment :
 
                                 chartData ->
                             weightChart.data = chartData
-                            setupChartUI(weightChart, weightChart.data,
-                                viewModel.previousWeekDateArray.value!!.peekContent())
+
+                            setupChartUI(
+                                weightChart, weightChart.data,
+                                viewModel.previousWeekDateArray.value!!.peekContent()
+                            )
+
                             chartMarkerSetting(weightChart)
+
+                            Log.d("dataPrevious", chartData.dataSets.toString())
                         }
-                    }
-                }
-            }
-        }
+            })
+        })
     }
 
     private fun onNextButtonClicked(userId: String) {
@@ -155,25 +154,26 @@ class WeightChartFragment :
 
         viewModel.getNextWeekData(userId, currentStartOfWeek, currentEndOfWeek)
 
-        viewModel.nextWeekDateArray.observe(viewLifecycleOwner) { weekEvent ->
-            weekEvent.getContentIfNotHandled()?.let { weekData ->
-                viewModel.nextWeekKcalArray.observe(viewLifecycleOwner) { kcalEvent ->
-                    kcalEvent.getContentIfNotHandled()?.let {
+        viewModel.nextWeekDateArray.observe(viewLifecycleOwner, EventObserver {
+            viewModel.nextWeekKcalArray.observe(viewLifecycleOwner, EventObserver {
 
-                        viewModel.updateChartNextData()
+                viewModel.updateChartNextData()
 
-                        setupChartData(viewModel.entries).let {
+                setupChartData(viewModel.entries).let {
 
-                                chartData ->
-                            weightChart.data = chartData
-                            setupChartUI(weightChart, weightChart.data,viewModel.nextWeekDateArray.value!!.peekContent())
-                            chartMarkerSetting(weightChart)
+                        chartData ->
+                    weightChart.data = chartData
 
-                        }
-                    }
+                    setupChartUI(
+                        weightChart, weightChart.data,
+                        viewModel.nextWeekDateArray.value!!.peekContent()
+                    )
+
+                    chartMarkerSetting(weightChart)
+
                 }
-            }
-        }
+            })
+        })
     }
 
     private fun setupChartData(data: MutableList<Entry>): LineData {
@@ -230,7 +230,7 @@ class WeightChartFragment :
             axisMinimum = 0f
 
             if(lineData.yMax > 0)
-                axisMaximum = lineData.yMax * 1.2F// yMax하면 안됨 + 그냥 yMax로하면 차트 볼때 맨날 최대치 채워져있잖아 많이 먹은거마냥..
+                axisMaximum = lineData.yMax * 1.2F // y축의 최댓값 == 최대 칼로리 값 * 1.2
 
             axisLineWidth = 2f // 축의 굵기
             textSize = 16f
