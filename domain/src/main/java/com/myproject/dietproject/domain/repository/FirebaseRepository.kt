@@ -13,7 +13,9 @@ interface FirebaseRepository {
 
     val todayKcal: LiveData<Int>
 
-    val homeDateText: LiveData<String>
+    val homeDateText: LiveData<String> // 날짜 text -> 12-09 (금)
+
+    val homeDateTextByDate: LiveData<String> // 전, 후 날짜 변경, 날짜 기준 데이터 -> 2023-12-09, 실제 날짜
 
     val calculTodayKcal: Int
 
