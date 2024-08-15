@@ -238,11 +238,6 @@ class InfoViewModel @Inject constructor(
                             sumKcal += kcal
                         }
 
-//                        if (kcal != null) { // 하루 권장 칼로리 초과한 횟수
-//                            if(kcal > _recommendKcal.value!!.toInt()) {
-//
-//                            }
-//                        }
                     }
 
                     if(maxDate != null)
