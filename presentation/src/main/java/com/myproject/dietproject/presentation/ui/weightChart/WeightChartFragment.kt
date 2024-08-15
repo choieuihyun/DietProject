@@ -68,8 +68,8 @@ class WeightChartFragment :
 
         weightChart = binding.weightChart
 
-        viewModel.weekDateArray.observe(viewLifecycleOwner) { weekData ->
-            viewModel.weekKcalArray.observe(viewLifecycleOwner) {
+        viewModel.weekDateArray.observe(viewLifecycleOwner, EventObserver {
+            viewModel.weekKcalArray.observe(viewLifecycleOwner, EventObserver {
 
                 viewModel.updateChartData()
 
@@ -81,8 +81,8 @@ class WeightChartFragment :
                     chartMarkerSetting(weightChart)
 
                 }
-            }
-        }
+            })
+        })
 
         viewModel.isNextButtonEnabled.observe(viewLifecycleOwner) {
             binding.chartBtnWeekNext.isEnabled = it
@@ -119,10 +119,8 @@ class WeightChartFragment :
 
         viewModel.getPreviousWeekData(userId, currentStartOfWeek, currentEndOfWeek)
 
-        viewModel.previousWeekDateArray.observe(viewLifecycleOwner) { weekEvent ->
-            weekEvent.getContentIfNotHandled()?.let { weekData ->
-                viewModel.previousWeekKcalArray.observe(viewLifecycleOwner) { kcalEvent ->
-                    kcalEvent.getContentIfNotHandled()?.let {
+        viewModel.previousWeekDateArray.observe(viewLifecycleOwner, EventObserver {
+            viewModel.previousWeekKcalArray.observe(viewLifecycleOwner, EventObserver {
 
                         viewModel.updateChartPreviousData()
 
@@ -130,14 +128,18 @@ class WeightChartFragment :
 
                                 chartData ->
                             weightChart.data = chartData
-                            setupChartUI(weightChart, weightChart.data,
-                                viewModel.previousWeekDateArray.value!!.peekContent())
+
+                            setupChartUI(
+                                weightChart, weightChart.data,
+                                viewModel.previousWeekDateArray.value!!.peekContent()
+                            )
+
                             chartMarkerSetting(weightChart)
+
+                            Log.d("dataPrevious", chartData.dataSets.toString())
                         }
-                    }
-                }
-            }
-        }
+            })
+        })
     }
 
     private fun onNextButtonClicked(userId: String) {
@@ -152,25 +154,26 @@ class WeightChartFragment :
 
         viewModel.getNextWeekData(userId, currentStartOfWeek, currentEndOfWeek)
 
-        viewModel.nextWeekDateArray.observe(viewLifecycleOwner) { weekEvent ->
-            weekEvent.getContentIfNotHandled()?.let { weekData ->
-                viewModel.nextWeekKcalArray.observe(viewLifecycleOwner) { kcalEvent ->
-                    kcalEvent.getContentIfNotHandled()?.let {
+        viewModel.nextWeekDateArray.observe(viewLifecycleOwner, EventObserver {
+            viewModel.nextWeekKcalArray.observe(viewLifecycleOwner, EventObserver {
 
-                        viewModel.updateChartNextData()
+                viewModel.updateChartNextData()
 
-                        setupChartData(viewModel.entries).let {
+                setupChartData(viewModel.entries).let {
 
-                                chartData ->
-                            weightChart.data = chartData
-                            setupChartUI(weightChart, weightChart.data,viewModel.nextWeekDateArray.value!!.peekContent())
-                            chartMarkerSetting(weightChart)
+                        chartData ->
+                    weightChart.data = chartData
 
-                        }
-                    }
+                    setupChartUI(
+                        weightChart, weightChart.data,
+                        viewModel.nextWeekDateArray.value!!.peekContent()
+                    )
+
+                    chartMarkerSetting(weightChart)
+
                 }
-            }
-        }
+            })
+        })
     }
 
     private fun setupChartData(data: MutableList<Entry>): LineData {
@@ -227,7 +230,7 @@ class WeightChartFragment :
             axisMinimum = 0f
 
             if(lineData.yMax > 0)
-                axisMaximum = lineData.yMax * 1.2F// yMax하면 안됨 + 그냥 yMax로하면 차트 볼때 맨날 최대치 채워져있잖아 많이 먹은거마냥..
+                axisMaximum = lineData.yMax * 1.2F // y축의 최댓값 == 최대 칼로리 값 * 1.2
 
             axisLineWidth = 2f // 축의 굵기
             textSize = 16f
