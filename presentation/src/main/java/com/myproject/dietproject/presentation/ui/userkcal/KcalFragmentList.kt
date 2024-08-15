@@ -124,6 +124,7 @@ class KcalFragmentList : BaseFragment<KcalFragmentListBinding>(R.layout.kcal_fra
 
     override fun onPause() {
         super.onPause()
+        viewModel.updateKcalListFavoriteState()
         Log.d("onPauseKcalList", "onPauseKcalList")
 
     }
