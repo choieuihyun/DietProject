@@ -99,17 +99,9 @@ class InfoViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            getUserRecommendKcalUseCase(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            getUserRecommendKcalUseCase(userId)
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    _recommendKcal.postValue(snapshot.value.toString())
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-            })
+            _recommendKcal.value = getUserRecommendKcalUseCase.getRecommendKcal().toString()
 
         }
 
